@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liet Notes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: rgb(255, 244, 244);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logi {
+            position: absolute;
+            top: 30%;
+            border: 15px solid white;
+            border-radius: 3px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            height:auto;
+            width:80%;
+        }
+        .logi h2{
+            text-align: center;
+            padding: 10px;
+            color: red;
+            font-weight: bold;
+        }
+        .logi input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px auto;
+            display: block;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .logi button {
+            width: 95%;
+            padding: 10px;
+            margin: 10px auto;
+            display: block;
+            border: none;
+            border-radius: 3px;
+            background-color: rgb(255, 0, 0);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="logi">
+        <form class="login">
+        <h2>Login</h2>
+        <input type="text" placeholder="Enter Username"id="user" required><br><br>
+        <input type="password" placeholder="Enter Password"id="pass" required><br><br>
+        <button type="submit">Login</button>
+        <br><br>
+        <h3> <a href="https://wa.me/916376411796?text=Hello%20sir%20plz%20Give%20me%20id%20pass">If You Cant login Then Contact Admin</a> </h3>
+        </form>
+    </div>
+    <script src="script.js" defer></script>
+</body>
+
+</html>

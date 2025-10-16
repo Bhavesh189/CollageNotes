@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *
+        {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        h6 {
+    color: red;
+    font-size: 20px;
+    background: yellow;
+    display: fixed;
+    position:absolute;
+    top: 0%;
+    text-align: center;
+    width: 100vw;
+    padding: 10px;
+    font-weight: bold;
+
+}
+.topics
+{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    top:10%;
+    position: absolute;
+    border-bottom: 2px solid green;
+    width:100%;
+    height:auto;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+body{
+    background:lightpink;
+}
+.p1{
+    border-bottom: 2px solid blue;
+}
+    </style>
+</head>
+<body>
+    <h6> Chemistry PRACTIALS</h6>
+    <div class="topics">
+        <div class="p1">
+       <a href="chemq.pdf.docx"> 1.  Expriment 1 to 4 in Normal Handwritten </a>
+        </div>
+        
+    </div><script>
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+        window.location.href = "login.html";
+    }
+</script>
+</body>
+</html>

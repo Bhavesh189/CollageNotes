@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script>
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+        window.location.href = "login.html";
+    } else {
+        setTimeout(function() {
+            localStorage.removeItem("isLoggedIn");
+            window.location.href = "login.html";
+        }, 1000000); 
+    }
+</script>
+    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes</title>
+</head>
+
+<body>
+    <h6>First Year Notes (liet 2025-26)</h6>
+    <div class="nav">
+        <a href="index.html">Home</a>
+        <a href="https://wa.me/916376411796?text=Hello%20sir%20plz%20add%20notes%20of%20this%20subject%20%20:" target="_blank" rel="noopener">Add Notes</a>
+        <a href="login.html">Notes</a>
+    </div>
+    <div class="subjects">
+        <div class="s"><img src="com.jpg"><a href="nc.html">COMPUTER</a></div>
+        <div class="s"><img src="chem.jpg"><a href="nce.html">Chemistry</a></div>
+        <div class="s"><img src="mefa.jpg"><a href="nme.html">MEFA</a></div>
+        <div class="s"><img src="math.jpg"><a href="nm.html">MATHS</a></div>
+        <div class="s"><img src="bee.jpg"><a href="notesbee.html">BEE</a></div>
+        <div class="s"><img src="p.jpg"><a href="np.html">PRACTICAL FILES</a></div>
+        <div class="s"><img src="t.jpg"><a href="npa.html">Mid Sem !</a></div>
+    </div>
+</body>
+</html>

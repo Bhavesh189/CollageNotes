@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *
+        {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        h6 {
+    color: red;
+    font-size: 20px;
+    background: yellow;
+    display: fixed;
+    position:absolute;
+    top: 0%;
+    text-align: center;
+    width: 100vw;
+    padding: 10px;
+    font-weight: bold;
+
+}
+.p1{
+    width:100%;
+}
+.topics {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+.topics .p1{
+    border-bottom: 3px solid black;
+}
+    </style>
+</head>
+<body>
+    <h6>Chemistry Notes </h6>
+    <div class="topics">
+        <div class="p1">
+       <a href="co.pdf"> 1. Corrosion </a></div>
+         <div class="p1">
+       <a href="lc.pdf"> 2. Lubricants </a></div>
+      <div class="p1">
+       <a href="ce1.pdf"> 3. Water + Boiler Troubles </a></div>
+         <div class="p1">
+             <div class="p1">
+       <a href="chemfuel.pdf"> 4. Fuel </a></div>
+    </div>
+    </div>
+    <script>
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+        window.location.href = "login.html";
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *
+        {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        h6 {
+    color: red;
+    font-size: 20px;
+    background: yellow;
+    display: fixed;
+    position:absolute;
+    top: 0%;
+    text-align: center;
+    width: 100vw;
+    padding: 10px;
+    font-weight: bold;
+
+}
+.p1{
+    width:100%;
+}
+.topics {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+.topics .p1{
+    border-bottom: 3px solid black;
+}
+    </style>
+</head>
+<body>
+    <h6> BEE Notes </h6>
+    <div class="topics">
+        <div class="p1">
+       <a href="bee.pdf.docx.pdf"> 1. 1st Chapter in Normal Handwritten </a>
+        </div>
+        <div class="p1">
+       <a href="bee2.docx.pdf"> 1. 2nd Chapter in Normal Handwritten </a>
+        </div>
+    </div><script>
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+        window.location.href = "login.html";
+    }
+</script>
+</body>
+</html>

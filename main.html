@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Main</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+  
+    h6 {
+      color: red;
+      font-size: 20px;
+      background: yellow;
+      position: absolute;    
+      top: 0;
+      left: 0;
+      text-align: center;
+      width: 100vw;
+      padding: 10px;
+      font-weight: bold;
+    }
+
+    .p1 { width: 100%; }
+
+    .topics {
+      margin-top: 60px; 
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .topics .p1 {
+      border-bottom: 3px solid black;
+      width: 90%;
+      padding: 6px 0;
+    }
+
+    .m { display: none; } 
+  </style>
+</head>
+<body>
+  <div class="m">
+    <h6>Chemistry Notes</h6>
+    <div class="topics">
+      <div class="p1"><a href="problem1.pdf">1. Problem 1</a></div>
+      <div class="p1"><a href="problem2.pdf.jpg">2. Problem 2</a></div>
+      <div class="p1"><a href="problem3.jpg">3. Problem 3</a></div>
+    </div>
+  </div>
+
+  <script>
+    window.onload = function () {
+    
+      const correctPassword = "password"; 
+
+      const pass = prompt("Enter the password:");
+      if (pass === null) {
+ 
+        window.location.href = "login.html";
+        return;
+      }
+
+      if (pass !== correctPassword) {
+        localStorage.setItem("isLoggedIn", "false");
+        window.location.href = "login.html";
+      } else {
+        document.querySelector(".m").style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>

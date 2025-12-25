@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *
+        {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        h6 {
+    color: red;
+    font-size: 20px;
+    background: yellow;
+    display: fixed;
+    position:absolute;
+    top: 0%;
+    text-align: center;
+    width: 100vw;
+    padding: 10px;
+    font-weight: bold;
+
+}
+ .subjects {
+        border: 3px solid red;
+        height: auto;
+        width: 95%;
+        margin: 40px auto;
+        border-radius: 5px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        margin-top: 70px;
+    }
+    
+.s{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    cursor: pointer;
+    border: 2px solid rgb(113, 113, 222);
+    background: white;
+}
+.s:hover{
+    background-color: rgb(224, 139, 224);
+}
+.s img {
+    height: auto;
+    max-width: 100px;
+    margin-bottom: 20px;
+}
+    </style>
+</head>
+<body>
+    <h6> All Practial file notes</h6>
+     <div class="subjects">
+        <div class="s"><img src="com.jpg"><a href="ncp.html">COMPUTER file</div></a>
+        <div class="s"><img src="chem.jpg"><a href="ncep.html">Chemistry file</div></a>
+        <div class="s"><img src="commu.jpg"><a href="chamq.pdf">Communication File</div></a>
+        <div class="s"><img src="bee.jpg"><a href="beep.pdf">BEE file</div></a>
+        </div><script>
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+        window.location.href = "login.html";
+    }
+</script>
+</body>
+</html>

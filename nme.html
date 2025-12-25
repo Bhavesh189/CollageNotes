@@ -3,80 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Computer Notes</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YJFYSR5VKS"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YJFYSR5VKS');
+    </script>
+
     <style>
-        *
-        {
+        *{
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: 'poppins', sans-serif;
         }
-        h6 {
-    color: red;
-    font-size: 20px;
-    background: yellow;
-    display: fixed;
-    position:absolute;
-    top: 0%;
-    text-align: center;
-    width: 100vw;
-    padding: 10px;
-    font-weight: bold;
+        body {
+            background : rgb(37, 36, 36);
+            color : white;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        .nav {
+            background-color: black;
+            border : 2px solid greenyellow;
+            border-radius : 5px;
+            box-shadow: 0 4px 15px rgba(0, 255, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+        }
 
-}
-.p1{
-    width:100%;
-}
-.topics {
-    margin-top: 50px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-}
-.topics .p1{
-    border-bottom: 3px solid black;
-}
+        .nav h1 {
+            color: white;
+            text-align: center;
+            padding: 15px;
+        }
+        
+        .notes {
+            margin-top: 30px;
+            width: 90%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .notes .name {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid rgb(0, 255, 0);
+            padding: 10px;
+            border-radius: 15px;
+            background-color: rgb(20, 20, 20);
+            cursor: pointer;
+            transition: 0.3s ease-in-out;
+        }
+        .name:hover {
+            background-color: rgb(0, 51, 0);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .name i {
+            font-size: 24px;
+            color: yellow;
+        }
+        .ad {
+            height : 25%;
+            width : 100%;
+            cursor : pointer;
+            position : fixed;
+            bottom : 0;
+        }
+        .ad img {
+            height : 100%;
+            width : 100%;
+            object-fit : cover;
+        }
+        .notes a {
+            text-decoration : none;
+        }
+        .notes a h4 {
+            color : white;
+        }
     </style>
 </head>
 <body>
-    <h6>MEFA Notes </h6>
-    <div class="topics">
-        <div class="p1">
-       <a href="mefa1.docx"> 1. 1st Chapter Sir wala </a></div>
-        <div class="p1">
-         <a href="mefa1p.docx"> 1.1 . 1st Chapter Sir wala (part 2) </a>
-        </div>
-        <div class="p1">
-       <a href="mefa2.docx"> 2. 2nd Chapter Sir Wala </a>
-        </div>
-        <div class="p1">
-       <a href="cost.pdf.docx"> 3. Cost </a>
-        </div>
-        <div class="p1">
-       <a href="m3p.docx"> 3. Unit 3 Production </a>
-        </div>
-        <div class="p1">
-       <a href="m4.docx"> 4. 4th Chapter Sir Wala </a>
-        </div>
-        <div class="p1">
-       <a href="m51.docx"> 5. 5th Chapter Sir Wala </a>
-        </div>
-        <div class="p1">
-       <a href="52.docx"> 5. Part 2 Chapter 5 </a>
-        </div>
-        <div class="p1">
-       <a href="53.docx"> 5. Part 3 Chapter 5 </a>
-        </div>
-        <div class="p1">
-       <a href="54.docx"> 5. Part 4 Chapter 5 </a>
-        </div>
-       
-    </div><script>
-    if (localStorage.getItem("isLoggedIn") !== "true") {
-        window.location.href = "login.html";
-    }
-</script>
+    <div class="nav">
+        <h1>MEFA Notes</h1>
+    </div>
+
+    <div class="notes">
+
+        <a href="mefa1.docx">
+            <div class="name">
+                <i class="fa-solid fa-file-pdf"></i>
+                <h4>1. 1st Chapter Sir wala</h4>
+                <i class="fa-solid fa-download"></i>
+            </div>
+        </a>
+
+        <a href="mefa1p.docx">
+            <div class="name">
+                <i class="fa-solid fa-file-pdf"></i>
+                <h4>1.1 1st Chapter Sir wala (Part 2)</h4>
+                <i class="fa-solid fa-download"></i>
+            </div>
+        </a>
+
+        <a href="mefa2.docx">
+            <div class="name">
+                <i class="fa-solid fa-file-pdf"></i>
+                <h4>2. 2nd Chapter Sir wala</h4>
+                <i class="fa-solid fa-download"></i>
+            </div>
+        </a>
+
+        <a href="cost.pdf.docx">
+            <div class="name">
+                <i class="fa-solid fa-file-pdf"></i>
+                <h4>3. Cost</h4>
+                <i class="fa-solid fa-download"></i>
+            </div>
+        </a>
+
+        <a href="m3p.docx">
+            <div class="name">
+                <i class="fa-solid fa-file-pdf"></i>
+                <h4>3. Unit 3 Production</h4>
+                <i class="fa-solid fa-download"></i>
+            </div>
+        </a>
+
+        <a href="m4.docx">
+            <div class="name">
+                <i class="fa-solid fa-file-pdf"></i>
+                <h4>4. 4th Chapter Sir wala</h4>
+                <i class="fa-solid fa-download"></i>
+            </div>
+        </a>
+
+        <a href="m51.docx">
+            <div class="name">
+                <i class="fa-solid fa-file-pdf"></i>
+                <h4>5. 5th Chapter Sir wala</h4>
+                <i class="fa-solid fa-download"></i>
+            </div>
+        </a>
+
+        <a href="52.docx">
+            <div class="name">
+                <i class="fa-solid fa-file-pdf"></i>
+                <h4>5. Part 2 Chapter 5</h4>
+                <i class="fa-solid fa-download"></i>
+            </div>
+        </a>
+
+        <a href="53.docx">
+            <div class="name">
+                <i class="fa-solid fa-file-pdf"></i>
+                <h4>5. Part 3 Chapter 5</h4>
+                <i class="fa-solid fa-download"></i>
+            </div>
+        </a>
+
+        <a href="54.docx">
+            <div class="name">
+                <i class="fa-solid fa-file-pdf"></i>
+                <h4>5. Part 4 Chapter 5</h4>
+                <i class="fa-solid fa-download"></i>
+            </div>
+        </a>
+
+    </div>
+
+    <div class="ad">
+        <a href="https://bhavesh189.github.io/EnterNet/home.html">
+            <img src="ad.png" alt="Watch Movies on EnterNet">
+        </a>
+    </div>
 </body>
 </html>

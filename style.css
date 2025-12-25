@@ -24,7 +24,7 @@ body {
 .glass {
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    border: 1px solid rgb(0, 255, 115);
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
 }
 
@@ -79,7 +79,8 @@ body {
 
 /* CARD */
 .card {
-    height: 390px;
+    margin-top : 20px;
+    height: 350px;
     background: #111;
     border-radius: 20px;
     padding: 20px;
@@ -88,7 +89,8 @@ body {
     justify-content: space-between;
     transition: 0.35s;
     cursor: pointer;
-    border: 2px solid rgba(255,255,255,0.12);
+    border: 2px solid rgb(2, 255, 120);
+    -webkit-text-stroke: 1px greenyellow;
 }
 
 /* 3D Hover + Glow */

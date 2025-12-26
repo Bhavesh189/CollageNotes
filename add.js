@@ -68,6 +68,7 @@ async function done() {
             alert("Server Busy hai badme krio")
             btn.value="Submit"
             btn.disabled = false
+            window.location.href="wa.me/+916376411796"
         }
     }
     catch(error) {

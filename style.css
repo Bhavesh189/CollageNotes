@@ -169,6 +169,20 @@ a {
     text-decoration: none;
 }
 
+#sem {
+    padding: 10px 16px;
+    border: 1px solid rgb(0, 255, 115);
+    border-radius: 18px;
+    color: black;
+    font-family: 'poppins', sans-serif;
+}
+
+#sem option {
+    background: black;
+    color: white;
+}
+
+
 @media (max-width: 600px) {
 
     .notes {

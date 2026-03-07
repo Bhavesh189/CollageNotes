@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Sem 2 Notes </title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: aquamarine;
+            height: 8vh;
+            font-size: large;
+            font-family: 'poppins', sans-serif;
+            font-weight: bold;
+        }
+
+        body {
+            background-color: black;
+        }
+
+        .container {
+            margin-top : 20px;
+            margin-left : auto;
+            margin-right : auto;
+            width : 80vw;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .container .sub {
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            align-items: center;
+            padding: 10px;
+            border-radius: 15px;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .sub img {
+            height : 180px;
+            width : 250px;
+            border-radius: 15px;
+            border: 2px solid black;
+        }
+
+        .container .sub b {
+            margin-top: 10px;
+            font-size: 18px;
+            color: black;
+            font-family: 'poppins', sans-serif;
+        }
+        
+        .container .sub:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 15px rgb(0, 234, 255);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="nav">
+        Btech Sem 2 Notes
+    </div>
+    <div class="container">
+        <div class="sub"><img src="commu.jpg"><b>Communication Skills</b></div>
+        <div class="sub"><img src="chem.jpg"><b>Introduction to built in environment</b></div>
+        <div class="sub"><img src="bee.jpg"><b>Physics</b></div>
+        <div class="sub"><img src="math.jpg"><b>Maths</b></div>
+        <div class="sub"><img src="com.jpg"><b>Mechanical Engineering</b></div>
+    </div>
+</body>
+
+</html>

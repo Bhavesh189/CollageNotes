@@ -5,10 +5,11 @@ import FloatingBot from './components/FloatingBot';
 import AdsBanner from './components/AdsBanner';
 import TabSelector from './components/TabSelector';
 import NotesHub from './pages/NotesHub';
+import PyqFinder from './pages/PyqFinder';
 import AddNotesForm from './pages/AddNotesForm';
 
 function App() {
-  const [currentView, setCurrentView] = useState('notes'); // 'notes', 'add-notes'
+  const [currentView, setCurrentView] = useState('notes'); // 'notes', 'pyq', 'add-notes'
   const [currentSem, setCurrentSem] = useState('sem1');
   const [scrollWidth, setScrollWidth] = useState('0%');
 
@@ -57,6 +58,12 @@ function App() {
             <i className="fa-solid fa-square-poll-vertical"></i> See Result
           </a>
           <button 
+            className={`nav-btn ${currentView === 'pyq' ? 'active' : ''}`}
+            onClick={() => setCurrentView('pyq')}
+          >
+            <i className="fa-solid fa-file-lines"></i> PYQ Papers
+          </button>
+          <button 
             className={`nav-btn ${currentView === 'add-notes' ? 'active' : ''}`}
             onClick={() => setCurrentView('add-notes')}
           >
@@ -87,6 +94,9 @@ function App() {
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {currentView === 'notes' && (
           <NotesHub currentSem={currentSem} onNavigate={setCurrentView} />
+        )}
+        {currentView === 'pyq' && (
+          <PyqFinder />
         )}
         {currentView === 'add-notes' && (
           <AddNotesForm />

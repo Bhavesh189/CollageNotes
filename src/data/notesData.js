@@ -192,7 +192,104 @@ export const semestersData = {
       }
     ]
   },
-  sem3: { id: 'sem3', name: 'Semester 3', subjects: [] },
+  sem3: {
+    id: 'sem3',
+    name: 'Semester 3',
+    subjects: [
+      {
+        id: 'tech_comm',
+        name: 'Technical Communication',
+        image: '/commu.jpg',
+        colorClass: 'color-comm_skills',
+        notes: [
+          { title: 'PYQ 2022', file: '/pyq/sem3/TC-2022.pdf' },
+          { title: 'PYQ Feb 2021', file: '/pyq/sem3/TC-Feb-2021.pdf' },
+          { title: 'PYQ Dec 2019', file: '/pyq/sem3/TC-Dec-2019.pdf' }
+        ]
+      },
+      {
+        id: 'adv_maths',
+        name: 'Advanced Engineering Mathematics',
+        image: '/math.jpg',
+        colorClass: 'color-maths',
+        notes: [
+          { title: 'PYQ 2026', file: '/pyq/sem3/AEM-2026.pdf' },
+          { title: 'PYQ 2025', file: '/pyq/sem3/AEM-2025.pdf' },
+          { title: 'PYQ 2024', file: '/pyq/sem3/AEM-2024.pdf' },
+          { title: 'PYQ May 2023', file: '/pyq/sem3/AEM-May-2023.pdf' },
+          { title: 'PYQ 2023 (310001)', file: '/pyq/sem3/AEM-2023.pdf' },
+          { title: 'PYQ 2022 (310401)', file: '/pyq/sem3/AEM-2022.pdf' },
+          { title: 'PYQ 2022 (310001)', file: '/pyq/sem3/AEM-2022-2.pdf' },
+          { title: 'PYQ Feb 2021 (310001)', file: '/pyq/sem3/AEM-Feb-2021.pdf' },
+          { title: 'PYQ Feb 2021 (310401)', file: '/pyq/sem3/AEM-Feb-2021-2.pdf' },
+          { title: 'PYQ Dec 2019 (310401)', file: '/pyq/sem3/AEM-Dec-2019.pdf' },
+          { title: 'PYQ Dec 2019 (310901)', file: '/pyq/sem3/AEM-Dec-2019-2.pdf' }
+        ]
+      },
+      {
+        id: 'digital_elec',
+        name: 'Digital Electronics',
+        image: '/bee.jpg',
+        colorClass: 'color-bee',
+        notes: [
+          { title: 'PYQ 2026', file: '/pyq/sem3/DE-2026.pdf' },
+          { title: 'PYQ 2025', file: '/pyq/sem3/DE-2025.pdf' },
+          { title: 'PYQ 2024', file: '/pyq/sem3/DE-2024.pdf' },
+          { title: 'PYQ May 2023', file: '/pyq/sem3/DE-May-2023.pdf' },
+          { title: 'PYQ 2022', file: '/pyq/sem3/DE-2022.pdf' },
+          { title: 'PYQ Feb 2021', file: '/pyq/sem3/DE-Feb-2021.pdf' },
+          { title: 'PYQ Dec 2019 (310404)', file: '/pyq/sem3/DE-Dec-2019.pdf' },
+          { title: 'PYQ Dec 2019 (310904)', file: '/pyq/sem3/DE-Dec-2019-2.pdf' }
+        ]
+      },
+      {
+        id: 'dsa',
+        name: 'Data Structures and Algorithms',
+        image: '/dsa.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'PYQ 2026', file: '/pyq/sem3/DSA-2026.pdf' },
+          { title: 'PYQ 2025', file: '/pyq/sem3/DSA-2025.pdf' },
+          { title: 'PYQ 2024', file: '/pyq/sem3/DSA-2024.pdf' },
+          { title: 'PYQ May 2023', file: '/pyq/sem3/DSA-May-2023.pdf' },
+          { title: 'PYQ 2022', file: '/pyq/sem3/DSA-2022.pdf' },
+          { title: 'PYQ Feb 2021', file: '/pyq/sem3/DSA-2021.pdf' },
+          { title: 'PYQ Dec 2019', file: '/pyq/sem3/DSA-Dec-2019.pdf' }
+        ]
+      },
+      {
+        id: 'oop',
+        name: 'Object Oriented Programming',
+        image: '/com.jpg',
+        colorClass: 'color-mech_eng',
+        notes: [
+          { title: 'PYQ 2026', file: '/pyq/sem3/OOP-2026.pdf' },
+          { title: 'PYQ 2025', file: '/pyq/sem3/OOP-2025.pdf' },
+          { title: 'PYQ 2024 (310406)', file: '/pyq/sem3/OOP-2024.pdf' },
+          { title: 'PYQ 2024 (31N0404)', file: '/pyq/sem3/OOP-2024-2.pdf' },
+          { title: 'PYQ May 2023', file: '/pyq/sem3/OOP-May-2023.pdf' },
+          { title: 'PYQ 2022', file: '/pyq/sem3/OOP-2022.pdf' },
+          { title: 'PYQ Feb 2021', file: '/pyq/sem3/OOP-Feb-2021.pdf' },
+          { title: 'PYQ Dec 2019', file: '/pyq/sem3/OOP-Dec-2019.pdf' }
+        ]
+      },
+      {
+        id: 'software_eng',
+        name: 'Software Engineering',
+        image: '/bs.jpeg',
+        colorClass: 'color-mefa',
+        notes: [
+          { title: 'PYQ 2026', file: '/pyq/sem3/SE-2026.pdf' },
+          { title: 'PYQ 2025', file: '/pyq/sem3/SE-2025.pdf' },
+          { title: 'PYQ 2024', file: '/pyq/sem3/SE-2024.pdf' },
+          { title: 'PYQ May 2023', file: '/pyq/sem3/SE-May-2023.pdf' },
+          { title: 'PYQ 2022', file: '/pyq/sem3/SE-2022.pdf' },
+          { title: 'PYQ Feb 2021', file: '/pyq/sem3/SE-Feb-2021.pdf' },
+          { title: 'PYQ Dec 2019', file: '/pyq/sem3/SE-Dec-2019.pdf' }
+        ]
+      }
+    ]
+  },
   sem4: { id: 'sem4', name: 'Semester 4', subjects: [] },
   sem5: { id: 'sem5', name: 'Semester 5', subjects: [] },
   sem6: { id: 'sem6', name: 'Semester 6', subjects: [] },

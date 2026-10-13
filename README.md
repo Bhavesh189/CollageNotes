@@ -1,56 +1,61 @@
-# Bhavesh Notes — Infinite Portal
+# 📚 Bhavesh Notes — Infinite Portal
 
-A React web app where college students can browse and download semester-wise study notes (PDFs, docs, and images), hosted right in the repo.
+A fast, mobile-friendly academic repository for B.Tech students — semester-wise notes, previous-year papers, and syllabus, all searchable in one click.
 
-## What it does
+**Live:** https://notes.thebhavesh.online
 
-- **Notes dashboard** — pick a semester tab (Semester 1 / Semester 2), browse subjects as visual cards, and open or download the linked notes.
-- **Some subjects are access-gated** — a login modal prompts before opening secured subjects (login state kept in the browser's localStorage).
-- **Add Notes form** — drag-and-drop a file, enter a topic and subject, and submit it; submissions are forwarded through a Telegram bot (API placeholders are injected from repository secrets during the deploy workflow).
-- **Extras on the page** — a notifications ticker, a floating "Document Analyzer AI" widget, a "See Result" link, a scroll-progress bar, and a glowing glassmorphism UI.
-- **Large static library** — dozens of PDFs/DOCs/images (Chemistry units, Maths, Physics, PYQs, important-question sets, practical files) live in `public/` and are served as-is.
+## ✨ What's inside
 
-## Tech stack
+- **📖 Notes Dashboard** — Semesters 1–8, subject cards with note counts, file sizes on every download
+- **🔍 Universal Search** — one search box across *everything*: notes, PYQ papers, subjects. Filters by semester, subject, and type (Notes / PYQ). Sort by relevance, A–Z, or newest. Press `/` anywhere to jump to search
+- **📝 PYQ Papers** — 44 BTU previous-year papers (2026 → 2019) with year/session filters
+- **🕘 Recently Added** — newest papers surfaced on the dashboard
+- **➕ Add Notes** — drag-and-drop uploads forwarded via Telegram bot
+- **📱 Fully responsive** — phones, tablets, desktops; icon-only nav on small screens, 44px touch targets
+- **🔔 Extras** — notifications ticker, Document Analyzer widget, login-gated secured subjects, back-to-top, breadcrumbs
 
-- React 18 + Vite 5 (dev server on port 5173)
-- Plain CSS (`src/styles/App.css`, `variables.css`)
-- Lucide icons (`lucide-react`), FontAwesome via CDN, Google Fonts (Outfit + Poppins)
-- GitHub Actions deploy to GitHub Pages on every push to `main`
+## 📂 Library at a glance
 
-## Project structure
+| Semester | Subjects | Contents |
+|----------|----------|----------|
+| Sem 1–2 | Chemistry, Physics, Maths, EME, MEFA… | Unit notes, important questions, PYQs |
+| Sem 3 | AEM, Digital Electronics, DSA, OOP, Software Engg, Linux | Unit notes + 44 PYQ papers |
+| Sem 4 | Discrete Maths, Microprocessor, TOC, DBMS, Python, Java | Unit notes |
+| Sem 5 | OS, COA, Networks, Cloud & DevOps, ML, DMW, Distributed Systems | Unit notes |
+| Sem 6 | Compiler Design, DAA, Info Security, DIP, IoT, NLP | Unit notes |
+| Sem 7–8 | Deep Learning, Disaster Mgmt, Generative AI, FHI | Unit notes |
+
+300+ files and growing. Everything lives in `public/` and is served as-is.
+
+## 🛠 Tech stack
+
+React 18 + Vite 5 · Plain CSS (glassmorphism dark UI) · Lucide + FontAwesome icons · GitHub Actions → GitHub Pages
+
+## 📁 Project structure
 
 ```
-├── index.html                  # title "Bhavesh Notes - Infinite Portal", font/icon CDNs
-├── public/                     # the whole notes library: PDFs, docs, images, videos
+├── index.html                  # title, fonts, icon CDNs
+├── CNAME                       # notes.thebhavesh.online
+├── public/
+│   ├── notes/sem<N>/<subject>/ # unit notes (Sem 2–8)
+│   ├── pyq/sem3/               # previous-year papers
+│   └── …                       # Sem 1–2 legacy library
 ├── src/
-│   ├── App.jsx                 # header nav, semester tabs, ticker, view switching
-│   ├── main.jsx                # React entry point
-│   ├── components/
-│   │   ├── FloatingBot.jsx     # floating Document Analyzer widget
-│   │   ├── LoginModal.jsx      # gate for secured subjects
-│   │   ├── AdsBanner.jsx
-│   │   ├── GlowBg.jsx
-│   │   └── TabSelector.jsx     # semester tabs
-│   ├── pages/
-│   │   ├── NotesHub.jsx        # subject grid + per-subject note lists
-│   │   └── AddNotesForm.jsx    # drag-drop upload form → Telegram bot
-│   ├── data/notesData.js        # semester/subject/note catalogue
-│   └── styles/                 # App.css, variables.css
-├── .github/workflows/         # deploy.yml + main.yml: GitHub Pages deploys
-├── package.json
-└── vite.config.js
+│   ├── App.jsx                 # header, nav, search, view router
+│   ├── data/notesData.js       # semesters → subjects → notes
+│   ├── data/pyqData.js         # hardcoded PYQ index
+│   ├── data/fileSizes.js       # auto-generated file-size manifest
+│   ├── lib/searchIndex.js      # universal search engine
+│   ├── components/             # SearchBar, BackToTop, RecentlyAdded…
+│   ├── pages/                  # NotesHub, PyqFinder, SearchResults, AddNotesForm
+│   └── styles/App.css          # responsive design system
+└── .github/workflows/          # deploy to Pages on push to main
 ```
 
-## Run it locally
+## 🚀 Deploy
 
-```bash
-npm install
-npm run dev      # opens the app at http://localhost:5173
-npm run build    # production build
-npm run preview  # preview the production build
-```
+Push to `main` — the workflow builds and deploys to GitHub Pages automatically. Custom domain is set via `CNAME` + the Pages API; DNS CNAME `notes` → `Bhavesh189.github.io` in the domain's DNS panel.
 
-## Notes
+---
 
-- Deploying works out of the box: pushing to `main` triggers the Pages workflow. The Add Notes form needs the `TG_API` and `TG_ID` repository secrets to send files; without them the form's bot placeholders stay unsubstituted.
-- `package.json` is marked `private` — this is a personal project, not published to npm.
+Built with ❤️ by [Bhavesh Sharma](https://github.com/Bhavesh189) for every student cramming at 2 AM.

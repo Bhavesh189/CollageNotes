@@ -1,10 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { pyqPapers } from '../data/pyqData';
+import DocViewer from '../components/DocViewer';
 
 const PyqFinder = () => {
   const [query, setQuery] = useState('');
   const [subject, setSubject] = useState('all');
   const [year, setYear] = useState('all');
+  const [preview, setPreview] = useState(null); // { file, title }
 
   const subjects = useMemo(
     () => [...new Set(pyqPapers.map((p) => p.subject))].sort(),
@@ -97,6 +99,19 @@ const PyqFinder = () => {
                 </span>
               </div>
               <div className="note-item-right">
+                <button
+                  type="button"
+                  className="preview-btn"
+                  title="Preview in browser"
+                  aria-label={`Preview ${p.subject} ${p.session}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setPreview({ file: p.file, title: `${p.subject} — ${p.session}` });
+                  }}
+                >
+                  <i className="fa-solid fa-eye"></i>
+                </button>
                 <i className="fa-solid fa-arrow-down"></i>
               </div>
             </a>
@@ -109,6 +124,14 @@ const PyqFinder = () => {
           </div>
         )}
       </div>
+
+      {preview && (
+        <DocViewer
+          file={preview.file}
+          title={preview.title}
+          onClose={() => setPreview(null)}
+        />
+      )}
     </div>
   );
 };

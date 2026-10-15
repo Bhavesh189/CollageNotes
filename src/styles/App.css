@@ -1722,3 +1722,339 @@ body::before {
     white-space: normal;
   }
 }
+
+/* ============ Preview button (eye) next to download links ============ */
+.preview-btn {
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  margin-right: 8px;
+}
+.preview-btn:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+}
+
+/* ============ DocViewer modal ============ */
+.docviewer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.docviewer-modal {
+  width: min(1000px, 100%);
+  height: min(88vh, 900px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 16px;
+}
+.docviewer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--glass-border);
+}
+.docviewer-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.docviewer-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.docviewer-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  border-radius: 10px;
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  text-decoration: none;
+}
+.docviewer-btn:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+}
+.docviewer-frame {
+  flex: 1;
+  width: 100%;
+  border: 0;
+  background: #111;
+}
+
+/* ============ AI chat popup ============ */
+.ai-bot-icon {
+  font-size: 1.5rem;
+  color: #fff;
+}
+.aichat-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: transparent;
+  pointer-events: none;
+}
+.aichat-popup {
+  pointer-events: auto;
+  position: fixed;
+  bottom: 190px;
+  right: 30px;
+  width: min(380px, calc(100vw - 32px));
+  height: min(540px, calc(100vh - 220px));
+  min-height: 380px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 18px;
+  z-index: 901;
+}
+.aichat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--glass-border);
+  font-weight: 600;
+}
+.aichat {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+.aichat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.aichat-msg {
+  display: flex;
+}
+.aichat-msg.user {
+  justify-content: flex-end;
+}
+.aichat-bubble {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--glass-border);
+}
+.aichat-msg.user .aichat-bubble {
+  background: rgba(255, 255, 255, 0.16);
+  border-bottom-right-radius: 4px;
+}
+.aichat-msg.bot .aichat-bubble {
+  border-bottom-left-radius: 4px;
+}
+.aichat-results {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+.aichat-result {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+.aichat-result:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+}
+.aichat-result-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.82rem;
+}
+.aichat-result-text small {
+  color: var(--text-secondary);
+}
+.aichat-typing {
+  display: inline-flex;
+  gap: 5px;
+  padding: 12px 16px;
+}
+.aichat-typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  animation: aichatBlink 1.2s infinite;
+}
+.aichat-typing span:nth-child(2) { animation-delay: 0.2s; }
+.aichat-typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes aichatBlink {
+  0%, 60%, 100% { opacity: 0.25; }
+  30% { opacity: 1; }
+}
+.aichat-chips {
+  display: flex;
+  gap: 8px;
+  padding: 0 14px 10px;
+  flex-wrap: wrap;
+}
+.aichat-chip {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+.aichat-chip:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.aichat-inputrow {
+  display: flex;
+  gap: 8px;
+  padding: 0 14px 14px;
+}
+.aichat-input {
+  flex: 1;
+}
+.aichat-send {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--glass-border);
+  color: #fff;
+  border-radius: 12px;
+  width: 44px;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+.aichat-send:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ============ Mobile: full-screen viewer + chat ============ */
+@media (max-width: 640px) {
+  .docviewer-backdrop {
+    padding: 0;
+  }
+  .docviewer-modal {
+    width: 100%;
+    height: 100dvh;
+    border-radius: 0;
+  }
+  .aichat-popup {
+    bottom: 0;
+    right: 0;
+    width: 100vw;
+    height: 92dvh;
+    min-height: 0;
+    border-radius: 18px 18px 0 0;
+  }
+}
+
+/* ============ Responsive hardening (mobile-first fixes) ============ */
+
+/* Global image guard: images never overflow their containers */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Flexbox truncation: flex children must be allowed to shrink,
+   otherwise long titles push buttons off-screen on narrow phones */
+.note-item-left,
+.docviewer-title,
+.aichat-bubble,
+.search-page-input,
+.header-search {
+  min-width: 0;
+}
+.note-item-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Prevent iOS Safari auto-zoom on input focus (needs >= 16px) */
+@media (max-width: 768px) {
+  .header-search-input,
+  .search-page-input input,
+  .aichat-input,
+  input[type="text"],
+  input[type="search"],
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* Safe-area padding for notched phones */
+.main-header,
+.aichat-popup {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+.aichat-popup {
+  padding-bottom: max(0px, env(safe-area-inset-bottom));
+}
+
+/* Tap targets: minimum 44px on touch devices */
+@media (max-width: 768px) {
+  .nav-btn,
+  .tab-btn,
+  .docviewer-btn,
+  .preview-btn,
+  .download-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  /* Chat quick-reply chips: wrap instead of overflowing */
+  .aichat-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  /* Search result rows: stack meta below title on narrow screens */
+  .search-result-meta {
+    flex-wrap: wrap;
+  }
+}

@@ -35,7 +35,7 @@ const PyqFinder = () => {
         <div style={{ width: '80px' }}></div>
         <h2 className="panel-title">
           <i className="fa-solid fa-file-lines" style={{ marginRight: '10px' }}></i>
-          PYQ Finder — Sem 3 CSE
+          PYQ Finder — B.Tech CSE · All Semesters
         </h2>
         <div style={{ width: '80px' }}></div>
       </div>

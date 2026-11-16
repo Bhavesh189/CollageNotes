@@ -5,6 +5,8 @@ import {
   getSubjectOptions,
   formatSize,
 } from '../lib/searchIndex';
+import DocViewer from '../components/DocViewer';
+import { ViewButton, DownloadButton, OpenButton } from '../components/NoteActions';
 
 // Dedicated universal-search results view.
 // Props: query (from header), onQueryChange, onClear (Escape / clear button).
@@ -13,6 +15,7 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
   const [subject, setSubject] = useState('all');
   const [type, setType] = useState('all');
   const [sort, setSort] = useState('relevance');
+  const [preview, setPreview] = useState(null); // { file, title }
 
   const semesterOptions = useMemo(() => getSemesterOptions(), []);
   const subjectOptions = useMemo(
@@ -127,15 +130,23 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
       {showResults && (
         <div className="notes-list-container">
           {results.length > 0 ? (
-            results.map((r, index) => (
-              <a
+            results.map((r, index) => {
+              const openView = () => {
+                if (r.isExternal) {
+                  window.open(r.file, '_blank', 'noopener,noreferrer');
+                } else {
+                  setPreview({ file: r.file, title: r.title });
+                }
+              };
+              return (
+              <div
                 key={r.id}
-                href={r.file}
-                download={!r.isExternal}
-                target={r.isExternal ? '_blank' : '_self'}
-                rel={r.isExternal ? 'noopener noreferrer' : ''}
                 className="note-item glass"
                 style={{ '--i': Math.min(index, 12) }}
+                onClick={openView}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openView(); } }}
               >
                 <div className="note-item-left">
                   <i className={`fa-solid ${r.type === 'pyq' ? 'fa-file-lines' : 'fa-file-pdf'} note-item-icon`}></i>
@@ -152,10 +163,18 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
                   </span>
                 </div>
                 <div className="note-item-right">
-                  <i className="fa-solid fa-arrow-down"></i>
+                  {r.isExternal ? (
+                    <OpenButton file={r.file} label={`Open ${r.title}`} />
+                  ) : (
+                    <>
+                      <ViewButton onClick={(e) => { e.stopPropagation(); openView(); }} label={`View ${r.title}`} />
+                      <DownloadButton file={r.file} label={`Download ${r.title}`} />
+                    </>
+                  )}
                 </div>
-              </a>
-            ))
+              </div>
+              );
+            })
           ) : (
             <div className="coming-soon-card glass" style={{ margin: '2rem auto' }}>
               <i className="fa-solid fa-magnifying-glass coming-soon-icon"></i>
@@ -167,6 +186,14 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
             </div>
           )}
         </div>
+      )}
+
+      {preview && (
+        <DocViewer
+          file={preview.file}
+          title={preview.title}
+          onClose={() => setPreview(null)}
+        />
       )}
     </div>
   );

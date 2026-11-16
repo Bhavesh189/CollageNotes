@@ -1,23 +1,33 @@
 :root {
-  --neon-purple: #ffffff;
-  --neon-cyan: #e2e8f0;
-  --neon-green: #ffffff;
-  --neon-yellow: #cccccc;
-  --neon-pink: #ffffff;
-  
-  --bg-dark: #000000;
-  --bg-card: rgba(255, 255, 255, 0.02);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-glow: rgba(255, 255, 255, 0.08);
-  
-  --text-primary: #ffffff;
-  --text-secondary: #a0aec0;
-  --text-muted: #4a5568;
-  
+  /* ---- Light green + warm skin/cream theme ---- */
+  --green: #1b7a43;
+  --green-dark: #14532d;
+  --green-soft: #7fb069;
+  --green-light: #e6f4ea;
+  --cream: #fbf7ef;
+  --cream-deep: #f3ecdd;
+  --skin: #f7ead9;
+  --card: #fffdf8;
+
+  /* Legacy accent names (kept for compatibility) — now the green family */
+  --neon-purple: #1b7a43;
+  --neon-cyan: #2e8b57;
+  --neon-green: #1b7a43;
+  --neon-yellow: #b7791f;
+  --neon-pink: #c05621;
+
+  --bg-dark: #fbf7ef;
+  --bg-card: #fffdf8;
+  --glass-border: rgba(45, 42, 38, 0.12);
+  --glass-glow: rgba(27, 122, 67, 0.10);
+
+  --text-primary: #2d2a26;
+  --text-secondary: #5c564e;
+  --text-muted: #8a8378;
+
   --font-main: 'Poppins', sans-serif;
   --font-display: 'Outfit', sans-serif;
-  
+
   --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast: all 0.2s ease;
 }
-

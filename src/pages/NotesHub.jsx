@@ -3,6 +3,9 @@ import { semestersData } from '../data/notesData';
 import { formatSize, fileSizes } from '../data/fileSizes';
 import LoginModal from '../components/LoginModal';
 import RecentlyAdded from '../components/RecentlyAdded';
+import DocViewer from '../components/DocViewer';
+import SyllabusCard from '../components/SyllabusCard';
+import { ViewButton, DownloadButton, OpenButton, ComingSoonButton } from '../components/NoteActions';
 
 // Count downloadable files in a subject (notes + subnotes, skip placeholders)
 const countNotes = (subject) =>
@@ -16,6 +19,7 @@ const NotesHub = ({ currentSem, onNavigate }) => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [pendingSubject, setPendingSubject] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [preview, setPreview] = useState(null); // { file, title }
 
   // Check login state on mount
   useEffect(() => {
@@ -86,43 +90,64 @@ const NotesHub = ({ currentSem, onNavigate }) => {
                         <span>{note.title}</span>
                       </div>
                       <div className="folder-notes-grid">
-                        {note.subnotes.map((sub, sIdx) => (
-                          <a
-                            key={sIdx}
-                            href={sub.file}
-                            download={!sub.isExternal}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="folder-note-link"
-                          >
-                            <span>{sub.title}</span>
-                            <span className="folder-note-meta">
-                              {fileSizes[sub.file] != null && <span className="file-size">{formatSize(fileSizes[sub.file])}</span>}
-                              <i className="fa-solid fa-download" style={{ color: 'var(--neon-cyan)' }}></i>
-                            </span>
-                          </a>
-                        ))}
+                        {note.subnotes.map((sub, sIdx) => {
+                          const openSub = () => {
+                            if (sub.isExternal) {
+                              window.open(sub.file, '_blank', 'noopener,noreferrer');
+                            } else {
+                              setPreview({ file: sub.file, title: sub.title });
+                            }
+                          };
+                          return (
+                            <div
+                              key={sIdx}
+                              className="folder-note-row"
+                              onClick={openSub}
+                              role="button"
+                              tabIndex={0}
+                              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openSub(); } }}
+                            >
+                              <span className="folder-note-title">{sub.title}</span>
+                              <span className="folder-note-meta">
+                                {fileSizes[sub.file] != null && <span className="file-size">{formatSize(fileSizes[sub.file])}</span>}
+                                {sub.isExternal ? (
+                                  <OpenButton file={sub.file} label={`Open ${sub.title}`} />
+                                ) : (
+                                  <>
+                                    <ViewButton onClick={(e) => { e.stopPropagation(); openSub(); }} label={`View ${sub.title}`} />
+                                    <DownloadButton file={sub.file} label={`Download ${sub.title}`} />
+                                  </>
+                                )}
+                              </span>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   );
                 }
 
-                // Normal Note Link
+                // Normal Note — explicit View + Download buttons (whole row opens View)
+                const openView = () => {
+                  if (note.isPlaceholder) {
+                    alert("Note has not been uploaded yet! Coming soon.");
+                    return;
+                  }
+                  if (note.isExternal) {
+                    window.open(note.file, '_blank', 'noopener,noreferrer');
+                    return;
+                  }
+                  if (note.file) setPreview({ file: note.file, title: note.title });
+                };
                 return (
-                  <a
+                  <div
                     key={index}
-                    href={note.file}
-                    download={!note.isExternal && !note.isPlaceholder}
-                    target={note.isExternal ? "_blank" : "_self"}
-                    rel={note.isExternal ? "noopener noreferrer" : ""}
                     className="note-item glass"
                     style={{ '--i': index }}
-                    onClick={(e) => {
-                      if (note.isPlaceholder) {
-                        e.preventDefault();
-                        alert("Note has not been uploaded yet! Coming soon.");
-                      }
-                    }}
+                    onClick={openView}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openView(); } }}
                   >
                     <div className="note-item-left">
                       <i className={`fa-solid ${note.file && note.file.endsWith('.docx') ? 'fa-file-word' : 'fa-file-pdf'} note-item-icon`}></i>
@@ -134,9 +159,18 @@ const NotesHub = ({ currentSem, onNavigate }) => {
                       </span>
                     </div>
                     <div className="note-item-right">
-                      <i className="fa-solid fa-arrow-down"></i>
+                      {note.isPlaceholder ? (
+                        <ComingSoonButton />
+                      ) : note.isExternal ? (
+                        <OpenButton file={note.file} label={`Open ${note.title}`} />
+                      ) : (
+                        <>
+                          <ViewButton onClick={(e) => { e.stopPropagation(); openView(); }} label={`View ${note.title}`} />
+                          <DownloadButton file={note.file} label={`Download ${note.title}`} />
+                        </>
+                      )}
                     </div>
-                  </a>
+                  </div>
                 );
               })
             ) : (
@@ -153,6 +187,7 @@ const NotesHub = ({ currentSem, onNavigate }) => {
         <div style={{ width: '100%' }}>
           {semData.subjects.length > 0 ? (
             <>
+              <SyllabusCard semId={currentSem} onPreview={setPreview} />
               <RecentlyAdded onOpenPyq={() => onNavigate && onNavigate('pyq')} />
               <div className="section-head">
                 <h2>{semData.name}</h2>
@@ -200,6 +235,15 @@ const NotesHub = ({ currentSem, onNavigate }) => {
         onClose={() => setIsLoginOpen(false)}
         onUnlock={handleUnlockSuccess}
       />
+
+      {/* In-browser document preview */}
+      {preview && (
+        <DocViewer
+          file={preview.file}
+          title={preview.title}
+          onClose={() => setPreview(null)}
+        />
+      )}
     </div>
   );
 };

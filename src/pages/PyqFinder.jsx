@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { pyqPapers } from '../data/pyqData';
 import DocViewer from '../components/DocViewer';
+import { ViewButton, DownloadButton } from '../components/NoteActions';
 
 const PyqFinder = () => {
   const [query, setQuery] = useState('');
@@ -75,20 +76,24 @@ const PyqFinder = () => {
           </select>
         </div>
         <p style={{ margin: '12px 0 0', color: 'var(--text-muted, #9aa0b4)', fontSize: '0.9rem' }}>
-          {results.length} paper{results.length === 1 ? '' : 's'} found — tap any card to download.
+          {results.length} paper{results.length === 1 ? '' : 's'} found — tap a card to view it, or use Download.
         </p>
       </div>
 
       {/* Results */}
       <div className="notes-list-container">
         {results.length > 0 ? (
-          results.map((p, index) => (
-            <a
+          results.map((p, index) => {
+            const openView = () => setPreview({ file: p.file, title: `${p.subject} — ${p.session}` });
+            return (
+            <div
               key={p.id}
-              href={p.file}
-              download
               className="note-item glass"
               style={{ '--i': index }}
+              onClick={openView}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openView(); } }}
             >
               <div className="note-item-left">
                 <i className="fa-solid fa-file-pdf note-item-icon"></i>
@@ -99,23 +104,12 @@ const PyqFinder = () => {
                 </span>
               </div>
               <div className="note-item-right">
-                <button
-                  type="button"
-                  className="preview-btn"
-                  title="Preview in browser"
-                  aria-label={`Preview ${p.subject} ${p.session}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    setPreview({ file: p.file, title: `${p.subject} — ${p.session}` });
-                  }}
-                >
-                  <i className="fa-solid fa-eye"></i>
-                </button>
-                <i className="fa-solid fa-arrow-down"></i>
+                <ViewButton onClick={(e) => { e.stopPropagation(); openView(); }} label={`View ${p.subject} ${p.session}`} />
+                <DownloadButton file={p.file} label={`Download ${p.subject} ${p.session}`} />
               </div>
-            </a>
-          ))
+            </div>
+            );
+          })
         ) : (
           <div className="coming-soon-card glass" style={{ margin: '2rem auto' }}>
             <i className="fa-solid fa-magnifying-glass coming-soon-icon"></i>

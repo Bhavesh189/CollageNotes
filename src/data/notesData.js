@@ -204,7 +204,7 @@ export const semestersData = {
       {
         id: 'mefa2',
         name: 'Managerial Economics and Financial Accounting',
-        image: '/mefa.jpg',
+        image: '/subjects/managerial-economics.jpg',
         colorClass: 'color-mefa',
         notes: [
           { title: 'Unit 1', file: '/notes/sem2/managerial-economics-and-financial-accounting/mefa-unit-1.pdf' },
@@ -288,9 +288,17 @@ export const semestersData = {
           { title: 'PYQ 2022', file: '/pyq/sem3/DSA-2022.pdf' },
           { title: 'PYQ Feb 2021', file: '/pyq/sem3/DSA-2021.pdf' },
           { title: 'PYQ Dec 2019', file: '/pyq/sem3/DSA-Dec-2019.pdf' },
+          { title: 'Prerequisite: Linked List', file: '/notes/sem3/data-structures-algorithms/dsa-prerequisite-linked-list.pdf' },
           { title: 'Unit 1', file: '/notes/sem3/data-structures-algorithms/dsa-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem3/data-structures-algorithms/dsa-unit-2.pdf' },
+          { title: 'Unit 2 (Part 1)', file: '/notes/sem3/data-structures-algorithms/dsa-unit-2-part-1.pdf' },
+          { title: 'Unit 2 (Part 2)', file: '/notes/sem3/data-structures-algorithms/dsa-unit-2-part-2.pdf' },
+          { title: 'Unit 2 (Part 3)', file: '/notes/sem3/data-structures-algorithms/dsa-unit-2-part-3.pdf' },
+          { title: 'Unit 2 (Complete) (Part 1)', file: '/notes/sem3/data-structures-algorithms/dsa-unit-2-complete-part-1.pdf' },
+          { title: 'Unit 2 (Complete) (Part 2)', file: '/notes/sem3/data-structures-algorithms/dsa-unit-2-complete-part-2.pdf' },
+          { title: 'Unit 2 (Complete) (Part 3)', file: '/notes/sem3/data-structures-algorithms/dsa-unit-2-complete-part-3.pdf' },
+          { title: 'Unit 2 (Complete) (Part 4)', file: '/notes/sem3/data-structures-algorithms/dsa-unit-2-complete-part-4.pdf' },
           { title: 'Unit 3', file: '/notes/sem3/data-structures-algorithms/dsa-unit-3.pdf' },
+          { title: 'Unit 3 (Complete)', file: '/notes/sem3/data-structures-algorithms/dsa-unit-3-complete.pdf' },
           { title: 'Unit 4', file: '/notes/sem3/data-structures-algorithms/dsa-unit-4.pdf' },
           { title: 'Unit 5', file: '/notes/sem3/data-structures-algorithms/dsa-unit-5.pdf' },
         ]
@@ -339,7 +347,7 @@ export const semestersData = {
       {
         id: 'linux_shell',
         name: 'Linux and Shell Programming',
-        image: '/com.jpg',
+        image: '/subjects/linux-shell-programming.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem3/linux-and-shell-programming/lsp-unit-1.pdf' },
@@ -355,7 +363,7 @@ export const semestersData = {
       {
         id: 'discrete_maths',
         name: 'Discrete Mathematics',
-        image: '/math.jpg',
+        image: '/subjects/discrete-mathematics.jpg',
         colorClass: 'color-maths',
         notes: [
           { title: 'Unit 1', file: '/notes/sem4/discrete-mathematics/dm-unit-1.pdf' },
@@ -368,7 +376,7 @@ export const semestersData = {
       {
         id: 'mpi',
         name: 'Microprocessor and Interfaces',
-        image: '/bee.jpg',
+        image: '/subjects/microprocessor-interfaces.jpg',
         colorClass: 'color-bee',
         notes: [
           { title: 'Unit 1', file: '/notes/sem4/microprocessor-and-interfaces/mpi-unit-1.pdf' },
@@ -381,7 +389,7 @@ export const semestersData = {
       {
         id: 'toc',
         name: 'Theory of Computation',
-        image: '/dsa.jpg',
+        image: '/subjects/theory-of-computation.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem4/theory-of-computation/toc-unit-1.pdf' },
@@ -394,7 +402,7 @@ export const semestersData = {
       {
         id: 'dbms',
         name: 'Database Management Systems',
-        image: '/com.jpg',
+        image: '/subjects/database-management-systems.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem4/database-management-systems/dbms-unit-1.pdf' },
@@ -407,7 +415,7 @@ export const semestersData = {
       {
         id: 'python_prog',
         name: 'Python Programming',
-        image: '/com.jpg',
+        image: '/subjects/python-programming.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem4/python-programming/py-unit-1.pdf' },
@@ -420,7 +428,7 @@ export const semestersData = {
       {
         id: 'java_prog',
         name: 'Java Programming',
-        image: '/com.jpg',
+        image: '/subjects/java-programming.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem4/java-programming/jav-unit-1.pdf' },
@@ -435,7 +443,7 @@ export const semestersData = {
       {
         id: 'os',
         name: 'Operating Systems',
-        image: '/com.jpg',
+        image: '/subjects/operating-systems.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem5/operating-systems/os-unit-1.pdf' },
@@ -448,7 +456,7 @@ export const semestersData = {
       {
         id: 'coa',
         name: 'Computer Org. & Architecture',
-        image: '/bee.jpg',
+        image: '/subjects/computer-architecture.jpg',
         colorClass: 'color-bee',
         notes: [
           { title: 'Unit 1', file: '/notes/sem5/computer-org-architecture/coa-unit-1.pdf' },
@@ -461,7 +469,7 @@ export const semestersData = {
       {
         id: 'cn',
         name: 'Computer Networks',
-        image: '/com.jpg',
+        image: '/subjects/computer-networks.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem5/computer-networks/cn-unit-1.pdf' },
@@ -474,7 +482,7 @@ export const semestersData = {
       {
         id: 'cc_devops',
         name: 'Cloud Computing & DevOps',
-        image: '/com.jpg',
+        image: '/subjects/cloud-computing-devops.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem5/cloud-computing-devops/cc-dev-unit-1.pdf' },
@@ -487,7 +495,7 @@ export const semestersData = {
       {
         id: 'ml',
         name: 'Machine Learning',
-        image: '/dsa.jpg',
+        image: '/subjects/machine-learning.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem5/machine-learning/ml-unit-1.pdf' },
@@ -500,7 +508,7 @@ export const semestersData = {
       {
         id: 'dmw',
         name: 'Data Mining & Warehousing',
-        image: '/com.jpg',
+        image: '/subjects/data-mining-warehousing.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem5/data-mining-warehousing/dmw-unit-1.pdf' },
@@ -513,7 +521,7 @@ export const semestersData = {
       {
         id: 'ds_systems',
         name: 'Distributed Systems',
-        image: '/com.jpg',
+        image: '/subjects/distributed-systems.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem5/distributed-systems/ds-unit-1.pdf' },
@@ -528,7 +536,7 @@ export const semestersData = {
       {
         id: 'cd',
         name: 'Compiler Design',
-        image: '/com.jpg',
+        image: '/subjects/compiler-design.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem6/compiler-design/cd-unit-1.pdf' },
@@ -541,7 +549,7 @@ export const semestersData = {
       {
         id: 'daa',
         name: 'Design and Analysis of Algorithms',
-        image: '/dsa.jpg',
+        image: '/subjects/design-analysis-algorithms.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem6/design-and-analysis-of-algorithms/daa-unit-1.pdf' },
@@ -554,7 +562,7 @@ export const semestersData = {
       {
         id: 'iss',
         name: 'Information Security Systems',
-        image: '/com.jpg',
+        image: '/subjects/information-security.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem6/information-security-systems/iss-unit-1.pdf' },
@@ -567,7 +575,7 @@ export const semestersData = {
       {
         id: 'dip',
         name: 'Digital Image Processing',
-        image: '/com.jpg',
+        image: '/subjects/digital-image-processing.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem6/digital-image-processing/dip-unit-1.pdf' },
@@ -580,7 +588,7 @@ export const semestersData = {
       {
         id: 'iot',
         name: 'Internet of Things',
-        image: '/bee.jpg',
+        image: '/subjects/internet-of-things.jpg',
         colorClass: 'color-bee',
         notes: [
           { title: 'Unit 1', file: '/notes/sem6/internet-of-things/iot-unit-1.pdf' },
@@ -593,7 +601,7 @@ export const semestersData = {
       {
         id: 'nlp',
         name: 'Natural Language Processing',
-        image: '/dsa.jpg',
+        image: '/subjects/natural-language-processing.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem6/natural-language-processing/nlp-unit-1.pdf' },
@@ -608,7 +616,7 @@ export const semestersData = {
       {
         id: 'dl',
         name: 'Deep Learning',
-        image: '/dsa.jpg',
+        image: '/subjects/deep-learning.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem7/deep-learning/dl-unit-1.pdf' },
@@ -621,7 +629,7 @@ export const semestersData = {
       {
         id: 'disaster_mgmt',
         name: 'Disaster Management',
-        image: '/bs.jpeg',
+        image: '/subjects/disaster-management.jpg',
         colorClass: 'color-mefa',
         notes: [
           { title: 'Unit 1', file: '/notes/sem7/disaster-management/dm-unit-1.pdf' },
@@ -634,7 +642,7 @@ export const semestersData = {
       {
         id: 'gen_ai',
         name: 'Generative AI',
-        image: '/dsa.jpg',
+        image: '/subjects/generative-ai.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 2', file: '/notes/sem7/generative-ai/gai-unit-2.pdf' },
@@ -647,7 +655,7 @@ export const semestersData = {
       {
         id: 'fhi',
         name: 'FHI Subject',
-        image: '/bs.jpeg',
+        image: '/subjects/human-interaction.jpg',
         colorClass: 'color-mefa',
         notes: [
           { title: 'Unit 1', file: '/notes/sem8/fhi-subject/fhi-unit-1.pdf' },

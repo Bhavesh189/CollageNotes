@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import './styles/App.css';
 import GlowBg from './components/GlowBg';
 import FloatingBot from './components/FloatingBot';
-import AdsBanner from './components/AdsBanner';
 import TabSelector from './components/TabSelector';
 import SearchBar from './components/SearchBar';
 import BackToTop from './components/BackToTop';
@@ -116,6 +115,14 @@ function App() {
           >
             <i className="fa-solid fa-circle-plus"></i> <span className="nav-label">Add Notes</span>
           </button>
+          <a
+            href="https://thebhavesh.online"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-btn"
+          >
+            <i className="fa-solid fa-user"></i> <span className="nav-label">Portfolio</span>
+          </a>
         </nav>
       </header>
 
@@ -127,7 +134,7 @@ function App() {
         </div>
         <div className="ticker-marquee">
           <div className="ticker-text">
-            🚀 Added New B.Tech Semester 2 Notes! Check them now. • 💻 Document Analyzer AI integration available on the floating widget. • 🎬 Finished studying? Stream movies for free on EnterNet below!
+            🚀 Added New B.Tech Semester 2 Notes! Check them now. • 💻 Document Analyzer AI integration available on the floating widget. • 📚 Every semester page now starts with its official BTU syllabus — View or Download it right there.
           </div>
         </div>
       </div>
@@ -163,8 +170,21 @@ function App() {
       {/* Back to top */}
       <BackToTop />
 
-      {/* Bottom Ads Banner */}
-      <AdsBanner />
+      {/* Footer */}
+      <footer className="site-footer">
+        <p>
+          <strong>Bhavesh Notes</strong> — B.Tech CSE notes, official syllabus &amp; PYQs, free for every student.
+        </p>
+        <p className="site-footer-links">
+          <a href="https://thebhavesh.online" target="_blank" rel="noopener noreferrer">
+            <i className="fa-solid fa-user"></i> Portfolio — thebhavesh.online
+          </a>
+          <span className="site-footer-sep">·</span>
+          <a href="https://bhavesh189.github.io/Result-Website/" target="_blank" rel="noopener noreferrer">
+            <i className="fa-solid fa-square-poll-vertical"></i> See Result
+          </a>
+        </p>
+      </footer>
     </div>
   );
 }

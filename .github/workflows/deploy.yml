@@ -34,7 +34,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22 # must satisfy package.json engines >=22 (vendored pdf.js 6.5.438 needs Node 22+ APIs; Node 20 fails npm ci on the engines pin and renders 0 pages)
           cache: npm
 
       - name: Install and build

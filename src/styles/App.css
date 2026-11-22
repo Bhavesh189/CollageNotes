@@ -2123,6 +2123,17 @@ img {
   border-color: var(--green-dark);
   transform: translateY(-1px);
 }
+/* PYQ / syllabus rows only — notes rows never render a Download button. */
+.action-download {
+  background: var(--bg-card);
+  border: 1px solid rgba(27, 122, 67, 0.45);
+  color: var(--green-dark);
+}
+.action-download:hover {
+  background: var(--green-light);
+  border-color: var(--green);
+  transform: translateY(-1px);
+}
 .action-disabled {
   background: rgba(45, 42, 38, 0.06);
   border: 1px solid var(--glass-border);
@@ -2362,6 +2373,7 @@ html { scroll-padding-top: 112px; }
 [data-theme="dark"] .docviewer-frame { background: #141a12; }
 [data-theme="dark"] .glow-orb { mix-blend-mode: screen; opacity: 0.22; }
 [data-theme="dark"] .glass { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45); }
+[data-theme="dark"] .action-download { background: var(--bg-card); }
 [data-theme="dark"] .syllabus-card { background: linear-gradient(135deg, var(--green-light), var(--bg-card) 65%); }
 
 /* --- Header: icon buttons, hamburger, nav badge, scrolled shadow --- */
@@ -2701,4 +2713,15 @@ html { scroll-padding-top: 112px; }
 .pdf-zoom-select:focus {
   border-color: var(--green);
   box-shadow: 0 0 0 2px rgba(27, 122, 67, 0.25);
+}
+
+/* PYQ / syllabus viewer: the text layer is ON, so text must be selectable
+   (the base .docviewer-body rule sets user-select:none for notes mode). */
+.docviewer-body--selectable {
+  -webkit-user-select: text;
+  user-select: text;
+}
+.docviewer-body--selectable .react-pdf__Page__text-layer {
+  -webkit-user-select: text;
+  user-select: text;
 }

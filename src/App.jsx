@@ -19,7 +19,7 @@ import { semestersData } from './data/notesData';
 const TICKER_ITEMS = [
   'Added New B.Tech Semester 2 Notes! Check them now.',
   'Document Analyzer AI integration available on the floating widget.',
-  'Every semester page now starts with its official BTU syllabus — View it right there.',
+  'Every semester page now starts with its official BTU syllabus — View or Download it right there.',
 ];
 
 const SEM_IDS = ['sem1', 'sem2', 'sem3', 'sem4', 'sem5', 'sem6', 'sem7', 'sem8'];

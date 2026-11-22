@@ -17,7 +17,18 @@ const isPdfFile = (file) => /\.pdf$/i.test(file || '');
 // PDFs render with pdf.js (react-pdf). .doc/.docx still go through the
 // Google Docs viewer embed (needs the absolute public URL).
 //
-// COPY PROTECTION, by design:
+// TWO MODES (PYQ exemption, 2026-11-22):
+//  - NOTES (allowDownload falsy — the default): image-only later (Step 2);
+//    here, the PDF renders with the copy protection below — no Download
+//    button, no text layer, watermark, copy blocked, screenshot deterrents.
+//  - PYQ / SYLLABUS (allowDownload true): the file is meant to be kept —
+//    Download button in the toolbar, text layer ON (selectable, as the old
+//    viewer had it), no watermark, no copy block, no blur deterrent.
+//    Blocking copy would be incoherent when the PDF itself downloads.
+//    The caller passes allowDownload (NotesHub notes = false;
+//    PyqFinder / syllabus = true; SearchResults / Bookmarks per item type).
+//
+// COPY PROTECTION (notes mode only), by design:
 //  - renderTextLayer={false} — no selectable text layer;
 //  - no file-save button anywhere (not in the header, not on errors);
 //  - user-select:none on the page area, context menu + copy/cut/save
@@ -33,14 +44,24 @@ const isPdfFile = (file) => /\.pdf$/i.test(file || '');
 //    in any UI copy.
 // Search works against the loaded PDF (pdf.getPage(i).getTextContent()) —
 // page-level matches, jump to a match's page. NO word-level highlight:
-// highlighting needs the text layer, which is off by design (trade-off).
+// highlighting needs the text layer, which is off in notes mode (trade-off).
 // `context` is optional metadata for analytics: { semester, source }.
+//
+// NEW (2026-11-22): RESUME READING — the last page read is remembered per
+// file (localStorage) and the viewer reopens there. ZOOM MEMORY — the
+// fit-width / zoom level is remembered across opens.
 const SEARCH_MIN_LEN = 2;
 const SEARCH_DEBOUNCE_MS = 300;
 const BLUR_MS_AFTER_PRINTSCREEN = 1500;
 const ZOOM_LEVELS = [0.6, 0.8, 1.0, 1.25, 1.5, 2.0];
 
-const DocViewer = ({ file, title, onClose, context }) => {
+const PAGE_KEY = (f) => `bn-viewer-page:${f}`;
+const ZOOM_KEY = 'bn-viewer-zoom';
+
+const DocViewer = ({ file, title, onClose, context, allowDownload }) => {
+  // PYQ / syllabus = downloadable (download button, text layer, no
+  // deterrents). Notes = protected. Default (no prop) = protected.
+  const downloadable = !!allowDownload;
   const [pdfDoc, setPdfDoc] = useState(null);
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -62,6 +83,8 @@ const DocViewer = ({ file, title, onClose, context }) => {
   const pageRef = useRef(1);
   const searchRunRef = useRef(0);
   const blurTimerRef = useRef(null);
+  // Resume-reading target, read on open and consumed once the PDF loads.
+  const resumePageRef = useRef(null);
 
   const totalMatches = useMemo(
     () => matches.reduce((sum, m) => sum + m.count, 0),
@@ -91,9 +114,11 @@ const DocViewer = ({ file, title, onClose, context }) => {
     return () => document.removeEventListener('fullscreenchange', onFs);
   }, []);
 
-  // Screenshot deterrent: blur the page the moment the window loses focus
-  // or the tab is hidden (app-switch / screen-share). Un-blur on return.
+  // Screenshot deterrent (NOTES MODE ONLY): blur the page the moment the
+  // window loses focus or the tab is hidden (app-switch / screen-share).
+  // Un-blur on return. Skipped entirely for downloadable files.
   useEffect(() => {
+    if (downloadable) return undefined;
     const onBlur = () => setBlurred(true);
     const onFocus = () => setBlurred(false);
     const onVis = () => setBlurred(document.hidden);
@@ -106,7 +131,7 @@ const DocViewer = ({ file, title, onClose, context }) => {
       document.removeEventListener('visibilitychange', onVis);
       if (blurTimerRef.current) clearTimeout(blurTimerRef.current);
     };
-  }, []);
+  }, [downloadable]);
 
   const toggleFullscreen = () => {
     const el = modalRef.current;
@@ -125,14 +150,21 @@ const DocViewer = ({ file, title, onClose, context }) => {
     pageRef.current = clamped;
     setPageNumber(clamped);
     setPageInput(String(clamped));
+    // Resume reading: remember the last page read for this file.
+    try {
+      localStorage.setItem(PAGE_KEY(file), String(clamped));
+    } catch {
+      // storage unavailable — reading still works
+    }
   };
   const goPrev = () => goToPage(pageRef.current - 1);
   const goNext = () => goToPage(pageRef.current + 1);
 
-  // Keyboard: Esc closes; Left/Right change page; PrintScreen is blocked
-  // (+ brief blur); Ctrl/Cmd+C, Ctrl/Cmd+X and Ctrl/Cmd+S are blocked —
-  // but never while the user is typing in an input, textarea, select or
-  // contentEditable. goToPage reads refs only, so this listener never goes stale.
+  // Keyboard: Esc closes; Left/Right change page; in NOTES MODE ONLY,
+  // PrintScreen is blocked (+ brief blur) and Ctrl/Cmd+C, Ctrl/Cmd+X and
+  // Ctrl/Cmd+S are blocked — but never while the user is typing in an
+  // input, textarea, select or contentEditable. goToPage reads refs only,
+  // so this listener never goes stale.
   useEffect(() => {
     const isTyping = (target) => {
       const tag = (target.tagName || '').toLowerCase();
@@ -149,7 +181,7 @@ const DocViewer = ({ file, title, onClose, context }) => {
         onClose();
         return;
       }
-      if (e.key === 'PrintScreen') {
+      if (!downloadable && e.key === 'PrintScreen') {
         // Best effort only — the OS may still capture. Blur briefly so a
         // capture taken at this instant gets a blurred page.
         e.preventDefault();
@@ -159,7 +191,7 @@ const DocViewer = ({ file, title, onClose, context }) => {
         return;
       }
       if (isTyping(e.target)) return;
-      if ((e.ctrlKey || e.metaKey) && ['c', 'x', 's'].includes(e.key.toLowerCase())) {
+      if (!downloadable && (e.ctrlKey || e.metaKey) && ['c', 'x', 's'].includes(e.key.toLowerCase())) {
         e.preventDefault();
         return;
       }
@@ -179,11 +211,22 @@ const DocViewer = ({ file, title, onClose, context }) => {
       document.body.style.overflow = prev;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onClose]);
+  }, [onClose, downloadable]);
+
+  // Zoom memory: remember fit-width / zoom level across opens.
+  useEffect(() => {
+    try {
+      localStorage.setItem(ZOOM_KEY, JSON.stringify({ scale, fitWidth }));
+    } catch {
+      // storage unavailable — reading still works
+    }
+  }, [scale, fitWidth]);
 
   // Reset whenever a different file is opened, and report the open to GA4
   // (which notes actually get read — the metric that matters most).
   // Fires once per open; no-op when analytics is off.
+  // Also restores the resume page (if the user read past page 1 before)
+  // and the remembered zoom — both applied once the PDF loads.
   useEffect(() => {
     setPdfDoc(null);
     setNumPages(null);
@@ -198,6 +241,24 @@ const DocViewer = ({ file, title, onClose, context }) => {
     setSearching(false);
     pageRef.current = 1;
     numPagesRef.current = null;
+    resumePageRef.current = null;
+    try {
+      const p = parseInt(localStorage.getItem(PAGE_KEY(file)) || '', 10);
+      if (Number.isFinite(p) && p > 1) resumePageRef.current = p;
+    } catch {
+      // no stored page — start at 1
+    }
+    try {
+      const z = JSON.parse(localStorage.getItem(ZOOM_KEY) || 'null');
+      if (z && typeof z.scale === 'number' && ZOOM_LEVELS.includes(z.scale)) {
+        setScale(z.scale);
+        setFitWidth(false);
+      } else if (z && z.fitWidth) {
+        setFitWidth(true);
+      }
+    } catch {
+      // no stored zoom — defaults stand
+    }
     trackEvent('view_pdf', {
       file_title: title || file,
       semester: context && context.semester,
@@ -297,15 +358,16 @@ const DocViewer = ({ file, title, onClose, context }) => {
     goToPage(matches[next].page);
   };
 
-  // Copy protection on the modal itself: block the context menu and the
-  // copy/cut events (except inside inputs, where copy/paste stays usable).
+  // Copy protection on the modal itself (NOTES MODE ONLY): block the
+  // context menu and the copy/cut events (except inside inputs, where
+  // copy/paste stays usable). Downloadable files keep the browser default.
   const isTypingTarget = (target) => {
     if (!target || !target.tagName) return false;
     const tag = target.tagName.toLowerCase();
     return tag === 'input' || tag === 'textarea' || tag === 'select' || target.isContentEditable;
   };
   const blockIfNotTyping = (e) => {
-    if (!isTypingTarget(e.target)) e.preventDefault();
+    if (!downloadable && !isTypingTarget(e.target)) e.preventDefault();
   };
 
   const matchPagesText =
@@ -404,8 +466,8 @@ const DocViewer = ({ file, title, onClose, context }) => {
                   // frame before the debounced search runs.
                   setSearching(true);
                 }}
-                placeholder="Search in this note…"
-                aria-label="Search in this note"
+                placeholder={downloadable ? 'Search in this paper…' : 'Search in this note…'}
+                aria-label={downloadable ? 'Search in this paper' : 'Search in this note'}
               />
               {searching ? (
                 <span className="pdf-match-label">Searching…</span>
@@ -498,19 +560,39 @@ const DocViewer = ({ file, title, onClose, context }) => {
                 <i className={isFullscreen ? 'fa-solid fa-minimize' : 'fa-solid fa-maximize'}></i>
                 <span>{isFullscreen ? 'Exit' : 'Full'}</span>
               </button>
+              {downloadable && (
+                <a
+                  className="pdf-nav-btn pdf-fit-btn pdf-download-btn"
+                  href={file}
+                  download
+                  title="Download this file"
+                  aria-label="Download this file"
+                >
+                  <i className="fa-solid fa-download"></i>
+                  <span>Download</span>
+                </a>
+              )}
             </div>
           </div>
         )}
 
-        <div className="docviewer-body" ref={pageWrapRef}>
+        <div className={`docviewer-body${downloadable ? ' docviewer-body--selectable' : ''}`} ref={pageWrapRef}>
           {showPdf ? (
-            <div className={`pdf-page-wrap${blurred ? ' img-blurred' : ''}`}>
+            <div className={`pdf-page-wrap${blurred && !downloadable ? ' img-blurred' : ''}`}>
               <Document
                 file={file}
                 onLoadSuccess={(pdf) => {
                   setPdfDoc(pdf);
                   setNumPages(pdf.numPages);
                   setLoadError(false);
+                  // Keep the ref in sync immediately (state lags a render).
+                  numPagesRef.current = pdf.numPages;
+                  // Resume reading: jump to the last page read, if any.
+                  if (resumePageRef.current) {
+                    const p = Math.min(resumePageRef.current, pdf.numPages);
+                    resumePageRef.current = null;
+                    if (p > 1) goToPage(p);
+                  }
                 }}
                 onLoadError={() => {
                   setPdfDoc(null);
@@ -527,21 +609,26 @@ const DocViewer = ({ file, title, onClose, context }) => {
                       : undefined
                   }
                   scale={containerWidth ? undefined : scale}
-                  renderTextLayer={false}
-                  renderAnnotationLayer={false}
+                  // Notes: text layer OFF (no selectable text). PYQ/syllabus:
+                  // text layer ON, as the old viewer had it — the file is
+                  // downloadable anyway, so selecting text here is coherent.
+                  renderTextLayer={downloadable}
+                  renderAnnotationLayer={downloadable}
                 />
               </Document>
-              {blurred && (
+              {blurred && !downloadable && (
                 <div className="img-pause-overlay" aria-hidden="true">
                   <span>Preview paused — switch back to this tab to continue reading.</span>
                 </div>
               )}
-              <div className="pdf-watermark" aria-hidden="true">
-                <span>thebhavesh.online</span>
-                <span>thebhavesh.online</span>
-                <span>thebhavesh.online</span>
-                <span>thebhavesh.online</span>
-              </div>
+              {!downloadable && (
+                <div className="pdf-watermark" aria-hidden="true">
+                  <span>thebhavesh.online</span>
+                  <span>thebhavesh.online</span>
+                  <span>thebhavesh.online</span>
+                  <span>thebhavesh.online</span>
+                </div>
+              )}
             </div>
           ) : loadError ? (
             <div className="pdf-error-wrap">

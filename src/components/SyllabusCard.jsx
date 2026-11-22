@@ -1,11 +1,12 @@
 import React from 'react';
 import { syllabusData } from '../data/syllabusData';
 import { formatSize, fileSizes } from '../data/fileSizes';
-import { ViewButton } from './NoteActions';
+import { ViewButton, DownloadButton } from './NoteActions';
 
 // The syllabus card — always the FIRST thing on a semester page.
-// Available semesters get View (in-page); the rest get an honest
+// Available semesters get View (in-page) + Download; the rest get an honest
 // "coming soon" card until the official document is added.
+// Syllabus is downloadable like PYQ (PYQ exemption, 2026-11-22).
 const SyllabusCard = ({ semId, onPreview }) => {
   const data = syllabusData[semId];
   if (!data) return null;
@@ -51,9 +52,10 @@ const SyllabusCard = ({ semId, onPreview }) => {
       </div>
       <div className="syllabus-actions">
         <ViewButton
-          onClick={() => onPreview && onPreview({ file: data.file, title: data.title })}
+          onClick={() => onPreview && onPreview({ file: data.file, title: data.title, allowDownload: true })}
           label={`View ${data.title}`}
         />
+        <DownloadButton file={data.file} label={`Download ${data.title}`} />
       </div>
     </div>
   );

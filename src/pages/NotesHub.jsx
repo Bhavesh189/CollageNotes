@@ -326,12 +326,14 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
         onUnlock={handleUnlockSuccess}
       />
 
-      {/* In-browser document preview */}
+      {/* In-browser document preview — notes are protected (no download);
+          the syllabus preview passes allowDownload: true via onPreview. */}
       {preview && (
         <DocViewer
           file={preview.file}
           title={preview.title}
           context={preview.context}
+          allowDownload={preview.allowDownload}
           onClose={() => setPreview(null)}
         />
       )}

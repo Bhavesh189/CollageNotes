@@ -6,7 +6,7 @@ import {
   formatSize,
 } from '../lib/searchIndex';
 import DocViewer from '../components/DocViewer';
-import { ViewButton, OpenButton, BookmarkButton } from '../components/NoteActions';
+import { ViewButton, DownloadButton, OpenButton, BookmarkButton } from '../components/NoteActions';
 import { isBookmarked, toggleBookmark } from '../lib/bookmarks';
 
 // Dedicated universal-search results view.
@@ -137,7 +137,7 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
                 if (r.isExternal) {
                   window.open(r.file, '_blank', 'noopener,noreferrer');
                 } else {
-                  setPreview({ file: r.file, title: r.title, context: { semester: r.semesterName, source: r.type || 'search' } });
+                  setPreview({ file: r.file, title: r.title, context: { semester: r.semesterName, source: r.type || 'search' }, allowDownload: r.type === 'pyq' });
                 }
               };
               return (
@@ -177,6 +177,7 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
                   ) : (
                     <>
                       <ViewButton onClick={(e) => { e.stopPropagation(); openView(); }} label={`View ${r.title}`} />
+                      {r.type === 'pyq' && <DownloadButton file={r.file} label={`Download ${r.title}`} />}
                     </>
                   )}
                 </div>
@@ -201,6 +202,7 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
           file={preview.file}
           title={preview.title}
           context={preview.context}
+          allowDownload={preview.allowDownload}
           onClose={() => setPreview(null)}
         />
       )}

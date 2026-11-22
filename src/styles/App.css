@@ -356,13 +356,14 @@ body {
 /* Semester Picker Custom Tabs */
 .tabs-container {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   margin-bottom: 2.5rem;
   width: 100%;
 }
 
 .tab-box {
   display: flex;
+  margin: 0 auto; /* centers when content fits; left-anchors when it overflows */
   padding: 6px;
   border-radius: 24px;
   position: relative;
@@ -389,6 +390,7 @@ body {
   font-size: 0.9rem;
   transition: var(--transition-fast);
   white-space: nowrap;
+  flex-shrink: 0; /* scroll containers let flex items shrink below content width — never shrink a tab, let the row scroll instead */
   position: relative;
   z-index: 2;
 }
@@ -1351,6 +1353,7 @@ body {
   padding: 4px 12px;
   border-radius: 20px;
   white-space: nowrap;
+  flex-shrink: 0; /* never squeeze the count badge — the row wraps instead */
 }
 
 /* --- Note count badge on subject cards --- */
@@ -1612,6 +1615,17 @@ body {
   }
   .panel-title {
     font-size: 1.3rem;
+  }
+  /* Section head stacks on very small screens: heading + count badge both
+     fully visible, badge left-aligned clear of the floating assistant button */
+  .section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .section-count {
+    font-size: 0.78rem;
+    padding: 3px 10px;
   }
   .subject-panel-header {
     flex-wrap: wrap;

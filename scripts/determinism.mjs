@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import crypto from 'node:crypto';
-import * as pdfjs from 'pdfjs-dist/legacy/build/pdf.mjs';
+import * as pdfjs from './vendor/pdfjs-dist-6.5.438/legacy/build/pdf.mjs'; // vendored 6.5.438 — npm 4.8.69 segfaults in Node render (see vendor README)
 import { createCanvas } from '@napi-rs/canvas';
 const FILE='/home/hatch/workspace/collagenotes-work/CollageNotes/public/notes/sem2/engineering-mathematics-2/em2-unit-5.pdf';
 async function once() {

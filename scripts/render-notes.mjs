@@ -66,11 +66,15 @@ function walk(dir, out = []) {
 
 // ---------------- worker: renders ONE document ----------------
 async function renderDoc({ rel, srcPath, outDir }) {
-  const pdfjs = await import('pdfjs-dist/legacy/build/pdf.mjs');
+  // pdf.js 6.5.438, VENDORED (scripts/vendor/pdfjs-dist-6.5.438/): the
+  // npm-installed pdfjs-dist 4.8.69 (pinned for react-pdf 9.2.1) SEGFAULTS
+  // inside page.render() in Node — see the vendor README. Do not point
+  // this import back at 'pdfjs-dist'.
+  const pdfjs = await import('./vendor/pdfjs-dist-6.5.438/legacy/build/pdf.mjs');
   const { createCanvas } = await import('@napi-rs/canvas');
   const { pathToFileURL } = await import('node:url');
   const stdFonts =
-    pathToFileURL(path.join(ROOT, 'node_modules', 'pdfjs-dist', 'standard_fonts')).href + '/';
+    pathToFileURL(path.join(ROOT, 'scripts', 'vendor', 'pdfjs-dist-6.5.438', 'standard_fonts')).href + '/';
   const data = new Uint8Array(fs.readFileSync(srcPath));
   const doc = await pdfjs
     .getDocument({ data, useSystemFonts: false, standardFontDataUrl: stdFonts })

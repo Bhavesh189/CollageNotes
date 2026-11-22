@@ -5,7 +5,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import * as pdfjs from 'pdfjs-dist/legacy/build/pdf.mjs';
+import * as pdfjs from './vendor/pdfjs-dist-6.5.438/legacy/build/pdf.mjs'; // vendored 6.5.438 — npm 4.8.69 segfaults in Node render (see vendor README)
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..', 'public');

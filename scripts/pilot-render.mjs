@@ -4,13 +4,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import * as pdfjs from 'pdfjs-dist/legacy/build/pdf.mjs';
+import * as pdfjs from './vendor/pdfjs-dist-6.5.438/legacy/build/pdf.mjs'; // vendored 6.5.438 — npm 4.8.69 segfaults in Node render (see vendor README)
 import { createCanvas } from '@napi-rs/canvas';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUT = path.join(__dirname, '..', '..', 'pilot');
 fs.mkdirSync(OUT, { recursive: true });
-const STD_FONTS = pathToFileURL(path.join(__dirname, '..', 'node_modules', 'pdfjs-dist', 'standard_fonts')).href + '/';
+const STD_FONTS = pathToFileURL(path.join(__dirname, 'vendor', 'pdfjs-dist-6.5.438', 'standard_fonts')).href + '/';
 
 const SAMPLES = [
   ['notes/sem2/engineering-mathematics-2/em2-unit-5.pdf', 1, 'em2-p1-text'],

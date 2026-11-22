@@ -15,6 +15,7 @@ import MyStudy from './pages/MyStudy';
 import { getBookmarks } from './lib/bookmarks';
 import { getSettings } from './lib/study';
 import { trackPageView } from './lib/analytics';
+import { prefetchViewerManifest } from './components/DocViewer';
 import { pyqSubjectsFor } from './lib/subjectPyq';
 import { semestersData } from './data/notesData';
 
@@ -58,6 +59,19 @@ function App() {
   const searchInputRef = useRef(null);
   const headerRef = useRef(null);
   const prevViewRef = useRef('notes');
+
+  // Warm the viewer manifest on idle so the first note opens instantly:
+  // the manifest (file -> page-image dir) is fetched once per page load,
+  // and a viewer open later finds it already cached instead of paying a
+  // round-trip before the first page image can even be requested.
+  useEffect(() => {
+    if (typeof window.requestIdleCallback === 'function') {
+      const id = window.requestIdleCallback(() => prefetchViewerManifest(), { timeout: 3000 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const t = setTimeout(() => prefetchViewerManifest(), 1500);
+    return () => clearTimeout(t);
+  }, []);
 
   // Apply theme to <html> + persist it
   useEffect(() => {

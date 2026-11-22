@@ -2906,3 +2906,195 @@ html[data-high-contrast="true"] .glass { border-width: 2px; }
 
 /* Chatbot credit — small, humble (2026-11-22): no shouty chip, just a line. */
 .aichat-credit { font-size: 0.72rem; color: var(--text-muted); text-align: center; padding: 6px 12px 10px; }
+/* ---- Image viewer (DocViewer.jsx): toolbar groups, watermark, blur ---- */
+.pdf-tool-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.pdf-search-group {
+  flex: 1 1 200px;
+}
+.pdf-page-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.pdf-page-jump-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+.pdf-page-input {
+  width: 58px;
+  height: 38px;
+  padding: 0 6px;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  outline: none;
+}
+.pdf-page-input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 2px rgba(27, 122, 67, 0.25);
+}
+.pdf-page-input:disabled {
+  opacity: 0.4;
+}
+.pdf-search-input {
+  flex: 1 1 120px;
+  min-width: 0;
+  height: 38px;
+  padding: 0 10px;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  outline: none;
+}
+.pdf-search-input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 2px rgba(27, 122, 67, 0.25);
+}
+.pdf-match-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+.pdf-fit-btn {
+  width: auto;
+  min-width: 38px;
+  padding: 0 10px;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+/* No selectable text anywhere in the page area. Toolbar inputs unaffected. */
+.docviewer-body,
+.docviewer-title {
+  -webkit-user-select: none;
+  user-select: none;
+}
+.pdf-page-wrap {
+  position: relative;
+}
+/* The rendered page image — never draggable, no long-press callout. */
+.img-page {
+  display: block;
+  height: auto;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-user-drag: none;
+}
+/* Page-shaped skeleton — holds the page's place while its image is
+   genuinely not ready yet, so the viewer never shows a blank wait.
+   --overlay covers the page area (the wrap reserves A4 height while
+   loading); --standalone is used before the first page is known. The
+   shimmer is a light gradient sweep, disabled for reduced-motion users. */
+.pdf-page-wrap--loading {
+  aspect-ratio: 1 / 1.414;
+}
+.pdf-skeleton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(100deg, #efe9dc 40%, #f8f3e9 50%, #efe9dc 60%);
+  background-size: 200% 100%;
+  animation: pdf-shimmer 1.4s linear infinite;
+  color: #6b7280;
+  font-weight: 600;
+  border-radius: 4px;
+}
+.pdf-skeleton--overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+.pdf-skeleton--standalone {
+  width: 100%;
+  aspect-ratio: 1 / 1.414;
+}
+@keyframes pdf-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pdf-skeleton {
+    animation: none;
+  }
+}
+/* Screenshot deterrent: heavy blur while the window/tab is in the
+   background (or briefly after PrintScreen). See DocViewer.jsx — this
+   stops casual copying; OS-level capture cannot be blocked by any site. */
+.img-blurred {
+  filter: blur(18px) saturate(0.8);
+}
+.img-pause-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1rem;
+  z-index: 4;
+  pointer-events: none;
+}
+/* Diagonal watermark over every page image. pointer-events:none so it never
+   blocks clicks or scrolling; it scrolls with the page. */
+.pdf-watermark {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  z-index: 3;
+}
+.pdf-watermark span {
+  display: block;
+  white-space: nowrap;
+  font-size: clamp(20px, 4vw, 34px);
+  font-weight: 700;
+  color: rgba(27, 122, 67, 0.1);
+  transform: rotate(-28deg) scale(1.4);
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* Fullscreen viewer fills the screen. */
+.docviewer-modal:fullscreen {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  border-radius: 0;
+}
+/* Narrow phones: search takes its own row so nothing clips. */
+@media (max-width: 480px) {
+  .pdf-toolbar {
+    gap: 6px;
+    padding: 8px 10px;
+  }
+  .pdf-search-group {
+    flex-basis: 100%;
+    order: 3;
+  }
+  .pdf-page-input,
+  .pdf-search-input {
+    font-size: 16px; /* no iOS auto-zoom on focus */
+  }
+}

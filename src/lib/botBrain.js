@@ -224,7 +224,7 @@ function answerFindPyq(entities) {
 }
 
 const HELP_TEXT =
-  'I can find study material for you. Try:\n• “aem chapter 1 sem 3”\n• “dsa unit 3 sem 4”\n• “pyq 2024” or “previous year papers”\n• “who created you?”';
+  'I can find study material and explain topics from your notes. Try:\n• “aem chapter 1 sem 3”\n• “dsa unit 3 sem 4”\n• “pyq 2024” or “previous year papers”\n• “what is the Carnot cycle?” — I quote the exact page it comes from';
 
 export function getBotReply(rawText) {
   const text = norm(rawText).trim();
@@ -235,14 +235,14 @@ export function getBotReply(rawText) {
 
   switch (intent) {
     case 'founder':
-      return { reply: 'I was created by **Bhavesh Sharma**.', results: [] };
+      return { reply: 'Bhavesh Sharma made this site — and me. I am just here to help you find your notes.', results: [] };
     case 'greeting':
       return {
-        reply: 'Hey! 👋 Ask me for notes like “aem chapter 1 sem 3” or papers like “pyq 2024”.',
+        reply: 'Hey! Ask me for notes like “aem chapter 1 sem 3”, papers like “pyq 2024”, or a topic like “what is the Carnot cycle?” — I answer from the notes themselves.',
         results: [],
       };
     case 'thanks':
-      return { reply: "You're welcome! Good luck with your studies. 📚", results: [] };
+      return { reply: "You're welcome! Good luck with your studies.", results: [] };
     case 'help':
       return { reply: HELP_TEXT, results: [] };
     case 'find_pyq':

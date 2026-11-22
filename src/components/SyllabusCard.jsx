@@ -55,7 +55,7 @@ const SyllabusCard = ({ semId, onPreview }) => {
           onClick={() => onPreview && onPreview({ file: data.file, title: data.title, allowDownload: true })}
           label={`View ${data.title}`}
         />
-        <DownloadButton file={data.file} label={`Download ${data.title}`} />
+        <DownloadButton file={data.file} label={`Download ${data.title}`} kind="syllabus" />
       </div>
     </div>
   );

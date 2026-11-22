@@ -3,6 +3,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import { trackEvent } from '../lib/analytics';
+import { recordPageView, recordSession } from '../lib/study';
 
 // pdf.js worker bundled by Vite (pdfjs-dist ships the .mjs worker).
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -156,6 +157,15 @@ const DocViewer = ({ file, title, onClose, context, allowDownload }) => {
     } catch {
       // storage unavailable — reading still works
     }
+    // Study progress: this page counts as read (feeds My Study, streaks,
+    // continue-reading and per-subject bars). Metadata only — no file.
+    recordPageView(file, clamped, {
+      title,
+      subject: context && context.semester,
+      sem: context && context.semId,
+      type: context && context.source === 'pyq' ? 'pyq' : 'note',
+      total,
+    });
   };
   const goPrev = () => goToPage(pageRef.current - 1);
   const goNext = () => goToPage(pageRef.current + 1);
@@ -221,6 +231,17 @@ const DocViewer = ({ file, title, onClose, context, allowDownload }) => {
       // storage unavailable — reading still works
     }
   }, [scale, fitWidth]);
+
+  // Reading session: log elapsed minutes when this file's view ends
+  // (close or a different file opened) — feeds the streak + stats.
+  const sessionStartRef = useRef(Date.now());
+  useEffect(() => {
+    sessionStartRef.current = Date.now();
+    return () => {
+      recordSession(file, (Date.now() - sessionStartRef.current) / 1000, { title });
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [file]);
 
   // Reset whenever a different file is opened, and report the open to GA4
   // (which notes actually get read — the metric that matters most).

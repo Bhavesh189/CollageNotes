@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { getBotReply } from '../lib/botBrain';
+import { getBotReply, extractEntities, classifyIntent } from '../lib/botBrain';
+import { answerFromNotes, isTopicQuestion, tokenize } from '../lib/notesRag';
 
-const QUICK_REPLIES = ['Find DSA notes', 'PYQ 2024', 'Who created you?'];
+// No "Who created you?" chip — the answer is correct when asked, but it is
+// not advertised (humble credit lives in the footer line below instead).
+const QUICK_REPLIES = ['Find DSA notes', 'PYQ 2024', 'What can you do?'];
 
 // Renders **bold** spans in bot text (founder answer uses markdown-ish bold)
 function renderRich(text) {
@@ -15,7 +18,7 @@ const AiChat = ({ onPreview }) => {
   const [messages, setMessages] = useState([
     {
       from: 'bot',
-      text: 'Hi! I can find notes and PYQ papers for you. Try “aem chapter 1 sem 3”.',
+      text: 'Hi! I find notes and PYQ papers — and I can explain a topic from the notes themselves. Try “what is the Carnot cycle?” or “dsa unit 2 sem 4”.',
       results: [],
     },
   ]);
@@ -36,10 +39,40 @@ const AiChat = ({ onPreview }) => {
     setMessages((m) => [...m, { from: 'user', text, results: [] }]);
     setInput('');
     setTyping(true);
-    timerRef.current = setTimeout(() => {
-      const { reply, results } = getBotReply(text);
+    // Grounded answers: topic questions are answered from the notes' own
+    // text (notesRag). Everything else uses the title-based brain. The
+    // reply is never invented — a miss says so honestly.
+    timerRef.current = setTimeout(async () => {
+      let reply;
+      let results = [];
+      const intent = classifyIntent(text);
+      if (isTopicQuestion(text) && intent !== 'founder' && intent !== 'greeting' && intent !== 'thanks') {
+        const topic = text
+          .replace(/^(what is|what are|what does|explain|define|meaning of|how does|how do|why|tell me about)\s+/i, '')
+          .replace(/\?+$/, '').trim();
+        const rag = await answerFromNotes(text);
+        if (rag.status === 'ok') {
+          const lines = rag.hits.map(
+            (h) => `**${h.title} — page ${h.page}:**\n${h.excerpt}`,
+          );
+          reply = `Here's what your notes say about **${topic || text}**:\n\n${lines.join('\n\n')}\n\nTap a note below to open that page.`;
+          results = rag.hits.map((h) => ({ ...h, page: h.page }));
+        } else if (rag.status === 'no-index') {
+          reply = 'The notes are still being converted into a searchable index, so I can only find notes by title right now — try “dsa unit 3 sem 4”. Topic answers switch on automatically once the conversion finishes.';
+          results = (rag.candidates || []).slice(0, 3);
+        } else {
+          const entities = extractEntities(text);
+          const subject = entities.subject ? ` on **${entities.subject}**` : '';
+          reply = `I searched your notes${subject} and couldn't find anything about “${topic || text}”. The notes may not cover it yet — try rephrasing, or open the closest notes below.`;
+          results = (rag.candidates || []).slice(0, 3);
+        }
+      } else {
+        const out = getBotReply(text);
+        reply = out.reply;
+        results = out.results || [];
+      }
       setTyping(false);
-      setMessages((m) => [...m, { from: 'bot', text: reply, results: results || [] }]);
+      setMessages((m) => [...m, { from: 'bot', text: reply, results }]);
     }, 650);
   };
 
@@ -62,14 +95,14 @@ const AiChat = ({ onPreview }) => {
                       key={ri}
                       type="button"
                       className="aichat-result"
-                      onClick={() => onPreview && onPreview(r.file, `${r.title} — ${r.subject}`)}
+                      onClick={() => onPreview && onPreview(r.file, `${r.title} — ${r.subject}`, r.page, r.type)}
                     >
                       <span className={`result-badge ${r.type === 'pyq' ? 'badge-pyq' : 'badge-note'}`}>
                         {r.type === 'pyq' ? 'PYQ' : 'Note'}
                       </span>
                       <span className="aichat-result-text">
                         <strong>{r.title}</strong>
-                        <small>{r.semesterName} · {r.subject}</small>
+                        <small>{r.semesterName} · {r.subject}{r.page ? ` · page ${r.page}` : ''}</small>
                       </span>
                       <i className="fa-solid fa-eye"></i>
                     </button>
@@ -102,7 +135,7 @@ const AiChat = ({ onPreview }) => {
           className="form-input aichat-input"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask for notes… e.g. dsa unit 2 sem 4"
+          placeholder="Ask for notes… e.g. what is the Carnot cycle?"
           aria-label="Chat message"
           autoComplete="off"
         />
@@ -110,6 +143,7 @@ const AiChat = ({ onPreview }) => {
           <i className="fa-solid fa-paper-plane"></i>
         </button>
       </form>
+      <p className="aichat-credit">Answers come from your notes — quoted with the page they are on. Made by Bhavesh Sharma.</p>
     </div>
   );
 };

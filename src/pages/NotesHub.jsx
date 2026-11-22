@@ -32,6 +32,25 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
     setIsAuthenticated(logged);
   }, []);
 
+  // Open a note from elsewhere (My Study, chatbot): { file, title, context }
+  // dispatched as 'bn-open-note' after navigating to the notes view.
+  useEffect(() => {
+    const onOpen = (e) => {
+      const d = (e && e.detail) || {};
+      if (!d.file) return;
+      const source = (d.context && d.context.source) || 'notes';
+      setPreview({
+        file: d.file,
+        title: d.title || d.file,
+        context: d.context || { semester: semData.name, source },
+        allowDownload: source === 'pyq' || source === 'syllabus',
+      });
+    };
+    window.addEventListener('bn-open-note', onOpen);
+    return () => window.removeEventListener('bn-open-note', onOpen);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Reset selected subject + grid controls when semester changes
   useEffect(() => {
     setSelectedSubject(null);
@@ -126,7 +145,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
                             if (sub.isExternal) {
                               window.open(sub.file, '_blank', 'noopener,noreferrer');
                             } else {
-                              setPreview({ file: sub.file, title: sub.title, context: { semester: semData.name, source: 'notes' } });
+                              setPreview({ file: sub.file, title: sub.title, context: { semester: semData.name, semId: currentSem, source: 'notes' } });
                             }
                           };
                           const bmId = `note:${currentSem}:${selectedSubject.id}:${index}:${sIdx}`;
@@ -170,7 +189,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
                     window.open(note.file, '_blank', 'noopener,noreferrer');
                     return;
                   }
-                  if (note.file) setPreview({ file: note.file, title: note.title, context: { semester: semData.name, source: 'notes' } });
+                  if (note.file) setPreview({ file: note.file, title: note.title, context: { semester: semData.name, semId: currentSem, source: 'notes' } });
                 };
                 const bmId = `note:${currentSem}:${selectedSubject.id}:${index}`;
                 const bmItem = { id: bmId, type: 'note', title: note.title, file: note.file, subject: selectedSubject.name, semesterName: semData.name, isExternal: !!note.isExternal };

@@ -26,8 +26,13 @@ const FloatingBot = () => {
     return () => window.removeEventListener('keydown', onKey);
   }, [open, preview]);
 
-  const handlePreview = useCallback((file, title) => {
-    setPreview({ file, title });
+  const handlePreview = useCallback((file, title, page, type) => {
+    // Jump straight to the quoted page: the viewer resumes from the stored
+    // last page, so set it before opening.
+    if (page && page > 1) {
+      try { localStorage.setItem(`bn-viewer-page:${file}`, String(page)); } catch { /* ignore */ }
+    }
+    setPreview({ file, title, page, type });
   }, []);
 
   return (
@@ -88,6 +93,8 @@ const FloatingBot = () => {
         <DocViewer
           file={preview.file}
           title={preview.title}
+          context={{ source: preview.type === 'pyq' ? 'pyq' : 'notes' }}
+          allowDownload={preview.type === 'pyq'}
           onClose={() => setPreview(null)}
         />
       )}

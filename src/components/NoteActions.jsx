@@ -36,12 +36,18 @@ export const ViewButton = ({ onClick, label }) => (
   </button>
 );
 
-export const DownloadButton = ({ file, label }) => (
+import { recordDownload } from '../lib/study';
+
+export const DownloadButton = ({ file, label, kind }) => (
   <a
     href={file}
     download
     className="action-btn action-download"
-    onClick={(e) => e.stopPropagation()}
+    onClick={(e) => {
+      e.stopPropagation();
+      // Study stats: count PYQ / syllabus downloads (local only).
+      recordDownload(file, String(label || 'Download').replace(/^Download\s+/i, ''), kind || 'pyq');
+    }}
     title={label || 'Download file'}
     aria-label={label || 'Download file'}
   >

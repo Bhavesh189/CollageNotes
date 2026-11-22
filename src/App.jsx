@@ -11,7 +11,9 @@ import PyqFinder from './pages/PyqFinder';
 import SearchResults from './pages/SearchResults';
 import AddNotesForm from './pages/AddNotesForm';
 import Bookmarks from './pages/Bookmarks';
+import MyStudy from './pages/MyStudy';
 import { getBookmarks } from './lib/bookmarks';
+import { getSettings } from './lib/study';
 import { trackPageView } from './lib/analytics';
 import { pyqSubjectsFor } from './lib/subjectPyq';
 import { semestersData } from './data/notesData';
@@ -44,7 +46,7 @@ function semFromHash() {
 }
 
 function App() {
-  const [currentView, setCurrentView] = useState('notes'); // 'notes', 'pyq', 'search', 'add-notes', 'bookmarks'
+  const [currentView, setCurrentView] = useState('notes'); // 'notes', 'pyq', 'search', 'add-notes', 'bookmarks', 'study'
   const [currentSem, setCurrentSem] = useState(() => semFromHash() || 'sem1');
   const [scrollWidth, setScrollWidth] = useState('0%');
   const [searchQuery, setSearchQuery] = useState('');
@@ -66,6 +68,33 @@ function App() {
       // ignore
     }
   }, [theme]);
+
+  // Accessibility settings (My Study → Settings): font size, reduce motion,
+  // high contrast — applied as <html> attributes, re-read on every change.
+  useEffect(() => {
+    const apply = () => {
+      const s = getSettings();
+      const el = document.documentElement;
+      el.setAttribute('data-font-size', s.fontSize || 'm');
+      el.setAttribute('data-reduce-motion', s.reduceMotion ? 'true' : 'false');
+      el.setAttribute('data-high-contrast', s.highContrast ? 'true' : 'false');
+    };
+    apply();
+    window.addEventListener('bn-study-changed', apply);
+    return () => window.removeEventListener('bn-study-changed', apply);
+  }, []);
+
+  // Open a note from My Study / the chatbot: navigate to the notes view
+  // (right semester) then ask NotesHub to open the viewer for that file.
+  const openNoteFromStudy = (file, title, context) => {
+    const semName = (context && context.semester) || '';
+    const semEntry = Object.entries(semestersData).find(([, s]) => s.name === semName);
+    if (semEntry) setCurrentSem(semEntry[0]);
+    setCurrentView('notes');
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('bn-open-note', { detail: { file, title, context } }));
+    }, 150);
+  };
 
   // Scroll progress + sticky-header shadow
   useEffect(() => {
@@ -250,6 +279,12 @@ function App() {
             {bmCount > 0 && <span className="nav-badge" aria-label={`${bmCount} bookmarks`}>{bmCount}</span>}
           </button>
           <button
+            className={`nav-btn ${currentView === 'study' ? 'active' : ''}`}
+            onClick={() => goToView('study')}
+          >
+            <i className="fa-solid fa-chart-line"></i> <span className="nav-label">My Study</span>
+          </button>
+          <button
             className={`nav-btn ${currentView === 'add-notes' ? 'active' : ''}`}
             onClick={() => goToView('add-notes')}
           >
@@ -300,6 +335,9 @@ function App() {
         {currentView === 'bookmarks' && (
           <Bookmarks onBrowseNotes={() => goToView('notes')} />
         )}
+        {currentView === 'study' && (
+          <MyStudy currentSem={currentSem} onOpenNote={openNoteFromStudy} onNavigate={goToView} />
+        )}
         {currentView === 'search' && (
           <SearchResults
             query={searchQuery}
@@ -337,6 +375,7 @@ function App() {
             <h4>Browse</h4>
             <button type="button" onClick={() => goToView('pyq')}>PYQ Papers</button>
             <button type="button" onClick={() => goToView('bookmarks')}>Bookmarks{bmCount > 0 ? ` (${bmCount})` : ''}</button>
+            <button type="button" onClick={() => goToView('study')}>My Study</button>
             <button type="button" onClick={() => goToView('add-notes')}>Add Notes</button>
           </nav>
           <nav className="footer-col" aria-label="Links">
@@ -344,7 +383,7 @@ function App() {
             <a href="https://thebhavesh.online" target="_blank" rel="noopener noreferrer">Portfolio — thebhavesh.online</a>
           </nav>
         </div>
-        <p className="footer-base">Made for students, by a student · Bikaner Technical University</p>
+        <p className="footer-base">Made for students, by a student · Bhavesh Sharma · Bikaner Technical University</p>
       </footer>
     </div>
   );

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { semestersData } from '../data/notesData';
 import { formatSize, fileSizes } from '../data/fileSizes';
 import LoginModal from '../components/LoginModal';
-import RecentlyAdded from '../components/RecentlyAdded';
 import DocViewer from '../components/DocViewer';
 import SyllabusCard from '../components/SyllabusCard';
 import { ViewButton, DownloadButton, OpenButton, ComingSoonButton, BookmarkButton } from '../components/NoteActions';
@@ -291,7 +290,6 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
           {semData.subjects.length > 0 ? (
             <>
               <SyllabusCard semId={currentSem} onPreview={setPreview} />
-              <RecentlyAdded onOpenPyq={() => onNavigate && onNavigate('pyq')} />
               <div className="section-head">
                 <h2>{semData.name}</h2>
                 <span className="section-count">{semData.subjects.length} subjects</span>

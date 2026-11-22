@@ -1,3 +1,4 @@
+import './polyfill.mjs'; // Node 22+ API safety net (see polyfill.mjs)
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import * as pdfjs from './vendor/pdfjs-dist-6.5.438/legacy/build/pdf.mjs'; // vendored 6.5.438 — npm 4.8.69 segfaults in Node render (see vendor README)

@@ -1,6 +1,7 @@
 // PILOT: render a few representative pages at two scales, measure
 // JPEG bytes + ms/page, save images for a readability check.
 // Usage: node scripts/pilot-render.mjs
+import './polyfill.mjs'; // Node 22+ API safety net (see polyfill.mjs)
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';

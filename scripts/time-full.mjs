@@ -1,3 +1,4 @@
+import './polyfill.mjs'; // Node 22+ API safety net (see polyfill.mjs)
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';

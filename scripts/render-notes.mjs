@@ -34,6 +34,7 @@
 //   manifest — usually a blank page or a JBIG2 image pdf.js skipped.
 //   Corrupt PDFs (e.g. em2-unit-3.pdf, "Invalid PDF structure") are logged
 //   and recorded with an error instead of failing the whole run.
+import './polyfill.mjs'; // Node 22+ API safety net (see polyfill.mjs)
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';

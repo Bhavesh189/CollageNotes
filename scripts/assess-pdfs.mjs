@@ -2,6 +2,7 @@
 // its pages, its bytes, and whether page 1 has extractable text
 // (scanned/handwritten pages have ~no text -> search index will be thin).
 // Read-only. Usage: node scripts/assess-pdfs.mjs
+import './polyfill.mjs'; // Node 22+ API safety net (see polyfill.mjs)
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

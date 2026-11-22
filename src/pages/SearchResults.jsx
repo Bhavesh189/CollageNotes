@@ -6,7 +6,7 @@ import {
   formatSize,
 } from '../lib/searchIndex';
 import DocViewer from '../components/DocViewer';
-import { ViewButton, DownloadButton, OpenButton, BookmarkButton } from '../components/NoteActions';
+import { ViewButton, OpenButton, BookmarkButton } from '../components/NoteActions';
 import { isBookmarked, toggleBookmark } from '../lib/bookmarks';
 
 // Dedicated universal-search results view.
@@ -177,7 +177,6 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
                   ) : (
                     <>
                       <ViewButton onClick={(e) => { e.stopPropagation(); openView(); }} label={`View ${r.title}`} />
-                      <DownloadButton file={r.file} label={`Download ${r.title}`} />
                     </>
                   )}
                 </div>

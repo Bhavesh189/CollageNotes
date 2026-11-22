@@ -1,10 +1,10 @@
 import React from 'react';
 import { syllabusData } from '../data/syllabusData';
 import { formatSize, fileSizes } from '../data/fileSizes';
-import { ViewButton, DownloadButton } from './NoteActions';
+import { ViewButton } from './NoteActions';
 
 // The syllabus card — always the FIRST thing on a semester page.
-// Available semesters get View (in-page) + Download; the rest get an honest
+// Available semesters get View (in-page); the rest get an honest
 // "coming soon" card until the official document is added.
 const SyllabusCard = ({ semId, onPreview }) => {
   const data = syllabusData[semId];
@@ -54,7 +54,6 @@ const SyllabusCard = ({ semId, onPreview }) => {
           onClick={() => onPreview && onPreview({ file: data.file, title: data.title })}
           label={`View ${data.title}`}
         />
-        <DownloadButton file={data.file} label={`Download ${data.title}`} />
       </div>
     </div>
   );

@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
+import { trackEvent } from '../lib/analytics';
 
 // pdf.js worker bundled by Vite (pdfjs-dist ships the .mjs worker).
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -13,17 +14,63 @@ const isDocFile = (file) => /\.(docx?)$/i.test(file || '');
 const isPdfFile = (file) => /\.pdf$/i.test(file || '');
 
 // In-browser document preview modal — no redirect, no new tab.
-// PDFs render with pdf.js (react-pdf): page navigation + zoom, works offline
-// with the static files in /public. .doc/.docx still go through the Google
-// Docs viewer embed (needs the absolute public URL). Anything else falls
-// back to the browser's native handling in an iframe.
-const DocViewer = ({ file, title, onClose }) => {
+// PDFs render with pdf.js (react-pdf). .doc/.docx still go through the
+// Google Docs viewer embed (needs the absolute public URL).
+//
+// COPY PROTECTION, by design:
+//  - renderTextLayer={false} — no selectable text layer;
+//  - no file-save button anywhere (not in the header, not on errors);
+//  - user-select:none on the page area, context menu + copy/cut/save
+//    shortcuts blocked inside the modal (inputs exempt);
+//  - a diagonal "thebhavesh.online" watermark overlays every page;
+//  - SCREENSHOT DETERRENTS (not a guarantee — see below): the page blurs
+//    the moment the window loses focus or the tab is hidden (app-switch /
+//    screen-share), the PrintScreen key is blocked + briefly blurs, and
+//    long-press context menu is disabled. Honest limit: NO website can
+//    block OS-level screenshots (desktop PrintScreen/Snipping Tool, mobile
+//    OS capture all bypass the page). These deterrents stop casual copying;
+//    the watermark is the real traceability. Never claim "screenshot-proof"
+//    in any UI copy.
+// Search works against the loaded PDF (pdf.getPage(i).getTextContent()) —
+// page-level matches, jump to a match's page. NO word-level highlight:
+// highlighting needs the text layer, which is off by design (trade-off).
+// `context` is optional metadata for analytics: { semester, source }.
+const SEARCH_MIN_LEN = 2;
+const SEARCH_DEBOUNCE_MS = 300;
+const BLUR_MS_AFTER_PRINTSCREEN = 1500;
+const ZOOM_LEVELS = [0.6, 0.8, 1.0, 1.25, 1.5, 2.0];
+
+const DocViewer = ({ file, title, onClose, context }) => {
+  const [pdfDoc, setPdfDoc] = useState(null);
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
+  const [pageInput, setPageInput] = useState('1');
   const [scale, setScale] = useState(1.0);
+  const [fitWidth, setFitWidth] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [containerWidth, setContainerWidth] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searching, setSearching] = useState(false);
+  // matches: [{ page, count }] — one entry per page that contains a hit.
+  const [matches, setMatches] = useState([]);
+  const [matchIndex, setMatchIndex] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [blurred, setBlurred] = useState(false);
+  const modalRef = useRef(null);
   const pageWrapRef = useRef(null);
+  const numPagesRef = useRef(null);
+  const pageRef = useRef(1);
+  const searchRunRef = useRef(0);
+  const blurTimerRef = useRef(null);
+
+  const totalMatches = useMemo(
+    () => matches.reduce((sum, m) => sum + m.count, 0),
+    [matches],
+  );
+
+  useEffect(() => {
+    numPagesRef.current = numPages;
+  }, [numPages]);
 
   // Fit the PDF page to the modal width; re-measure on resize.
   useEffect(() => {
@@ -37,9 +84,92 @@ const DocViewer = ({ file, title, onClose }) => {
     return () => ro.disconnect();
   }, []);
 
+  // Fullscreen state (for the toolbar toggle icon/label).
   useEffect(() => {
+    const onFs = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', onFs);
+    return () => document.removeEventListener('fullscreenchange', onFs);
+  }, []);
+
+  // Screenshot deterrent: blur the page the moment the window loses focus
+  // or the tab is hidden (app-switch / screen-share). Un-blur on return.
+  useEffect(() => {
+    const onBlur = () => setBlurred(true);
+    const onFocus = () => setBlurred(false);
+    const onVis = () => setBlurred(document.hidden);
+    window.addEventListener('blur', onBlur);
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onVis);
+    return () => {
+      window.removeEventListener('blur', onBlur);
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVis);
+      if (blurTimerRef.current) clearTimeout(blurTimerRef.current);
+    };
+  }, []);
+
+  const toggleFullscreen = () => {
+    const el = modalRef.current;
+    if (!el) return;
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    } else if (el.requestFullscreen) {
+      el.requestFullscreen().catch(() => {});
+    }
+  };
+
+  const goToPage = (n) => {
+    const total = numPagesRef.current;
+    if (!total) return;
+    const clamped = Math.min(total, Math.max(1, n));
+    pageRef.current = clamped;
+    setPageNumber(clamped);
+    setPageInput(String(clamped));
+  };
+  const goPrev = () => goToPage(pageRef.current - 1);
+  const goNext = () => goToPage(pageRef.current + 1);
+
+  // Keyboard: Esc closes; Left/Right change page; PrintScreen is blocked
+  // (+ brief blur); Ctrl/Cmd+C, Ctrl/Cmd+X and Ctrl/Cmd+S are blocked —
+  // but never while the user is typing in an input, textarea, select or
+  // contentEditable. goToPage reads refs only, so this listener never goes stale.
+  useEffect(() => {
+    const isTyping = (target) => {
+      const tag = (target.tagName || '').toLowerCase();
+      return (
+        tag === 'input' || tag === 'textarea' || tag === 'select' || target.isContentEditable
+      );
+    };
     const onKey = (e) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        // In fullscreen, Escape is the browser's "exit fullscreen" — let
+        // it do only that; otherwise one press would exit fullscreen AND
+        // close the viewer.
+        if (document.fullscreenElement) return;
+        onClose();
+        return;
+      }
+      if (e.key === 'PrintScreen') {
+        // Best effort only — the OS may still capture. Blur briefly so a
+        // capture taken at this instant gets a blurred page.
+        e.preventDefault();
+        setBlurred(true);
+        if (blurTimerRef.current) clearTimeout(blurTimerRef.current);
+        blurTimerRef.current = setTimeout(() => setBlurred(false), BLUR_MS_AFTER_PRINTSCREEN);
+        return;
+      }
+      if (isTyping(e.target)) return;
+      if ((e.ctrlKey || e.metaKey) && ['c', 'x', 's'].includes(e.key.toLowerCase())) {
+        e.preventDefault();
+        return;
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        goPrev();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        goNext();
+      }
     };
     window.addEventListener('keydown', onKey);
     const prev = document.body.style.overflow;
@@ -48,29 +178,143 @@ const DocViewer = ({ file, title, onClose }) => {
       window.removeEventListener('keydown', onKey);
       document.body.style.overflow = prev;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onClose]);
 
-  // Reset paging whenever a different file is opened.
+  // Reset whenever a different file is opened, and report the open to GA4
+  // (which notes actually get read — the metric that matters most).
+  // Fires once per open; no-op when analytics is off.
   useEffect(() => {
+    setPdfDoc(null);
     setNumPages(null);
     setPageNumber(1);
+    setPageInput('1');
     setScale(1.0);
+    setFitWidth(true);
     setLoadError(false);
+    setSearchQuery('');
+    setMatches([]);
+    setMatchIndex(0);
+    setSearching(false);
+    pageRef.current = 1;
+    numPagesRef.current = null;
+    trackEvent('view_pdf', {
+      file_title: title || file,
+      semester: context && context.semester,
+      source: context && context.source,
+      file_type: /\.pdf$/i.test(file || '') ? 'pdf' : 'other',
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
+
+  // In-document search: debounced; scans every page's text via the loaded
+  // pdf object (getTextContent). A run superseded by newer typing abandons
+  // itself via searchRunRef. No word highlight — the text layer is off.
+  useEffect(() => {
+    const q = searchQuery.trim();
+    if (q.length < SEARCH_MIN_LEN || !pdfDoc) {
+      setMatches([]);
+      setMatchIndex(0);
+      setSearching(false);
+      return undefined;
+    }
+    const runId = ++searchRunRef.current;
+    setSearching(true);
+    const timer = setTimeout(() => {
+      (async () => {
+        const needle = q.toLowerCase();
+        const found = [];
+        const total = pdfDoc.numPages;
+        for (let i = 1; i <= total; i += 1) {
+          if (searchRunRef.current !== runId) return;
+          const page = await pdfDoc.getPage(i);
+          const tc = await page.getTextContent();
+          const text = tc.items.map((it) => it.str || '').join(' ');
+          const lower = text.toLowerCase();
+          let count = 0;
+          let idx = lower.indexOf(needle);
+          while (idx !== -1) {
+            count += 1;
+            idx = lower.indexOf(needle, idx + needle.length);
+          }
+          if (count > 0) found.push({ page: i, count });
+        }
+        if (searchRunRef.current !== runId) return;
+        setMatches(found);
+        setMatchIndex(0);
+        setSearching(false);
+        if (found.length > 0) goToPage(found[0].page);
+      })();
+    }, SEARCH_DEBOUNCE_MS);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, pdfDoc]);
 
   if (!file) return null;
 
   const showPdf = isPdfFile(file) && !loadError;
   const viewerUrl = isDocFile(file)
     ? `https://docs.google.com/viewer?url=${encodeURIComponent(
-        window.location.origin + file
+        window.location.origin + file,
       )}&embedded=true`
     : file;
 
-  const goPrev = () => setPageNumber((p) => Math.max(1, p - 1));
-  const goNext = () => setPageNumber((p) => (numPages ? Math.min(numPages, p + 1) : p));
-  const zoomOut = () => setScale((s) => Math.max(0.6, +(s - 0.2).toFixed(2)));
-  const zoomIn = () => setScale((s) => Math.min(2.0, +(s + 0.2).toFixed(2)));
+  // Zoom steps move through the fixed levels so the zoom select always
+  // shows the current level. Any explicit zoom turns fit-width off.
+  const stepZoom = (dir) => {
+    const i = ZOOM_LEVELS.indexOf(scale);
+    const next = ZOOM_LEVELS[Math.min(ZOOM_LEVELS.length - 1, Math.max(0, (i === -1 ? 2 : i) + dir))];
+    setScale(next);
+    setFitWidth(false);
+  };
+  const zoomOut = () => stepZoom(-1);
+  const zoomIn = () => stepZoom(1);
+  const onZoomSelect = (e) => {
+    const v = e.target.value;
+    if (v === 'fit') {
+      setFitWidth(true);
+    } else {
+      setScale(parseFloat(v));
+      setFitWidth(false);
+    }
+  };
+
+  // Commit the page-jump input: Enter or blur. Out-of-range numbers clamp
+  // to 1..numPages; anything unparseable snaps back to the current page.
+  const commitPageInput = () => {
+    const n = parseInt(pageInput, 10);
+    if (!Number.isFinite(n) || !numPagesRef.current) {
+      setPageInput(String(pageRef.current));
+      return;
+    }
+    goToPage(n);
+  };
+
+  const goMatch = (dir) => {
+    if (matches.length === 0) return;
+    const next = (matchIndex + dir + matches.length) % matches.length;
+    setMatchIndex(next);
+    goToPage(matches[next].page);
+  };
+
+  // Copy protection on the modal itself: block the context menu and the
+  // copy/cut events (except inside inputs, where copy/paste stays usable).
+  const isTypingTarget = (target) => {
+    if (!target || !target.tagName) return false;
+    const tag = target.tagName.toLowerCase();
+    return tag === 'input' || tag === 'textarea' || tag === 'select' || target.isContentEditable;
+  };
+  const blockIfNotTyping = (e) => {
+    if (!isTypingTarget(e.target)) e.preventDefault();
+  };
+
+  const matchPagesText =
+    matches.length > 0
+      ? ` · p. ${matches
+          .slice(0, 4)
+          .map((m) => m.page)
+          .join(', ')}${matches.length > 4 ? ', …' : ''}`
+      : '';
 
   return (
     <div
@@ -82,7 +326,11 @@ const DocViewer = ({ file, title, onClose }) => {
     >
       <div
         className="docviewer-modal glass"
+        ref={modalRef}
         onClick={(e) => e.stopPropagation()}
+        onContextMenu={blockIfNotTyping}
+        onCopy={blockIfNotTyping}
+        onCut={blockIfNotTyping}
       >
         <div className="docviewer-header">
           <span className="docviewer-title" title={title}>
@@ -90,15 +338,6 @@ const DocViewer = ({ file, title, onClose }) => {
             {title || 'Document preview'}
           </span>
           <div className="docviewer-actions">
-            <a
-              href={file}
-              download
-              className="docviewer-btn"
-              title="Download file"
-              aria-label="Download file"
-            >
-              <i className="fa-solid fa-download"></i>
-            </a>
             <button
               className="docviewer-btn"
               onClick={onClose}
@@ -111,52 +350,205 @@ const DocViewer = ({ file, title, onClose }) => {
           </div>
         </div>
 
-        {showPdf && (
+        {showPdf && numPages && (
           <div className="pdf-toolbar">
-            <button type="button" className="pdf-nav-btn" onClick={goPrev} disabled={pageNumber <= 1} aria-label="Previous page">
-              <i className="fa-solid fa-chevron-left"></i>
-            </button>
-            <span className="pdf-page-label">
-              Page {pageNumber}{numPages ? ` of ${numPages}` : ''}
-            </span>
-            <button type="button" className="pdf-nav-btn" onClick={goNext} disabled={!numPages || pageNumber >= numPages} aria-label="Next page">
-              <i className="fa-solid fa-chevron-right"></i>
-            </button>
-            <span className="pdf-toolbar-spacer" />
-            <button type="button" className="pdf-nav-btn" onClick={zoomOut} disabled={scale <= 0.6} aria-label="Zoom out">
-              <i className="fa-solid fa-magnifying-glass-minus"></i>
-            </button>
-            <span className="pdf-zoom-label">{Math.round(scale * 100)}%</span>
-            <button type="button" className="pdf-nav-btn" onClick={zoomIn} disabled={scale >= 2.0} aria-label="Zoom in">
-              <i className="fa-solid fa-magnifying-glass-plus"></i>
-            </button>
+            <div className="pdf-tool-group">
+              <button
+                type="button"
+                className="pdf-nav-btn"
+                onClick={goPrev}
+                disabled={pageNumber <= 1}
+                aria-label="Previous page"
+              >
+                <i className="fa-solid fa-chevron-left"></i>
+              </button>
+              <label className="pdf-page-jump">
+                <span className="pdf-page-jump-label">Page</span>
+                <input
+                  type="number"
+                  className="pdf-page-input"
+                  value={pageInput}
+                  min={1}
+                  max={numPages || 1}
+                  disabled={!numPages}
+                  aria-label="Go to page"
+                  title="Type a page number, press Enter"
+                  onChange={(e) => setPageInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') commitPageInput();
+                  }}
+                  onBlur={commitPageInput}
+                />
+                <span className="pdf-page-label">of {numPages || '…'}</span>
+              </label>
+              <button
+                type="button"
+                className="pdf-nav-btn"
+                onClick={goNext}
+                disabled={!numPages || pageNumber >= numPages}
+                aria-label="Next page"
+              >
+                <i className="fa-solid fa-chevron-right"></i>
+              </button>
+            </div>
+
+            <div className="pdf-tool-group pdf-search-group">
+              <input
+                type="search"
+                className="pdf-search-input"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  // Show "Searching…" from the very first render after
+                  // typing — otherwise the label flashes "0 matches" for a
+                  // frame before the debounced search runs.
+                  setSearching(true);
+                }}
+                placeholder="Search in this note…"
+                aria-label="Search in this note"
+              />
+              {searching ? (
+                <span className="pdf-match-label">Searching…</span>
+              ) : searchQuery.trim().length >= SEARCH_MIN_LEN ? (
+                <span
+                  className="pdf-match-label"
+                  title={
+                    matches.length > 0
+                      ? `Matches on pages: ${matches.map((m) => m.page).join(', ')}`
+                      : 'No matches in this document'
+                  }
+                >
+                  {totalMatches} match{totalMatches === 1 ? '' : 'es'}
+                  {matchPagesText}
+                </span>
+              ) : null}
+              <button
+                type="button"
+                className="pdf-nav-btn"
+                onClick={() => goMatch(-1)}
+                disabled={matches.length === 0}
+                aria-label="Previous match"
+                title="Previous match"
+              >
+                <i className="fa-solid fa-chevron-up"></i>
+              </button>
+              <button
+                type="button"
+                className="pdf-nav-btn"
+                onClick={() => goMatch(1)}
+                disabled={matches.length === 0}
+                aria-label="Next match"
+                title="Next match"
+              >
+                <i className="fa-solid fa-chevron-down"></i>
+              </button>
+            </div>
+
+            <div className="pdf-tool-group">
+              <button
+                type="button"
+                className="pdf-nav-btn"
+                onClick={zoomOut}
+                disabled={scale <= ZOOM_LEVELS[0]}
+                aria-label="Zoom out"
+              >
+                <i className="fa-solid fa-magnifying-glass-minus"></i>
+              </button>
+              <select
+                className="pdf-zoom-select"
+                value={fitWidth ? 'fit' : String(scale)}
+                onChange={onZoomSelect}
+                aria-label="Zoom level"
+                title="Zoom level"
+              >
+                <option value="fit">Fit</option>
+                {ZOOM_LEVELS.map((z) => (
+                  <option key={z} value={String(z)}>
+                    {Math.round(z * 100)}%
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                className="pdf-nav-btn"
+                onClick={zoomIn}
+                disabled={scale >= ZOOM_LEVELS[ZOOM_LEVELS.length - 1]}
+                aria-label="Zoom in"
+              >
+                <i className="fa-solid fa-magnifying-glass-plus"></i>
+              </button>
+              <button
+                type="button"
+                className="pdf-nav-btn pdf-fit-btn"
+                onClick={() => setFitWidth((f) => !f)}
+                aria-pressed={fitWidth}
+                title={fitWidth ? 'Actual size (100%)' : 'Fit to width'}
+              >
+                <i className={fitWidth ? 'fa-solid fa-compress' : 'fa-solid fa-expand'}></i>
+                <span>{fitWidth ? 'Fit' : '100%'}</span>
+              </button>
+              <button
+                type="button"
+                className="pdf-nav-btn pdf-fit-btn"
+                onClick={toggleFullscreen}
+                aria-pressed={isFullscreen}
+                title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+                aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+              >
+                <i className={isFullscreen ? 'fa-solid fa-minimize' : 'fa-solid fa-maximize'}></i>
+                <span>{isFullscreen ? 'Exit' : 'Full'}</span>
+              </button>
+            </div>
           </div>
         )}
 
         <div className="docviewer-body" ref={pageWrapRef}>
           {showPdf ? (
-            <Document
-              file={file}
-              onLoadSuccess={({ numPages: n }) => { setNumPages(n); setLoadError(false); }}
-              onLoadError={() => setLoadError(true)}
-              loading={<div className="pdf-loading">Loading PDF…</div>}
-              error={<div className="pdf-error">Could not load this PDF.</div>}
-            >
-              <Page
-                pageNumber={pageNumber}
-                width={containerWidth ? Math.floor(containerWidth * scale) : undefined}
-                scale={containerWidth ? undefined : scale}
-                renderTextLayer
-                renderAnnotationLayer
-              />
-            </Document>
+            <div className={`pdf-page-wrap${blurred ? ' img-blurred' : ''}`}>
+              <Document
+                file={file}
+                onLoadSuccess={(pdf) => {
+                  setPdfDoc(pdf);
+                  setNumPages(pdf.numPages);
+                  setLoadError(false);
+                }}
+                onLoadError={() => {
+                  setPdfDoc(null);
+                  setLoadError(true);
+                }}
+                loading={<div className="pdf-loading">Loading PDF…</div>}
+                error={<div className="pdf-error">Could not load this PDF.</div>}
+              >
+                <Page
+                  pageNumber={pageNumber}
+                  width={
+                    containerWidth
+                      ? Math.floor(containerWidth * (fitWidth ? 1 : scale))
+                      : undefined
+                  }
+                  scale={containerWidth ? undefined : scale}
+                  renderTextLayer={false}
+                  renderAnnotationLayer={false}
+                />
+              </Document>
+              {blurred && (
+                <div className="img-pause-overlay" aria-hidden="true">
+                  <span>Preview paused — switch back to this tab to continue reading.</span>
+                </div>
+              )}
+              <div className="pdf-watermark" aria-hidden="true">
+                <span>thebhavesh.online</span>
+                <span>thebhavesh.online</span>
+                <span>thebhavesh.online</span>
+                <span>thebhavesh.online</span>
+              </div>
+            </div>
           ) : loadError ? (
             <div className="pdf-error-wrap">
               <p>Could not preview this file here.</p>
-              <a href={file} download className="action-btn action-view">
-                <i className="fa-solid fa-download"></i>
-                <span>Download instead</span>
-              </a>
+              <p className="pdf-error-note">
+                The file may be damaged or unavailable — try opening it from the notes list again.
+              </p>
             </div>
           ) : (
             <iframe

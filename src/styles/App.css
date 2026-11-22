@@ -608,7 +608,7 @@ body {
 
 /* Narrow phones: subject header stacks cleanly — title full-width on top,
    the two buttons share one row below (was: title squeezed beside Back,
-   Download all orphaned on a second line). */
+   the second button orphaned on a second line). */
 @media (max-width: 480px) {
   .subject-panel-header {
     flex-wrap: wrap;
@@ -1682,7 +1682,7 @@ body {
   }
 }
 
-/* ============ Preview button (eye) next to download links ============ */
+/* ============ Preview button (eye) next to action buttons ============ */
 .preview-btn {
   background: transparent;
   border: 1px solid var(--glass-border);
@@ -2001,8 +2001,7 @@ img {
   .nav-btn,
   .tab-btn,
   .docviewer-btn,
-  .preview-btn,
-  .download-btn {
+  .preview-btn {
     min-height: 44px;
     min-width: 44px;
   }
@@ -2019,7 +2018,7 @@ img {
 }
 
 /* ============================================================
-   REDESIGN — syllabus card, View/Download actions, footer,
+   REDESIGN — syllabus card, View action, footer,
    pdf.js viewer toolbar (light green + cream theme)
    ============================================================ */
 
@@ -2097,7 +2096,7 @@ img {
   box-shadow: none;
 }
 
-/* --- Explicit View / Download buttons (every note row) --- */
+/* --- Explicit View button (every note row) --- */
 .action-btn {
   display: inline-flex;
   align-items: center;
@@ -2124,16 +2123,6 @@ img {
   border-color: var(--green-dark);
   transform: translateY(-1px);
 }
-.action-download {
-  background: var(--bg-card);
-  border: 1px solid rgba(27, 122, 67, 0.45);
-  color: var(--green-dark);
-}
-.action-download:hover {
-  background: var(--green-light);
-  border-color: var(--green);
-  transform: translateY(-1px);
-}
 .action-disabled {
   background: rgba(45, 42, 38, 0.06);
   border: 1px solid var(--glass-border);
@@ -2150,7 +2139,7 @@ img {
   outline-offset: 2px;
 }
 
-/* Folder sub-note rows (same View + Download pattern) */
+/* Folder sub-note rows (same View pattern) */
 .folder-note-row {
   display: flex;
   justify-content: space-between;
@@ -2374,7 +2363,6 @@ html { scroll-padding-top: 112px; }
 [data-theme="dark"] .glow-orb { mix-blend-mode: screen; opacity: 0.22; }
 [data-theme="dark"] .glass { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45); }
 [data-theme="dark"] .syllabus-card { background: linear-gradient(135deg, var(--green-light), var(--bg-card) 65%); }
-[data-theme="dark"] .action-download { background: var(--bg-card); }
 
 /* --- Header: icon buttons, hamburger, nav badge, scrolled shadow --- */
 .header-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
@@ -2543,4 +2531,174 @@ html { scroll-padding-top: 112px; }
 }
 @media (min-width: 769px) {
   .menu-toggle { display: none; }
+}
+
+/* ---- PDF viewer (DocViewer.jsx): toolbar groups, watermark, blur ---- */
+.pdf-tool-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.pdf-search-group {
+  flex: 1 1 200px;
+}
+.pdf-page-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.pdf-page-jump-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+.pdf-page-input {
+  width: 58px;
+  height: 38px;
+  padding: 0 6px;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  outline: none;
+}
+.pdf-page-input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 2px rgba(27, 122, 67, 0.25);
+}
+.pdf-page-input:disabled {
+  opacity: 0.4;
+}
+.pdf-search-input {
+  flex: 1 1 120px;
+  min-width: 0;
+  height: 38px;
+  padding: 0 10px;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  outline: none;
+}
+.pdf-search-input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 2px rgba(27, 122, 67, 0.25);
+}
+.pdf-match-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+.pdf-fit-btn {
+  width: auto;
+  min-width: 38px;
+  padding: 0 10px;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+/* No selectable text anywhere in the page area. Toolbar inputs unaffected. */
+.docviewer-body,
+.docviewer-title {
+  -webkit-user-select: none;
+  user-select: none;
+}
+.pdf-page-wrap {
+  position: relative;
+}
+/* The rendered page — never selectable, no long-press callout. */
+/* Screenshot deterrent: heavy blur while the window/tab is in the
+   background (or briefly after PrintScreen). See DocViewer.jsx — this
+   stops casual copying; OS-level capture cannot be blocked by any site. */
+.img-blurred {
+  filter: blur(18px) saturate(0.8);
+}
+.img-pause-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1rem;
+  z-index: 4;
+  pointer-events: none;
+}
+/* Diagonal watermark over every page. pointer-events:none so it never
+   blocks clicks or scrolling; it scrolls with the page. */
+.pdf-watermark {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  z-index: 3;
+}
+.pdf-watermark span {
+  display: block;
+  white-space: nowrap;
+  font-size: clamp(20px, 4vw, 34px);
+  font-weight: 700;
+  color: rgba(27, 122, 67, 0.1);
+  transform: rotate(-28deg) scale(1.4);
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* Fullscreen viewer fills the screen. */
+.docviewer-modal:fullscreen {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  border-radius: 0;
+}
+/* Narrow phones: search takes its own row so nothing clips. */
+@media (max-width: 480px) {
+  .pdf-toolbar {
+    gap: 6px;
+    padding: 8px 10px;
+  }
+  .pdf-search-group {
+    flex-basis: 100%;
+    order: 3;
+  }
+  .pdf-page-input,
+  .pdf-search-input {
+    font-size: 16px; /* no iOS auto-zoom on focus */
+  }
+}
+
+/* The grouped toolbar must wrap on narrow screens (three groups + search). */
+.pdf-toolbar {
+  flex-wrap: wrap;
+}
+/* Zoom-level select — same height/border as the page-jump input. */
+.pdf-zoom-select {
+  height: 38px;
+  padding: 0 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  outline: none;
+  cursor: pointer;
+}
+.pdf-zoom-select:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 2px rgba(27, 122, 67, 0.25);
 }

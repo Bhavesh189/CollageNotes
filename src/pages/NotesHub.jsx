@@ -4,41 +4,26 @@ import { formatSize, fileSizes } from '../data/fileSizes';
 import LoginModal from '../components/LoginModal';
 import DocViewer from '../components/DocViewer';
 import SyllabusCard from '../components/SyllabusCard';
-import { ViewButton, DownloadButton, OpenButton, ComingSoonButton, BookmarkButton } from '../components/NoteActions';
+import { ViewButton, OpenButton, ComingSoonButton, BookmarkButton } from '../components/NoteActions';
 import { isBookmarked, toggleBookmark } from '../lib/bookmarks';
 import { pyqSubjectsFor, pyqCountFor, latestPyqYear } from '../lib/subjectPyq';
-import { downloadSubjectZip } from '../lib/downloadZip';
 
-// Count downloadable files in a subject (notes + subnotes, skip placeholders)
+// Count files in a subject (notes + subnotes, skip placeholders)
 const countNotes = (subject) =>
   (subject.notes || []).reduce(
     (n, note) => n + (note.subnotes ? note.subnotes.length : (note.isPlaceholder ? 0 : 1)),
     0
   );
 
-// Flatten a subject's notes (incl. subnote folders) for the ZIP download
-const flattenNotes = (subject) => {
-  const out = [];
-  (subject.notes || []).forEach((note) => {
-    if (note.subnotes) {
-      note.subnotes.forEach((sn) => out.push({ title: sn.title, file: sn.file, isExternal: !!sn.isExternal }));
-    } else if (!note.isPlaceholder) {
-      out.push({ title: note.title, file: note.file, isExternal: !!note.isExternal });
-    }
-  });
-  return out;
-};
 
 const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [pendingSubject, setPendingSubject] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [preview, setPreview] = useState(null); // { file, title }
+  const [preview, setPreview] = useState(null); // { file, title, context }
   const [filterText, setFilterText] = useState('');
   const [sortBy, setSortBy] = useState('name'); // 'name' | 'files' | 'recent'
-  const [zipping, setZipping] = useState(false);
-  const [zipProgress, setZipProgress] = useState('');
   const [, setBmTick] = useState(0);
 
   // Check login state on mount
@@ -96,26 +81,6 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
     setBmTick((t) => t + 1);
   };
 
-  const handleDownloadAll = async () => {
-    if (!selectedSubject || zipping) return;
-    const files = flattenNotes(selectedSubject);
-    if (files.length === 0) return;
-    setZipping(true);
-    setZipProgress(`Preparing 0/${files.length}…`);
-    try {
-      const added = await downloadSubjectZip(
-        selectedSubject.name,
-        files,
-        (done, total) => setZipProgress(`Preparing ${done}/${total}…`)
-      );
-      if (added === 0) {
-        alert('Could not download these files right now — please try a single file instead.');
-      }
-    } finally {
-      setZipping(false);
-      setZipProgress('');
-    }
-  };
 
   const subjectBadge = (sub) => {
     const n = countNotes(sub);
@@ -141,14 +106,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
               <i className="fa-solid fa-arrow-left"></i> Back to Grid
             </button>
             <h2 className="panel-title">{selectedSubject.name} Notes</h2>
-            {flattenNotes(selectedSubject).length > 0 ? (
-              <button className="back-btn" onClick={handleDownloadAll} disabled={zipping} type="button">
-                <i className="fa-solid fa-file-zipper"></i>
-                {zipping ? zipProgress : 'Download all'}
-              </button>
-            ) : (
-              <div style={{ width: '80px' }}></div>
-            )}
+            <div style={{ width: '80px' }}></div>
           </div>
 
           <div className="notes-list-container">
@@ -168,7 +126,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
                             if (sub.isExternal) {
                               window.open(sub.file, '_blank', 'noopener,noreferrer');
                             } else {
-                              setPreview({ file: sub.file, title: sub.title });
+                              setPreview({ file: sub.file, title: sub.title, context: { semester: semData.name, source: 'notes' } });
                             }
                           };
                           const bmId = `note:${currentSem}:${selectedSubject.id}:${index}:${sIdx}`;
@@ -191,7 +149,6 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
                                 ) : (
                                   <>
                                     <ViewButton onClick={(e) => { e.stopPropagation(); openSub(); }} label={`View ${sub.title}`} />
-                                    <DownloadButton file={sub.file} label={`Download ${sub.title}`} />
                                   </>
                                 )}
                               </span>
@@ -203,7 +160,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
                   );
                 }
 
-                // Normal Note — explicit View + Download buttons (whole row opens View)
+                // Normal Note — explicit View button (whole row opens View)
                 const openView = () => {
                   if (note.isPlaceholder) {
                     alert("Note has not been uploaded yet! Coming soon.");
@@ -213,7 +170,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
                     window.open(note.file, '_blank', 'noopener,noreferrer');
                     return;
                   }
-                  if (note.file) setPreview({ file: note.file, title: note.title });
+                  if (note.file) setPreview({ file: note.file, title: note.title, context: { semester: semData.name, source: 'notes' } });
                 };
                 const bmId = `note:${currentSem}:${selectedSubject.id}:${index}`;
                 const bmItem = { id: bmId, type: 'note', title: note.title, file: note.file, subject: selectedSubject.name, semesterName: semData.name, isExternal: !!note.isExternal };
@@ -247,7 +204,6 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
                       ) : (
                         <>
                           <ViewButton onClick={(e) => { e.stopPropagation(); openView(); }} label={`View ${note.title}`} />
-                          <DownloadButton file={note.file} label={`Download ${note.title}`} />
                         </>
                       )}
                     </div>
@@ -375,6 +331,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
         <DocViewer
           file={preview.file}
           title={preview.title}
+          context={preview.context}
           onClose={() => setPreview(null)}
         />
       )}

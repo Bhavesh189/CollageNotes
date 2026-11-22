@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { getBookmarks, removeBookmark } from '../lib/bookmarks';
 import DocViewer from '../components/DocViewer';
-import { ViewButton, DownloadButton, OpenButton } from '../components/NoteActions';
+import { ViewButton, OpenButton } from '../components/NoteActions';
 
 // Saved notes & PYQ papers (localStorage). No account, no sync —
 // bookmarks live in this browser only.
 const Bookmarks = ({ onBrowseNotes }) => {
-  const [preview, setPreview] = useState(null); // { file, title }
+  const [preview, setPreview] = useState(null); // { file, title, context }
   const [items, setItems] = useState(() => getBookmarks());
 
   const handleRemove = (id) => {
@@ -39,7 +39,7 @@ const Bookmarks = ({ onBrowseNotes }) => {
                 window.open(b.file, '_blank', 'noopener,noreferrer');
                 return;
               }
-              setPreview({ file: b.file, title: b.title });
+              setPreview({ file: b.file, title: b.title, context: { semester: b.semesterName, source: 'bookmarks' } });
             };
             return (
               <div
@@ -81,7 +81,6 @@ const Bookmarks = ({ onBrowseNotes }) => {
                   ) : (
                     <>
                       <ViewButton onClick={(e) => { e.stopPropagation(); openView(); }} label={`View ${b.title}`} />
-                      <DownloadButton file={b.file} label={`Download ${b.title}`} />
                     </>
                   )}
                 </div>
@@ -104,6 +103,7 @@ const Bookmarks = ({ onBrowseNotes }) => {
         <DocViewer
           file={preview.file}
           title={preview.title}
+          context={preview.context}
           onClose={() => setPreview(null)}
         />
       )}

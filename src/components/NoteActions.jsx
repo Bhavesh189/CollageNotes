@@ -18,9 +18,8 @@ export const BookmarkButton = ({ active, onClick, label }) => (
   </button>
 );
 
-// Explicit View + Download actions used on every note row across the site
-// (NotesHub, SearchResults, PyqFinder). View opens the in-page DocViewer;
-// Download is a plain anchor so the browser saves the file.
+// Explicit View action used on every note row across the site
+// (NotesHub, SearchResults, PyqFinder). View opens the in-page DocViewer.
 export const ViewButton = ({ onClick, label }) => (
   <button
     type="button"
@@ -34,21 +33,7 @@ export const ViewButton = ({ onClick, label }) => (
   </button>
 );
 
-export const DownloadButton = ({ file, label }) => (
-  <a
-    href={file}
-    download
-    className="action-btn action-download"
-    onClick={(e) => e.stopPropagation()}
-    title={label || 'Download file'}
-    aria-label={label || 'Download file'}
-  >
-    <i className="fa-solid fa-download"></i>
-    <span>Download</span>
-  </a>
-);
-
-// Open-in-new-tab variant for external links (no forced download possible).
+// Open-in-new-tab variant for external links (no forced file save possible).
 export const OpenButton = ({ file, label }) => (
   <a
     href={file}

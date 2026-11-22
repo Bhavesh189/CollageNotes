@@ -219,14 +219,6 @@ export const semestersData = {
     name: 'Semester 3',
     subjects: [
       {
-        id: 'tech_comm',
-        name: 'Technical Communication',
-        image: '/subjects/tech_comm.jpg',
-        colorClass: 'color-comm_skills',
-        notes: [
-        ]
-      },
-      {
         id: 'adv_maths',
         name: 'Advanced Engineering Mathematics',
         image: '/subjects/adv_maths.jpg',

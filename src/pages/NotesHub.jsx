@@ -285,18 +285,21 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
                         tabIndex={0}
                         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSubjectClick(sub); } }}
                       >
-                        {sub.secured && (
-                          <div className="secured-indicator">
-                            <i className="fa-solid fa-shield-halved"></i> Secured
-                          </div>
-                        )}
                         <div className="subject-card-img-wrapper">
                           <img src={sub.image} alt={sub.name} className="subject-card-img" loading="lazy" />
+                          <div className="subject-card-scrim" aria-hidden="true" />
+                          <div className="subject-card-overlay">
+                            <h3 className="subject-card-name">{sub.name}</h3>
+                            <span className="note-count-badge">
+                              <i className="fa-solid fa-file"></i> {subjectBadge(sub)}
+                            </span>
+                          </div>
+                          {sub.secured && (
+                            <div className="secured-indicator">
+                              <i className="fa-solid fa-shield-halved"></i> Secured
+                            </div>
+                          )}
                         </div>
-                        <h3 className="subject-card-name">{sub.name}</h3>
-                        <span className="note-count-badge">
-                          <i className="fa-solid fa-file"></i> {subjectBadge(sub)}
-                        </span>
                       </div>
                     );
                   })}

@@ -229,7 +229,8 @@ function App() {
       <header className="main-header glass" ref={headerRef}>
         <div className="logo-section">
           <h1>
-            Bhavesh Notes <span className="logo-dot"></span>
+            <img src="/logo-96.png" className="logo-mark" alt="Bhavesh Notes logo" />
+            Bhavesh Notes
           </h1>
         </div>
         <SearchBar

@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Bot, X } from 'lucide-react';
 import AiChat from './AiChat';
 import DocViewer from './DocViewer';
 
 // Floating assistant button — opens an IN-SITE chat popup (no redirect).
 // The chat can preview documents via DocViewer without leaving the page.
+// The button uses a bundled lucide icon (never a CDN font) and always shows
+// its label pill on desktop, so it is never a blank disc.
 const FloatingBot = () => {
   const [open, setOpen] = useState(false);
   const [preview, setPreview] = useState(null); // { file, title }
@@ -30,8 +33,8 @@ const FloatingBot = () => {
   return (
     <>
       <div className="ai-bot-widget">
-        <div className="ai-tooltip">
-          {open ? 'Close assistant' : 'Ask the Notes Assistant 🤖'}
+        <div className="ai-tooltip" aria-hidden="true">
+          {open ? 'Close assistant' : 'Ask the Notes Assistant'}
         </div>
         <button
           type="button"
@@ -41,10 +44,11 @@ const FloatingBot = () => {
           aria-label={open ? 'Close notes assistant' : 'Open notes assistant'}
           aria-expanded={open}
         >
-          <i
-            className={`fa-solid ${open ? 'fa-xmark' : 'fa-robot'} ai-bot-icon`}
-            aria-hidden="true"
-          ></i>
+          {open ? (
+            <X size={28} color="#ffffff" aria-hidden="true" />
+          ) : (
+            <Bot size={28} color="#ffffff" aria-hidden="true" />
+          )}
         </button>
       </div>
 
@@ -63,7 +67,7 @@ const FloatingBot = () => {
           >
             <div className="aichat-header">
               <span>
-                <i className="fa-solid fa-robot" style={{ marginRight: '8px' }}></i>
+                <Bot size={18} style={{ marginRight: '8px', verticalAlign: '-3px' }} aria-hidden="true" />
                 Notes Assistant
               </span>
               <button

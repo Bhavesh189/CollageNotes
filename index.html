@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/docana.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1b7a43" />
+    <!-- Apply the saved (or system) theme before first paint — no flash -->
+    <script>
+      try {
+        var t = localStorage.getItem('bn-theme');
+        if (t !== 'dark' && t !== 'light') {
+          t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { /* storage unavailable — light theme stays */ }
+    </script>
     <title>Bhavesh Notes — B.Tech CSE Notes, Syllabus &amp; PYQs</title>
     <meta name="description" content="Free B.Tech CSE notes, official BTU syllabus and previous year question papers — semester-wise, view or download." />
     <!-- Google Fonts -->

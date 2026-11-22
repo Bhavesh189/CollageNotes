@@ -8,6 +8,8 @@
   --cream-deep: #f3ecdd;
   --skin: #f7ead9;
   --card: #fffdf8;
+  /* Text that sits on a green background (buttons, active tabs) */
+  --on-green: #ffffff;
 
   /* Legacy accent names (kept for compatibility) — now the green family */
   --neon-purple: #1b7a43;
@@ -30,4 +32,32 @@
 
   --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast: all 0.2s ease;
+}
+
+/* ---- Dark mode: same green identity, deep green-tinted charcoal ---- */
+[data-theme="dark"] {
+  --green: #4ade80;
+  --green-dark: #86efac;
+  --green-soft: #22c55e;
+  --green-light: rgba(74, 222, 128, 0.14);
+  --cream: #0f130d;
+  --cream-deep: #151b12;
+  --skin: #1a2118;
+  --card: #1a2118;
+  --on-green: #07130a;
+
+  --neon-purple: #4ade80;
+  --neon-cyan: #22c55e;
+  --neon-green: #4ade80;
+  --neon-yellow: #fbbf24;
+  --neon-pink: #fb923c;
+
+  --bg-dark: #0f130d;
+  --bg-card: #1a2118;
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-glow: rgba(74, 222, 128, 0.12);
+
+  --text-primary: #e9ede6;
+  --text-secondary: #b6bfae;
+  --text-muted: #8b957f;
 }

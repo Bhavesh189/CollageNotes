@@ -1,16 +1,17 @@
 import React, { forwardRef } from 'react';
+import { Search, X } from 'lucide-react';
 
 // Prominent header search input. Parent owns value/onChange.
 // Exposes focus() via ref for the "/" keyboard shortcut.
 const SearchBar = forwardRef(({ value, onChange, onEscape, placeholder }, ref) => {
   return (
     <div className="header-search" role="search">
-      <i className="fa-solid fa-magnifying-glass header-search-icon" aria-hidden="true"></i>
+      <Search size={18} className="header-search-icon" aria-hidden="true" />
       <input
         ref={ref}
         type="text"
         className="header-search-input"
-        placeholder={placeholder || 'Search notes, PYQs, subjects…  ( / )'}
+        placeholder={placeholder || 'Search notes, PYQs, subjects…'}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={(e) => {
@@ -22,6 +23,9 @@ const SearchBar = forwardRef(({ value, onChange, onEscape, placeholder }, ref) =
         aria-label="Search all notes and papers"
         autoComplete="off"
       />
+      {!value && (
+        <kbd className="header-search-kbd" aria-hidden="true" title="Press / to search">/</kbd>
+      )}
       {value && (
         <button
           className="header-search-clear"
@@ -29,7 +33,7 @@ const SearchBar = forwardRef(({ value, onChange, onEscape, placeholder }, ref) =
           aria-label="Clear search"
           type="button"
         >
-          <i className="fa-solid fa-xmark"></i>
+          <X size={16} />
         </button>
       )}
     </div>

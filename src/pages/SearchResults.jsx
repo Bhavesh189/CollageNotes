@@ -6,7 +6,8 @@ import {
   formatSize,
 } from '../lib/searchIndex';
 import DocViewer from '../components/DocViewer';
-import { ViewButton, DownloadButton, OpenButton } from '../components/NoteActions';
+import { ViewButton, DownloadButton, OpenButton, BookmarkButton } from '../components/NoteActions';
+import { isBookmarked, toggleBookmark } from '../lib/bookmarks';
 
 // Dedicated universal-search results view.
 // Props: query (from header), onQueryChange, onClear (Escape / clear button).
@@ -16,6 +17,7 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
   const [type, setType] = useState('all');
   const [sort, setSort] = useState('relevance');
   const [preview, setPreview] = useState(null); // { file, title }
+  const [, setBmTick] = useState(0);
 
   const semesterOptions = useMemo(() => getSemesterOptions(), []);
   const subjectOptions = useMemo(
@@ -163,6 +165,13 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
                   </span>
                 </div>
                 <div className="note-item-right">
+                  <BookmarkButton
+                    active={isBookmarked(r.id)}
+                    onClick={() => {
+                      toggleBookmark({ id: r.id, type: r.type, title: r.title, file: r.file, subject: r.subject, semesterName: r.semesterName, isExternal: !!r.isExternal });
+                      setBmTick((t) => t + 1);
+                    }}
+                  />
                   {r.isExternal ? (
                     <OpenButton file={r.file} label={`Open ${r.title}`} />
                   ) : (

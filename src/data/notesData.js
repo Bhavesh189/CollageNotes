@@ -6,7 +6,7 @@ export const semestersData = {
       {
         id: 'computer',
         name: 'Computer',
-        image: '/com.jpg',
+        image: '/subjects/computer.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: '1. C ALL notes 1,2,3 Merged', file: '/cin1.pdf' },
@@ -17,7 +17,7 @@ export const semestersData = {
       {
         id: 'chemistry',
         name: 'Chemistry',
-        image: '/chem.jpg',
+        image: '/subjects/chemistry.jpg',
         colorClass: 'color-chemistry',
         notes: [
           { title: '1. Corrosion', file: '/co.pdf' },
@@ -33,13 +33,12 @@ export const semestersData = {
           { title: '9. All Unit 4', file: '/CHEMISTRY UNIT 4.pdf' },
           { title: '10. All Unit 5', file: '/CHEMISTRY UNIT 5.pdf' },
           { title: '!!! IMP QUES 70 QUES !!!', file: '/Engg. Chemistry Imp. 70 question (1).docx' },
-          { title: '!!! PYQ Practice !!!', file: '/CIT-PYQ-2023-24.pdf' }
         ]
       },
       {
         id: 'maths',
         name: 'Maths',
-        image: '/math.jpg',
+        image: '/subjects/maths.jpg',
         colorClass: 'color-maths',
         notes: [
           { title: '1. Mathematics 1', file: '/ma111.pdf' },
@@ -52,7 +51,7 @@ export const semestersData = {
       {
         id: 'bee',
         name: 'BEE',
-        image: '/bee.jpg',
+        image: '/subjects/bee.jpg',
         colorClass: 'color-bee',
         notes: [
           { title: '1. 1st Chapter in Normal Handwritten', file: '/bee.pdf.docx.pdf' },
@@ -66,7 +65,7 @@ export const semestersData = {
       {
         id: 'mefa',
         name: 'MEFA',
-        image: '/mefa.jpg',
+        image: '/subjects/mefa.jpg',
         colorClass: 'color-mefa',
         notes: [
           { title: '1. 1st Chapter Sir wala', file: '/mefa1.docx' },
@@ -85,7 +84,7 @@ export const semestersData = {
       {
         id: 'practical',
         name: 'Practical',
-        image: '/p.jpg',
+        image: '/subjects/practical.jpg',
         colorClass: 'color-practical',
         secured: true,
         notes: [
@@ -122,7 +121,7 @@ export const semestersData = {
       {
         id: 'midsem',
         name: 'Mid-Sem',
-        image: '/t.jpg',
+        image: '/subjects/midsem.jpg',
         colorClass: 'color-midsem',
         notes: [
           { title: '1. 1st Mid Term 2025–26', file: '/1midsemp.pdf' },
@@ -139,7 +138,7 @@ export const semestersData = {
       {
         id: 'comm_skills',
         name: 'Communication Skills',
-        image: '/commu.jpg',
+        image: '/subjects/comm_skills.jpg',
         colorClass: 'color-comm_skills',
         notes: [
           { title: '70 IMP + All Syllabus', file: '/2ndseminpcomm.pdf' }
@@ -148,7 +147,7 @@ export const semestersData = {
       {
         id: 'built_env',
         name: 'Built Environment',
-        image: '/chem.jpg',
+        image: '/subjects/built_env.jpg',
         colorClass: 'color-built_env',
         notes: [
           { title: 'Unit 1 - Notes', file: '/UNIT-1 NOTES.pdf' },
@@ -163,11 +162,10 @@ export const semestersData = {
       {
         id: 'physics',
         name: 'Physics',
-        image: '/bee.jpg',
+        image: '/subjects/physics.jpg',
         colorClass: 'color-physics',
         notes: [
           { title: '70 IMP and Full syllabus', file: '/PhysicsIMP.pdf' },
-          { title: 'Previous Year Questions', file: '/PYQ Physics.pdf' },
           { title: 'Unit 1 - Wave Optics', file: '/UNIT-1(WAVE OPTICS).pdf' },
           { title: 'Unit 2', file: '/PHYSICS U2.pdf' },
           { title: 'Unit 3 - Laser', file: '/UNIT-3(LASER).pdf' },
@@ -178,7 +176,7 @@ export const semestersData = {
       {
         id: 'maths2',
         name: 'Maths',
-        image: '/math.jpg',
+        image: '/subjects/maths2.jpg',
         colorClass: 'color-maths2',
         notes: [
           { title: 'Unit 1', file: '/notes/sem2/engineering-mathematics-2/em2-unit-1.pdf' },
@@ -191,7 +189,7 @@ export const semestersData = {
       {
         id: 'mech_eng',
         name: 'Mechanical Engineering',
-        image: '/com.jpg',
+        image: '/subjects/mech_eng.jpg',
         colorClass: 'color-mech_eng',
         notes: [
           { title: 'Unit 1 - Notes', file: '/EME- UNIT 01.pdf' },
@@ -204,7 +202,7 @@ export const semestersData = {
       {
         id: 'mefa2',
         name: 'Managerial Economics and Financial Accounting',
-        image: '/subjects/managerial-economics.jpg',
+        image: '/subjects/mefa2.jpg',
         colorClass: 'color-mefa',
         notes: [
           { title: 'Unit 1', file: '/notes/sem2/managerial-economics-and-financial-accounting/mefa-unit-1.pdf' },
@@ -223,31 +221,17 @@ export const semestersData = {
       {
         id: 'tech_comm',
         name: 'Technical Communication',
-        image: '/commu.jpg',
+        image: '/subjects/tech_comm.jpg',
         colorClass: 'color-comm_skills',
         notes: [
-          { title: 'PYQ 2022', file: '/pyq/sem3/TC-2022.pdf' },
-          { title: 'PYQ Feb 2021', file: '/pyq/sem3/TC-Feb-2021.pdf' },
-          { title: 'PYQ Dec 2019', file: '/pyq/sem3/TC-Dec-2019.pdf' }
         ]
       },
       {
         id: 'adv_maths',
         name: 'Advanced Engineering Mathematics',
-        image: '/math.jpg',
+        image: '/subjects/adv_maths.jpg',
         colorClass: 'color-maths',
         notes: [
-          { title: 'PYQ 2026', file: '/pyq/sem3/AEM-2026.pdf' },
-          { title: 'PYQ 2025', file: '/pyq/sem3/AEM-2025.pdf' },
-          { title: 'PYQ 2024', file: '/pyq/sem3/AEM-2024.pdf' },
-          { title: 'PYQ May 2023', file: '/pyq/sem3/AEM-May-2023.pdf' },
-          { title: 'PYQ 2023 (310001)', file: '/pyq/sem3/AEM-2023.pdf' },
-          { title: 'PYQ 2022 (310401)', file: '/pyq/sem3/AEM-2022.pdf' },
-          { title: 'PYQ 2022 (310001)', file: '/pyq/sem3/AEM-2022-2.pdf' },
-          { title: 'PYQ Feb 2021 (310001)', file: '/pyq/sem3/AEM-Feb-2021.pdf' },
-          { title: 'PYQ Feb 2021 (310401)', file: '/pyq/sem3/AEM-Feb-2021-2.pdf' },
-          { title: 'PYQ Dec 2019 (310401)', file: '/pyq/sem3/AEM-Dec-2019.pdf' },
-          { title: 'PYQ Dec 2019 (310901)', file: '/pyq/sem3/AEM-Dec-2019-2.pdf' },
           { title: 'Unit 1', file: '/notes/sem3/adv-engineering-mathematics/aem-unit-1.pdf' },
           { title: 'Unit 2', file: '/notes/sem3/adv-engineering-mathematics/aem-unit-2.pdf' },
           { title: 'Unit 3', file: '/notes/sem3/adv-engineering-mathematics/aem-unit-3.pdf' },
@@ -258,17 +242,9 @@ export const semestersData = {
       {
         id: 'digital_elec',
         name: 'Digital Electronics',
-        image: '/bee.jpg',
+        image: '/subjects/digital_elec.jpg',
         colorClass: 'color-bee',
         notes: [
-          { title: 'PYQ 2026', file: '/pyq/sem3/DE-2026.pdf' },
-          { title: 'PYQ 2025', file: '/pyq/sem3/DE-2025.pdf' },
-          { title: 'PYQ 2024', file: '/pyq/sem3/DE-2024.pdf' },
-          { title: 'PYQ May 2023', file: '/pyq/sem3/DE-May-2023.pdf' },
-          { title: 'PYQ 2022', file: '/pyq/sem3/DE-2022.pdf' },
-          { title: 'PYQ Feb 2021', file: '/pyq/sem3/DE-Feb-2021.pdf' },
-          { title: 'PYQ Dec 2019 (310404)', file: '/pyq/sem3/DE-Dec-2019.pdf' },
-          { title: 'PYQ Dec 2019 (310904)', file: '/pyq/sem3/DE-Dec-2019-2.pdf' },
           { title: 'Unit 1', file: '/notes/sem3/digital-electronics/de-unit-1.pdf' },
           { title: 'Unit 2', file: '/notes/sem3/digital-electronics/de-unit-2.pdf' },
           { title: 'Unit 3', file: '/notes/sem3/digital-electronics/de-unit-3.pdf' },
@@ -278,16 +254,9 @@ export const semestersData = {
       {
         id: 'dsa',
         name: 'Data Structures and Algorithms',
-        image: '/dsa.jpg',
+        image: '/subjects/dsa.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'PYQ 2026', file: '/pyq/sem3/DSA-2026.pdf' },
-          { title: 'PYQ 2025', file: '/pyq/sem3/DSA-2025.pdf' },
-          { title: 'PYQ 2024', file: '/pyq/sem3/DSA-2024.pdf' },
-          { title: 'PYQ May 2023', file: '/pyq/sem3/DSA-May-2023.pdf' },
-          { title: 'PYQ 2022', file: '/pyq/sem3/DSA-2022.pdf' },
-          { title: 'PYQ Feb 2021', file: '/pyq/sem3/DSA-2021.pdf' },
-          { title: 'PYQ Dec 2019', file: '/pyq/sem3/DSA-Dec-2019.pdf' },
           { title: 'Prerequisite: Linked List', file: '/notes/sem3/data-structures-algorithms/dsa-prerequisite-linked-list.pdf' },
           { title: 'Unit 1', file: '/notes/sem3/data-structures-algorithms/dsa-unit-1.pdf' },
           { title: 'Unit 2 (Part 1)', file: '/notes/sem3/data-structures-algorithms/dsa-unit-2-part-1.pdf' },
@@ -306,17 +275,9 @@ export const semestersData = {
       {
         id: 'oop',
         name: 'Object Oriented Programming',
-        image: '/com.jpg',
+        image: '/subjects/oop.jpg',
         colorClass: 'color-mech_eng',
         notes: [
-          { title: 'PYQ 2026', file: '/pyq/sem3/OOP-2026.pdf' },
-          { title: 'PYQ 2025', file: '/pyq/sem3/OOP-2025.pdf' },
-          { title: 'PYQ 2024 (310406)', file: '/pyq/sem3/OOP-2024.pdf' },
-          { title: 'PYQ 2024 (31N0404)', file: '/pyq/sem3/OOP-2024-2.pdf' },
-          { title: 'PYQ May 2023', file: '/pyq/sem3/OOP-May-2023.pdf' },
-          { title: 'PYQ 2022', file: '/pyq/sem3/OOP-2022.pdf' },
-          { title: 'PYQ Feb 2021', file: '/pyq/sem3/OOP-Feb-2021.pdf' },
-          { title: 'PYQ Dec 2019', file: '/pyq/sem3/OOP-Dec-2019.pdf' },
           { title: 'Unit 1', file: '/notes/sem3/oop-using-c/oop-unit-1.pdf' },
           { title: 'Unit 2', file: '/notes/sem3/oop-using-c/oop-unit-2.pdf' },
           { title: 'Unit 3', file: '/notes/sem3/oop-using-c/oop-unit-3.pdf' },
@@ -327,16 +288,9 @@ export const semestersData = {
       {
         id: 'software_eng',
         name: 'Software Engineering',
-        image: '/bs.jpeg',
+        image: '/subjects/software_eng.jpg',
         colorClass: 'color-mefa',
         notes: [
-          { title: 'PYQ 2026', file: '/pyq/sem3/SE-2026.pdf' },
-          { title: 'PYQ 2025', file: '/pyq/sem3/SE-2025.pdf' },
-          { title: 'PYQ 2024', file: '/pyq/sem3/SE-2024.pdf' },
-          { title: 'PYQ May 2023', file: '/pyq/sem3/SE-May-2023.pdf' },
-          { title: 'PYQ 2022', file: '/pyq/sem3/SE-2022.pdf' },
-          { title: 'PYQ Feb 2021', file: '/pyq/sem3/SE-Feb-2021.pdf' },
-          { title: 'PYQ Dec 2019', file: '/pyq/sem3/SE-Dec-2019.pdf' },
           { title: 'Unit 1', file: '/notes/sem3/software-engineering/se-unit-1.pdf' },
           { title: 'Unit 2', file: '/notes/sem3/software-engineering/se-unit-2.pdf' },
           { title: 'Unit 3', file: '/notes/sem3/software-engineering/se-unit-3.pdf' },
@@ -347,7 +301,7 @@ export const semestersData = {
       {
         id: 'linux_shell',
         name: 'Linux and Shell Programming',
-        image: '/subjects/linux-shell-programming.jpg',
+        image: '/subjects/linux_shell.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem3/linux-and-shell-programming/lsp-unit-1.pdf' },
@@ -363,7 +317,7 @@ export const semestersData = {
       {
         id: 'discrete_maths',
         name: 'Discrete Mathematics',
-        image: '/subjects/discrete-mathematics.jpg',
+        image: '/subjects/discrete_maths.jpg',
         colorClass: 'color-maths',
         notes: [
           { title: 'Unit 1', file: '/notes/sem4/discrete-mathematics/dm-unit-1.pdf' },
@@ -376,7 +330,7 @@ export const semestersData = {
       {
         id: 'mpi',
         name: 'Microprocessor and Interfaces',
-        image: '/subjects/microprocessor-interfaces.jpg',
+        image: '/subjects/mpi.jpg',
         colorClass: 'color-bee',
         notes: [
           { title: 'Unit 1', file: '/notes/sem4/microprocessor-and-interfaces/mpi-unit-1.pdf' },
@@ -389,7 +343,7 @@ export const semestersData = {
       {
         id: 'toc',
         name: 'Theory of Computation',
-        image: '/subjects/theory-of-computation.jpg',
+        image: '/subjects/toc.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem4/theory-of-computation/toc-unit-1.pdf' },
@@ -402,7 +356,7 @@ export const semestersData = {
       {
         id: 'dbms',
         name: 'Database Management Systems',
-        image: '/subjects/database-management-systems.jpg',
+        image: '/subjects/dbms.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem4/database-management-systems/dbms-unit-1.pdf' },
@@ -415,7 +369,7 @@ export const semestersData = {
       {
         id: 'python_prog',
         name: 'Python Programming',
-        image: '/subjects/python-programming.jpg',
+        image: '/subjects/python_prog.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem4/python-programming/py-unit-1.pdf' },
@@ -428,7 +382,7 @@ export const semestersData = {
       {
         id: 'java_prog',
         name: 'Java Programming',
-        image: '/subjects/java-programming.jpg',
+        image: '/subjects/java_prog.jpg',
         colorClass: 'color-computer',
         notes: [
           { title: 'Unit 1', file: '/notes/sem4/java-programming/jav-unit-1.pdf' },

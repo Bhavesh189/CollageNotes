@@ -17,10 +17,31 @@ function subjectAcronym(name) {
     .join('');
 }
 
-// Map free-text semester mentions ("sem 4", "sem4", "semester 4") to sem ids
+// Map free-text semester mentions ("sem4", "semester3") to sem ids.
+// NOTE: the "sem"/"semester" prefix is REQUIRED — a bare "1" must not map
+// to sem1, or queries like "unit 1" get wrongly filtered to Semester 1.
 function semesterIdFromToken(tok) {
-  const m = tok.match(/^(?:sem|semester)?\s*0*([1-8])$/);
+  const m = tok.match(/^(?:sem|semester)\s*0*([1-8])$/);
   return m ? `sem${m[1]}` : null;
+}
+
+// Pull "sem 4" / "sem4" / "semester 3" out of a token list into a semester
+// constraint, returning the remaining tokens. Handles both "sem4" (one token)
+// and "sem" "4" (two adjacent tokens) forms.
+function extractSemester(tokens) {
+  const rest = [];
+  let semId = null;
+  for (let i = 0; i < tokens.length; i++) {
+    const tok = tokens[i];
+    let m = tok.match(/^(?:sem|semester)\s*0*([1-8])$/);
+    if (m) { semId = `sem${m[1]}`; continue; }
+    if (/^(?:sem|semester)$/.test(tok) && i + 1 < tokens.length) {
+      const m2 = tokens[i + 1].match(/^0*([1-8])$/);
+      if (m2) { semId = `sem${m2[1]}`; i++; continue; }
+    }
+    rest.push(tok);
+  }
+  return { semId, rest };
 }
 
 let cachedIndex = null;
@@ -112,9 +133,13 @@ export function getSubjectOptions(semesterId) {
   return [...names].sort();
 }
 
-// Tokenize: split on whitespace, keep things like "3cs4-05" intact
+// Tokenize: split on whitespace, keep things like "3cs4-05" intact.
+// "chapter"/"chapters" are treated as "unit" (notes are organized by unit).
 function tokenize(query) {
-  return norm(query).split(/[\s,]+/).filter(Boolean);
+  return norm(query)
+    .replace(/\bchapters?\b/g, 'unit')
+    .split(/[\s,]+/)
+    .filter(Boolean);
 }
 
 // Irregular abbreviations that acronyms can't derive ("dbms" ← "Database…")
@@ -186,10 +211,16 @@ function scoreItem(item, tokens, fullQuery) {
 export function searchAll({ query, semester = 'all', subject = 'all', type = 'all', sort = 'relevance' }) {
   const index = buildSearchIndex();
   const q = norm(query).trim();
-  const tokens = tokenize(q);
+  let tokens = tokenize(q);
+
+  // "sem 4" typed in the query becomes a semester constraint (explicit
+  // dropdown filter wins if both are set).
+  const ex = extractSemester(tokens);
+  tokens = ex.rest;
+  const effSemester = semester !== 'all' ? semester : (ex.semId || 'all');
 
   let results = index.filter((item) => {
-    if (semester !== 'all' && item.semester !== semester) return false;
+    if (effSemester !== 'all' && item.semester !== effSemester) return false;
     if (subject !== 'all' && item.subject !== subject) return false;
     if (type !== 'all' && item.type !== type) return false;
     if (tokens.length === 0) return true;

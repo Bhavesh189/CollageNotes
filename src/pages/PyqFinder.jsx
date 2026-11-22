@@ -1,13 +1,28 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { pyqPapers } from '../data/pyqData';
 import DocViewer from '../components/DocViewer';
-import { ViewButton, DownloadButton } from '../components/NoteActions';
+import { ViewButton, DownloadButton, BookmarkButton } from '../components/NoteActions';
+import { isBookmarked, toggleBookmark } from '../lib/bookmarks';
 
-const PyqFinder = () => {
+// PYQ Finder. When initialSubjects is set (from a subject's "Get PYQ"
+// button), results are pre-filtered to those subjects with a banner;
+// "Show all PYQs" clears the filter.
+const PyqFinder = ({ initialSubjects, initialLabel, onClearInitialSubjects }) => {
   const [query, setQuery] = useState('');
   const [subject, setSubject] = useState('all');
   const [year, setYear] = useState('all');
   const [preview, setPreview] = useState(null); // { file, title }
+  const [, setBmTick] = useState(0);
+
+  // A new "Get PYQ" navigation resets the free-text/year filters.
+  useEffect(() => {
+    if (initialSubjects) {
+      setQuery('');
+      setYear('all');
+      setSubject('all');
+      window.scrollTo({ top: 0 });
+    }
+  }, [initialSubjects]);
 
   const subjects = useMemo(
     () => [...new Set(pyqPapers.map((p) => p.subject))].sort(),
@@ -26,9 +41,23 @@ const PyqFinder = () => {
       p.subjectCode.toLowerCase().includes(q) ||
       p.session.toLowerCase().includes(q);
     const matchSubject = subject === 'all' || p.subject === subject;
+    const matchInitial = !initialSubjects || initialSubjects.includes(p.subject);
     const matchYear = year === 'all' || String(p.year) === String(year);
-    return matchQuery && matchSubject && matchYear;
+    return matchQuery && matchSubject && matchInitial && matchYear;
   });
+
+  const handleToggleBookmark = (p) => {
+    toggleBookmark({
+      id: `pyq:${p.id}`,
+      type: 'pyq',
+      title: `${p.subject} — ${p.session}`,
+      file: p.file,
+      subject: p.subject,
+      semesterName: null,
+      isExternal: false,
+    });
+    setBmTick((t) => t + 1);
+  };
 
   return (
     <div className="view-main">
@@ -41,13 +70,26 @@ const PyqFinder = () => {
         <div style={{ width: '80px' }}></div>
       </div>
 
+      {/* Subject pre-filter banner (from "Get PYQ") */}
+      {initialSubjects && (
+        <div className="pyq-filter-banner glass">
+          <span>
+            <i className="fa-solid fa-filter" style={{ marginRight: '8px' }}></i>
+            Showing PYQs for <strong>{initialLabel || initialSubjects.join(', ')}</strong>
+          </span>
+          <button type="button" className="back-btn" onClick={onClearInitialSubjects}>
+            Show all PYQs
+          </button>
+        </div>
+      )}
+
       {/* Search + filters */}
       <div className="glass" style={{ padding: '1.4rem', margin: '0 auto 1.5rem', maxWidth: '920px', width: '100%' }}>
         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
           <input
             type="text"
             className="form-input"
-            placeholder="🔍 Search by subject, code, or session…"
+            placeholder="Search by subject, code, or session…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             style={{ flex: '2 1 220px' }}
@@ -85,6 +127,7 @@ const PyqFinder = () => {
         {results.length > 0 ? (
           results.map((p, index) => {
             const openView = () => setPreview({ file: p.file, title: `${p.subject} — ${p.session}` });
+            const bmId = `pyq:${p.id}`;
             return (
             <div
               key={p.id}
@@ -97,13 +140,14 @@ const PyqFinder = () => {
             >
               <div className="note-item-left">
                 <i className="fa-solid fa-file-pdf note-item-icon"></i>
-                <span className="note-item-title">
-                  {p.subject} <span style={{ opacity: 0.65 }}>· {p.subjectCode}</span>
-                  <br />
-                  <small style={{ opacity: 0.75, fontWeight: 'normal' }}>{p.session}</small>
+                <span className="note-item-title pyq-title">
+                  <span className="pyq-subject">{p.subject}</span>
+                  <span className="pyq-code">{p.subjectCode}</span>
+                  <small className="pyq-session">{p.session}</small>
                 </span>
               </div>
               <div className="note-item-right">
+                <BookmarkButton active={isBookmarked(bmId)} onClick={() => handleToggleBookmark(p)} />
                 <ViewButton onClick={(e) => { e.stopPropagation(); openView(); }} label={`View ${p.subject} ${p.session}`} />
                 <DownloadButton file={p.file} label={`Download ${p.subject} ${p.session}`} />
               </div>

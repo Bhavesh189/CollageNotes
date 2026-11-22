@@ -1,5 +1,22 @@
 import React from 'react';
+import { Bookmark } from 'lucide-react';
 import { formatSize, fileSizes } from '../data/fileSizes';
+
+// Icon-only bookmark toggle (bundled lucide icon — never a CDN font).
+// Renders a filled bookmark when active. onClick receives the click event;
+// callers that render it inside a clickable row must stopPropagation.
+export const BookmarkButton = ({ active, onClick, label }) => (
+  <button
+    type="button"
+    className={`action-btn action-bookmark ${active ? 'active' : ''}`}
+    onClick={(e) => { e.stopPropagation(); if (onClick) onClick(e); }}
+    title={label || (active ? 'Remove bookmark' : 'Bookmark this')}
+    aria-label={label || (active ? 'Remove bookmark' : 'Bookmark this')}
+    aria-pressed={!!active}
+  >
+    <Bookmark size={16} fill={active ? 'currentColor' : 'none'} aria-hidden="true" />
+  </button>
+);
 
 // Explicit View + Download actions used on every note row across the site
 // (NotesHub, SearchResults, PyqFinder). View opens the in-page DocViewer;

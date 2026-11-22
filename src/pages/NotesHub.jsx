@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { semestersData } from '../data/notesData';
 import { formatSize, fileSizes } from '../data/fileSizes';
 import LoginModal from '../components/LoginModal';
 import RecentlyAdded from '../components/RecentlyAdded';
 import DocViewer from '../components/DocViewer';
 import SyllabusCard from '../components/SyllabusCard';
-import { ViewButton, DownloadButton, OpenButton, ComingSoonButton } from '../components/NoteActions';
+import { ViewButton, DownloadButton, OpenButton, ComingSoonButton, BookmarkButton } from '../components/NoteActions';
+import { isBookmarked, toggleBookmark } from '../lib/bookmarks';
+import { pyqSubjectsFor, pyqCountFor, latestPyqYear } from '../lib/subjectPyq';
+import { downloadSubjectZip } from '../lib/downloadZip';
 
 // Count downloadable files in a subject (notes + subnotes, skip placeholders)
 const countNotes = (subject) =>
@@ -14,12 +17,30 @@ const countNotes = (subject) =>
     0
   );
 
-const NotesHub = ({ currentSem, onNavigate }) => {
+// Flatten a subject's notes (incl. subnote folders) for the ZIP download
+const flattenNotes = (subject) => {
+  const out = [];
+  (subject.notes || []).forEach((note) => {
+    if (note.subnotes) {
+      note.subnotes.forEach((sn) => out.push({ title: sn.title, file: sn.file, isExternal: !!sn.isExternal }));
+    } else if (!note.isPlaceholder) {
+      out.push({ title: note.title, file: note.file, isExternal: !!note.isExternal });
+    }
+  });
+  return out;
+};
+
+const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [pendingSubject, setPendingSubject] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [preview, setPreview] = useState(null); // { file, title }
+  const [filterText, setFilterText] = useState('');
+  const [sortBy, setSortBy] = useState('name'); // 'name' | 'files' | 'recent'
+  const [zipping, setZipping] = useState(false);
+  const [zipProgress, setZipProgress] = useState('');
+  const [, setBmTick] = useState(0);
 
   // Check login state on mount
   useEffect(() => {
@@ -27,13 +48,26 @@ const NotesHub = ({ currentSem, onNavigate }) => {
     setIsAuthenticated(logged);
   }, []);
 
-  // Reset selected subject when semester changes
+  // Reset selected subject + grid controls when semester changes
   useEffect(() => {
     setSelectedSubject(null);
+    setFilterText('');
   }, [currentSem]);
 
   const semData = semestersData[currentSem];
   if (!semData) return null;
+
+  const visibleSubjects = useMemo(() => {
+    const q = filterText.trim().toLowerCase();
+    const list = semData.subjects.filter((s) => !q || s.name.toLowerCase().includes(q));
+    if (sortBy === 'files') {
+      return [...list].sort((a, b) => countNotes(b) - countNotes(a) || a.name.localeCompare(b.name));
+    }
+    if (sortBy === 'recent') {
+      return [...list].sort((a, b) => latestPyqYear(b.id) - latestPyqYear(a.id) || a.name.localeCompare(b.name));
+    }
+    return [...list].sort((a, b) => a.name.localeCompare(b.name));
+  }, [semData, filterText, sortBy]);
 
   const handleSubjectClick = (subject) => {
     if (subject.secured && !isAuthenticated) {
@@ -58,6 +92,39 @@ const NotesHub = ({ currentSem, onNavigate }) => {
     setSelectedSubject(null);
   };
 
+  const handleToggleBookmark = (item) => {
+    toggleBookmark(item);
+    setBmTick((t) => t + 1);
+  };
+
+  const handleDownloadAll = async () => {
+    if (!selectedSubject || zipping) return;
+    const files = flattenNotes(selectedSubject);
+    if (files.length === 0) return;
+    setZipping(true);
+    setZipProgress(`Preparing 0/${files.length}…`);
+    try {
+      const added = await downloadSubjectZip(
+        selectedSubject.name,
+        files,
+        (done, total) => setZipProgress(`Preparing ${done}/${total}…`)
+      );
+      if (added === 0) {
+        alert('Could not download these files right now — please try a single file instead.');
+      }
+    } finally {
+      setZipping(false);
+      setZipProgress('');
+    }
+  };
+
+  const subjectBadge = (sub) => {
+    const n = countNotes(sub);
+    if (n > 0) return `${n} file${n === 1 ? '' : 's'}`;
+    if (pyqCountFor(sub.id) > 0) return 'PYQ papers';
+    return 'Coming soon';
+  };
+
   return (
     <div className="view-main">
       {/* Subject Panel Detail View */}
@@ -75,7 +142,14 @@ const NotesHub = ({ currentSem, onNavigate }) => {
               <i className="fa-solid fa-arrow-left"></i> Back to Grid
             </button>
             <h2 className="panel-title">{selectedSubject.name} Notes</h2>
-            <div style={{ width: '80px' }}></div> {/* spacer */}
+            {flattenNotes(selectedSubject).length > 0 ? (
+              <button className="back-btn" onClick={handleDownloadAll} disabled={zipping} type="button">
+                <i className="fa-solid fa-file-zipper"></i>
+                {zipping ? zipProgress : 'Download all'}
+              </button>
+            ) : (
+              <div style={{ width: '80px' }}></div>
+            )}
           </div>
 
           <div className="notes-list-container">
@@ -98,6 +172,8 @@ const NotesHub = ({ currentSem, onNavigate }) => {
                               setPreview({ file: sub.file, title: sub.title });
                             }
                           };
+                          const bmId = `note:${currentSem}:${selectedSubject.id}:${index}:${sIdx}`;
+                          const bmItem = { id: bmId, type: 'note', title: `${note.title} — ${sub.title}`, file: sub.file, subject: selectedSubject.name, semesterName: semData.name, isExternal: !!sub.isExternal };
                           return (
                             <div
                               key={sIdx}
@@ -110,6 +186,7 @@ const NotesHub = ({ currentSem, onNavigate }) => {
                               <span className="folder-note-title">{sub.title}</span>
                               <span className="folder-note-meta">
                                 {fileSizes[sub.file] != null && <span className="file-size">{formatSize(fileSizes[sub.file])}</span>}
+                                <BookmarkButton active={isBookmarked(bmId)} onClick={() => handleToggleBookmark(bmItem)} />
                                 {sub.isExternal ? (
                                   <OpenButton file={sub.file} label={`Open ${sub.title}`} />
                                 ) : (
@@ -139,6 +216,8 @@ const NotesHub = ({ currentSem, onNavigate }) => {
                   }
                   if (note.file) setPreview({ file: note.file, title: note.title });
                 };
+                const bmId = `note:${currentSem}:${selectedSubject.id}:${index}`;
+                const bmItem = { id: bmId, type: 'note', title: note.title, file: note.file, subject: selectedSubject.name, semesterName: semData.name, isExternal: !!note.isExternal };
                 return (
                   <div
                     key={index}
@@ -159,6 +238,9 @@ const NotesHub = ({ currentSem, onNavigate }) => {
                       </span>
                     </div>
                     <div className="note-item-right">
+                      {!note.isPlaceholder && (
+                        <BookmarkButton active={isBookmarked(bmId)} onClick={() => handleToggleBookmark(bmItem)} />
+                      )}
                       {note.isPlaceholder ? (
                         <ComingSoonButton />
                       ) : note.isExternal ? (
@@ -181,6 +263,27 @@ const NotesHub = ({ currentSem, onNavigate }) => {
               </div>
             )}
           </div>
+
+          {/* Get PYQ — notes and PYQs are separate; this jumps to the PYQ
+              view pre-filtered to this subject. */}
+          {pyqSubjectsFor(selectedSubject.id).length > 0 && (
+            <div className="get-pyq-card glass">
+              <div className="get-pyq-text">
+                <i className="fa-solid fa-file-lines get-pyq-icon"></i>
+                <div>
+                  <h3>Previous Year Papers</h3>
+                  <p>{pyqCountFor(selectedSubject.id)} PYQ paper{pyqCountFor(selectedSubject.id) === 1 ? '' : 's'} available for {selectedSubject.name}.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="get-pyq-btn"
+                onClick={() => onNavigatePyq && onNavigatePyq(selectedSubject.id, selectedSubject.name)}
+              >
+                Get PYQ <i className="fa-solid fa-arrow-right"></i>
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         /* Grid of Subjects */
@@ -193,31 +296,64 @@ const NotesHub = ({ currentSem, onNavigate }) => {
                 <h2>{semData.name}</h2>
                 <span className="section-count">{semData.subjects.length} subjects</span>
               </div>
-              <div className="subjects-grid">
-                {semData.subjects.map((sub) => {
-                  const n = countNotes(sub);
-                  return (
-                    <div
-                      key={sub.id}
-                      className={`subject-card glass glass-hover ${sub.colorClass || ''}`}
-                      onClick={() => handleSubjectClick(sub)}
-                    >
-                      {sub.secured && (
-                        <div className="secured-indicator">
-                          <i className="fa-solid fa-shield-halved"></i> Secured
-                        </div>
-                      )}
-                      <div className="subject-card-img-wrapper">
-                        <img src={sub.image} alt={sub.name} className="subject-card-img" loading="lazy" />
-                      </div>
-                      <h3 className="subject-card-name">{sub.name}</h3>
-                      <span className="note-count-badge">
-                        <i className="fa-solid fa-file"></i> {n} file{n === 1 ? '' : 's'}
-                      </span>
-                    </div>
-                  );
-                })}
+              <div className="grid-toolbar glass">
+                <div className="grid-filter">
+                  <i className="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  <input
+                    type="text"
+                    value={filterText}
+                    onChange={(e) => setFilterText(e.target.value)}
+                    placeholder="Filter subjects…"
+                    aria-label="Filter subjects by name"
+                  />
+                </div>
+                <select
+                  className="form-select grid-sort"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  aria-label="Sort subjects"
+                >
+                  <option value="name">Sort: Name A–Z</option>
+                  <option value="files">Sort: Most files</option>
+                  <option value="recent">Sort: Recently added</option>
+                </select>
               </div>
+              {visibleSubjects.length > 0 ? (
+                <div className="subjects-grid">
+                  {visibleSubjects.map((sub) => {
+                    const n = countNotes(sub);
+                    return (
+                      <div
+                        key={sub.id}
+                        className={`subject-card glass glass-hover ${sub.colorClass || ''}`}
+                        onClick={() => handleSubjectClick(sub)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSubjectClick(sub); } }}
+                      >
+                        {sub.secured && (
+                          <div className="secured-indicator">
+                            <i className="fa-solid fa-shield-halved"></i> Secured
+                          </div>
+                        )}
+                        <div className="subject-card-img-wrapper">
+                          <img src={sub.image} alt={sub.name} className="subject-card-img" loading="lazy" />
+                        </div>
+                        <h3 className="subject-card-name">{sub.name}</h3>
+                        <span className="note-count-badge">
+                          <i className="fa-solid fa-file"></i> {subjectBadge(sub)}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="coming-soon-card glass" style={{ margin: '2rem auto' }}>
+                  <i className="fa-solid fa-magnifying-glass coming-soon-icon"></i>
+                  <h3>No subjects match</h3>
+                  <p>Try a different search term for {semData.name}.</p>
+                </div>
+              )}
             </>
           ) : (
             <div className="coming-soon-card glass" style={{ margin: '4rem auto' }}>

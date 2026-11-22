@@ -111,12 +111,12 @@ export const pyqPapers = [
   { id: 's1-ec-jan-2020', subject: 'Engineering Chemistry', subjectCode: '18103', year: 2020, session: 'Jan 2020', file: '/pyq/sem1/EC-Jan-2020.pdf' },
   { id: 's1-ec-dec-2019', subject: 'Engineering Chemistry', subjectCode: '21503', year: 2019, session: 'Dec 2019', file: '/pyq/sem1/EC-Dec-2019.pdf' },
   { id: 's1-ec-dec-2018', subject: 'Engineering Chemistry', subjectCode: '11503', year: 2018, session: 'Dec 2018', file: '/pyq/sem1/EC-Dec-2018.pdf' },
+  { id: 's1-ec-internal-2023', subject: 'Engineering Chemistry', subjectCode: '11N503', year: 2023, session: 'Internal Nov 2023 (CIT Abu Road)', file: '/CIT-PYQ-2023-24.pdf' },
 
   // Engineering Mathematics-1 — 11N501
   { id: 's1-em1-2025', subject: 'Engineering Mathematics-1', subjectCode: '11N501', year: 2025, session: 'Main 2025', file: '/pyq/sem1/EM1-2025.pdf' },
   { id: 's1-em1-2024', subject: 'Engineering Mathematics-1', subjectCode: '11N501', year: 2024, session: 'Main 2024', file: '/pyq/sem1/EM1-2024.pdf' },
-  { id: 's1-em1-may-2023-a', subject: 'Engineering Mathematics-1', subjectCode: '11N-501', year: 2023, session: 'May 2023 (11N-501)', file: '/pyq/sem1/EM1-May-2023.pdf' },
-  { id: 's1-em1-may-2023-b', subject: 'Engineering Mathematics-1', subjectCode: '11N501', year: 2023, session: 'May 2023 (11N501)', file: '/pyq/sem1/EM1-May-2023-2.pdf' },
+  { id: 's1-em1-may-2023', subject: 'Engineering Mathematics-1', subjectCode: '11N501', year: 2023, session: 'May 2023', file: '/pyq/sem1/EM1-May-2023.pdf' },
   { id: 's1-em1-jul-2022', subject: 'Engineering Mathematics-1', subjectCode: '11N501', year: 2022, session: 'Jul 2022', file: '/pyq/sem1/EM1-Jul-2022.pdf' },
   { id: 's1-em1-mar-2021', subject: 'Engineering Mathematics-1', subjectCode: '11501', year: 2021, session: 'Mar 2021', file: '/pyq/sem1/EM1-Mar-2021.pdf' },
   { id: 's1-em1-jan-2020', subject: 'Engineering Mathematics-1', subjectCode: '18101', year: 2020, session: 'Jan 2020', file: '/pyq/sem1/EM1-Jan-2020.pdf' },
@@ -132,6 +132,7 @@ export const pyqPapers = [
   { id: 's1-ep-jan-2020', subject: 'Engineering Physics', subjectCode: '18102', year: 2020, session: 'Jan 2020', file: '/pyq/sem1/EP-Jan-2020.pdf' },
   { id: 's1-ep-dec-2019', subject: 'Engineering Physics', subjectCode: '21502', year: 2019, session: 'Dec 2019', file: '/pyq/sem1/EP-Dec-2019.pdf' },
   { id: 's1-ep-dec-2018', subject: 'Engineering Physics', subjectCode: '11502', year: 2018, session: 'Dec 2018', file: '/pyq/sem1/EP-Dec-2018.pdf' },
+  { id: 's1-ep-feb-2025', subject: 'Engineering Physics', subjectCode: '11N502', year: 2025, session: 'Main/Back Feb 2025', file: '/PYQ Physics.pdf' },
 
   // Human Values — 18105
   { id: 's1-hv-jan-2020', subject: 'Human Values', subjectCode: '18105', year: 2020, session: 'Jan 2020', file: '/pyq/sem1/HV-Jan-2020.pdf' },

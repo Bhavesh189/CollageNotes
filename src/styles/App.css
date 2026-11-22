@@ -606,6 +606,24 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+/* Narrow phones: subject header stacks cleanly — title full-width on top,
+   the two buttons share one row below (was: title squeezed beside Back,
+   Download all orphaned on a second line). */
+@media (max-width: 480px) {
+  .subject-panel-header {
+    flex-wrap: wrap;
+  }
+  .subject-panel-header .panel-title {
+    order: -1;
+    flex: 1 1 100%;
+    text-align: center;
+  }
+  .subject-panel-header .back-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
 /* Secured Folder Sub-Folders structure */
 .folder-card {
   background: rgba(27, 122, 67, 0.04);

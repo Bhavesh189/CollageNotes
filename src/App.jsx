@@ -12,6 +12,7 @@ import SearchResults from './pages/SearchResults';
 import AddNotesForm from './pages/AddNotesForm';
 import Bookmarks from './pages/Bookmarks';
 import { getBookmarks } from './lib/bookmarks';
+import { trackPageView } from './lib/analytics';
 import { pyqSubjectsFor } from './lib/subjectPyq';
 import { semestersData } from './data/notesData';
 
@@ -97,6 +98,17 @@ function App() {
     window.addEventListener('hashchange', onHash);
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
+
+  // SPA pageviews for GA4: hash routes (#sem1..#sem8) + view switches are
+  // not real navigations, so report them manually. The gtag config in
+  // index.html sets send_page_view:false, so this effect is the ONLY source
+  // of page_view events — including the first load. It fires on every
+  // view/semester change (hash changes and pushState both land here via
+  // state), so no separate hashchange tracking is needed. No-op until
+  // VITE_GA_MEASUREMENT_ID is configured.
+  useEffect(() => {
+    trackPageView(window.location.pathname + window.location.hash);
+  }, [currentView, currentSem]);
 
   // Bookmark count badge stays fresh
   useEffect(() => {
@@ -224,14 +236,6 @@ function App() {
           >
             <i className="fa-solid fa-graduation-cap"></i> <span className="nav-label">Notes Dashboard</span>
           </button>
-          <a
-            href="https://bhavesh189.github.io/Result-Website/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="nav-btn"
-          >
-            <i className="fa-solid fa-square-poll-vertical"></i> <span className="nav-label">See Result</span>
-          </a>
           <button
             className={`nav-btn ${currentView === 'pyq' ? 'active' : ''}`}
             onClick={() => goToView('pyq')}
@@ -338,7 +342,6 @@ function App() {
           <nav className="footer-col" aria-label="Links">
             <h4>Links</h4>
             <a href="https://thebhavesh.online" target="_blank" rel="noopener noreferrer">Portfolio — thebhavesh.online</a>
-            <a href="https://bhavesh189.github.io/Result-Website/" target="_blank" rel="noopener noreferrer">See Result</a>
           </nav>
         </div>
         <p className="footer-base">Made for students, by a student · Bikaner Technical University</p>

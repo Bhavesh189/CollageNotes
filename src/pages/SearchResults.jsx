@@ -109,9 +109,9 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
             onChange={(e) => setSort(e.target.value)}
             aria-label="Sort results"
           >
-            <option value="relevance">Sort: Relevance</option>
-            <option value="az">Sort: A–Z</option>
-            <option value="newest">Sort: Newest first</option>
+            <option value="relevance">Relevance</option>
+            <option value="az">A–Z</option>
+            <option value="newest">Newest first</option>
           </select>
           {hasFilters && (
             <button className="back-btn" onClick={clearAll} type="button">
@@ -137,7 +137,7 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
                 if (r.isExternal) {
                   window.open(r.file, '_blank', 'noopener,noreferrer');
                 } else {
-                  setPreview({ file: r.file, title: r.title });
+                  setPreview({ file: r.file, title: r.title, context: { semester: r.semesterName, source: r.type || 'search' } });
                 }
               };
               return (
@@ -201,6 +201,7 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
         <DocViewer
           file={preview.file}
           title={preview.title}
+          context={preview.context}
           onClose={() => setPreview(null)}
         />
       )}

@@ -4,10 +4,13 @@ import {
   getSemesterOptions,
   getSubjectOptions,
   formatSize,
+  didYouMean,
+  snippetFor,
 } from '../lib/searchIndex';
 import DocViewer from '../components/DocViewer';
 import { ViewButton, DownloadButton, OpenButton, BookmarkButton } from '../components/NoteActions';
 import { isBookmarked, toggleBookmark } from '../lib/bookmarks';
+import { getTrendingSearches, requestNote, getNoteRequests } from '../lib/study';
 
 // Dedicated universal-search results view.
 // Props: query (from header), onQueryChange, onClear (Escape / clear button).
@@ -16,7 +19,11 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
   const [subject, setSubject] = useState('all');
   const [type, setType] = useState('all');
   const [sort, setSort] = useState('relevance');
+  const [pyqYear, setPyqYear] = useState('all');
+  const [pyqExam, setPyqExam] = useState('all');
   const [preview, setPreview] = useState(null); // { file, title }
+  const [copied, setCopied] = useState(false);
+  const [requested, setRequested] = useState(false);
   const [, setBmTick] = useState(0);
 
   const semesterOptions = useMemo(() => getSemesterOptions(), []);
@@ -35,16 +42,55 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
     [query, semester, subject, type, sort]
   );
 
+  // PYQ facets: year + exam type (midterm/endterm) on PYQ results.
+  const pyqResults = useMemo(() => {
+    let list = results.filter((r) => r.type === 'pyq');
+    if (pyqYear !== 'all') list = list.filter((r) => String(r.year) === pyqYear);
+    if (pyqExam !== 'all') {
+      list = list.filter((r) => {
+        const s = String(r.session || '').toLowerCase();
+        return pyqExam === 'mid' ? /mid|sessional|internal/.test(s) : /end|final|main/.test(s);
+      });
+    }
+    return list;
+  }, [results, pyqYear, pyqExam]);
+  const shownResults = type === 'pyq' ? pyqResults : results;
+  const pyqYears = useMemo(() => {
+    const ys = [...new Set(results.filter((r) => r.type === 'pyq').map((r) => r.year).filter(Boolean))].sort((a, b) => b - a);
+    return ys;
+  }, [results]);
+
   const hasFilters = semester !== 'all' || subject !== 'all' || type !== 'all' || query.trim() !== '';
+  const showResults = query.trim().length >= 2 || hasFilters;
+
+  const suggestion = useMemo(
+    () => (showResults && results.length === 0 && query.trim().length >= 3 ? didYouMean(query) : null),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [query, results.length, showResults]
+  );
+  const trending = useMemo(() => getTrendingSearches(5), [query]);
+  const requests = useMemo(() => getNoteRequests(), [requested]);
+
+  const copySearchLink = async () => {
+    const url = `${window.location.origin}${window.location.pathname}#search?q=${encodeURIComponent(query.trim())}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      window.prompt('Copy this search link:', url);
+    }
+  };
+
   const clearAll = () => {
     setSemester('all');
     setSubject('all');
     setType('all');
     setSort('relevance');
+    setPyqYear('all');
+    setPyqExam('all');
     onClear();
   };
-
-  const showResults = query.trim().length >= 2 || hasFilters;
 
   return (
     <div className="view-main">
@@ -121,18 +167,49 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
         </div>
         <p className="search-count">
           {showResults ? (
-            <>{results.length} result{results.length === 1 ? '' : 's'}</>
+            <>{shownResults.length} result{shownResults.length === 1 ? '' : 's'}</>
           ) : (
             <>Type at least 2 characters, or pick filters — e.g. try “sem 4”, “database”, “pyq 2024”.</>
           )}
+          {query.trim().length >= 2 && (
+            <button type="button" className="search-copy-link" onClick={copySearchLink} title="Copy a shareable link for this search">
+              <i className="fa-solid fa-link"></i> {copied ? 'Link copied!' : 'Copy search link'}
+            </button>
+          )}
         </p>
+        {type === 'pyq' && pyqYears.length > 0 && (
+          <div className="search-filters-row">
+            <select className="form-select" value={pyqYear} onChange={(e) => setPyqYear(e.target.value)} aria-label="Filter PYQ by year">
+              <option value="all">All years</option>
+              {pyqYears.map((y) => (
+                <option key={y} value={y}>{y}</option>
+              ))}
+            </select>
+            <select className="form-select" value={pyqExam} onChange={(e) => setPyqExam(e.target.value)} aria-label="Filter PYQ by exam type">
+              <option value="all">Midterm + Endterm</option>
+              <option value="mid">Midterm / Sessional</option>
+              <option value="end">Endterm / Main</option>
+            </select>
+          </div>
+        )}
+        {!showResults && trending.length > 0 && (
+          <p className="search-trending">
+            Students are searching:{' '}
+            {trending.map((t, i) => (
+              <span key={t.term}>
+                {i > 0 && ' · '}
+                <button type="button" className="search-trend-btn" onClick={() => onQueryChange(t.term)}>{t.term}</button>
+              </span>
+            ))}
+          </p>
+        )}
       </div>
 
       {/* Results */}
       {showResults && (
         <div className="notes-list-container">
-          {results.length > 0 ? (
-            results.map((r, index) => {
+          {shownResults.length > 0 ? (
+            shownResults.map((r, index) => {
               const openView = () => {
                 if (r.isExternal) {
                   window.open(r.file, '_blank', 'noopener,noreferrer');
@@ -140,6 +217,7 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
                   setPreview({ file: r.file, title: r.title, context: { semester: r.semesterName, source: r.type || 'search' }, allowDownload: r.type === 'pyq' });
                 }
               };
+              const snip = snippetFor(r, query);
               return (
               <div
                 key={r.id}
@@ -156,10 +234,10 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
                     <span className={`result-badge ${r.type === 'pyq' ? 'badge-pyq' : 'badge-note'}`}>
                       {r.type === 'pyq' ? 'PYQ' : 'Note'}
                     </span>{' '}
-                    {r.title}
+                    {String(snip.title).split('**').map((p, i) => (i % 2 === 1 ? <strong key={i}>{p}</strong> : <span key={i}>{p}</span>))}
                     <br />
                     <small className="result-meta">
-                      {r.semesterName} · {r.subject}
+                      {snip.meta}
                       {r.size != null && <> · {formatSize(r.size)}</>}
                     </small>
                   </span>
@@ -188,7 +266,33 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
             <div className="coming-soon-card glass" style={{ margin: '2rem auto' }}>
               <i className="fa-solid fa-magnifying-glass coming-soon-icon"></i>
               <h3>No matches found</h3>
-              <p>Try fewer filters, a shorter keyword, or a different spelling.</p>
+              {suggestion ? (
+                <p>
+                  Did you mean{' '}
+                  <button type="button" className="search-trend-btn" onClick={() => onQueryChange(suggestion.suggestion)}>
+                    “{suggestion.suggestion}”
+                  </button>
+                  ? Try it, or fewer filters.
+                </p>
+              ) : (
+                <p>Try fewer filters, a shorter keyword, or a different spelling.</p>
+              )}
+              <p>
+                Looking for a paper instead? Try the{' '}
+                <button type="button" className="search-trend-btn" onClick={() => { setType('pyq'); }}>PYQ papers</button>
+                {' '}— or request this note and it will be added to your requested list in My Study:
+              </p>
+              <button
+                className="back-btn"
+                onClick={() => { requestNote(query.trim()); setRequested(true); }}
+                type="button"
+                style={{ margin: '0.5rem auto 0' }}
+              >
+                <i className="fa-solid fa-hand"></i> {requested ? 'Requested ✓ — see My Study' : `Request “${query.trim()}”`}
+              </button>
+              {requests.length > 0 && (
+                <p className="search-requests">Your requests: {requests.slice(0, 3).map((r) => r.text).join(' · ')}</p>
+              )}
               <button className="back-btn" onClick={clearAll} type="button" style={{ margin: '1rem auto 0' }}>
                 <i className="fa-solid fa-filter-circle-xmark"></i> Clear all filters
               </button>

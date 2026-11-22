@@ -15,7 +15,7 @@ export { prefetchViewerManifest };
 // The caller passes allowDownload (NotesHub notes = false; PyqFinder /
 // syllabus = true; SearchResults / Bookmarks per item type). Default
 // (no prop) = protected notes mode.
-const DocViewer = ({ file, title, onClose, context, allowDownload }) => {
+const DocViewer = ({ file, title, onClose, context, allowDownload, onOpenSyllabus, onOpenNext }) => {
   if (allowDownload) {
     return (
       <PdfViewer
@@ -28,7 +28,7 @@ const DocViewer = ({ file, title, onClose, context, allowDownload }) => {
     );
   }
   return (
-    <ImageViewer file={file} title={title} onClose={onClose} context={context} />
+    <ImageViewer file={file} title={title} onClose={onClose} context={context} onOpenSyllabus={onOpenSyllabus} onOpenNext={onOpenNext} />
   );
 };
 

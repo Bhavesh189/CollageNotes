@@ -42,6 +42,7 @@ import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { Worker, isMainThread, parentPort, workerData } from 'node:worker_threads';
 import { buildKeywordIndex } from './build-keywords.mjs';
+import { runHandwritePass } from './handwrite.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -253,6 +254,12 @@ if (!isMainThread) {
   console.log(`done in ${((Date.now() - t0) / 1000).toFixed(0)}s: ${rendered.length} docs, ${totalPages} pages, ${(totalBytes / 1048576).toFixed(0)}MB images`);
   if (errors.length) console.log(`errors (${errors.length}): ${errors.map(([k, d]) => `${k} — ${d.error}`).join(' | ')}`);
   if (suspiciousDocs.length) console.log(`suspicious pages in ${suspiciousDocs.length} docs (JPEG <12KB — check for blank/JBIG2 pages)`);
+
+  // Handwriting conversion — typed Sem 2-3 notes re-set in Kalam on ruled
+  // paper (scripts/handwrite.mjs). Idempotent: docs whose hwSha matches
+  // and whose hw images exist are skipped, so re-runs are a no-op.
+  const hw = await runHandwritePass(docs, { log: (m) => console.log(m) });
+  if (hw.convertedDocs) console.log(`handwrite: ${hw.convertedDocs} docs, ${hw.convertedPages} pages handwritten`);
 
   // Keyword index for the in-site chatbot (src/lib/notesRag.js) — see
   // scripts/build-keywords.mjs. Rebuilt from all on-disk search.json files

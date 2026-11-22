@@ -213,16 +213,35 @@ export function searchAll({ query, semester = 'all', subject = 'all', type = 'al
   const q = norm(query).trim();
   let tokens = tokenize(q);
 
+  // Operators: sem:3 · sub:dbms · type:pyq|note · year:2024 — pulled out
+  // of the tokens and applied as hard filters (shown as hint chips).
+  let opSemester = null;
+  let opSubject = null;
+  let opType = null;
+  let opYear = null;
+  tokens = tokens.filter((t) => {
+    const m = t.match(/^(sem|sub|type|year):(.+)$/);
+    if (!m) return true;
+    if (m[1] === 'sem') { const s = semesterIdFromToken(`sem${m[2]}`); if (s) opSemester = s; }
+    else if (m[1] === 'sub') opSubject = m[2];
+    else if (m[1] === 'type' && (m[2] === 'pyq' || m[2] === 'note')) opType = m[2];
+    else if (m[1] === 'year' && /^\d{4}$/.test(m[2])) opYear = m[2];
+    return false;
+  });
+
   // "sem 4" typed in the query becomes a semester constraint (explicit
   // dropdown filter wins if both are set).
   const ex = extractSemester(tokens);
   tokens = ex.rest;
-  const effSemester = semester !== 'all' ? semester : (ex.semId || 'all');
+  const effSemester = semester !== 'all' ? semester : (opSemester || ex.semId || 'all');
+  const effSubject = subject !== 'all' ? subject : opSubject;
+  const effType = type !== 'all' ? type : (opType || 'all');
 
   let results = index.filter((item) => {
     if (effSemester !== 'all' && item.semester !== effSemester) return false;
-    if (subject !== 'all' && item.subject !== subject) return false;
-    if (type !== 'all' && item.type !== type) return false;
+    if (effSubject && effSubject !== 'all' && norm(item.subject) !== effSubject && item.acronym !== effSubject) return false;
+    if (effType !== 'all' && item.type !== effType) return false;
+    if (opYear && String(item.year || '') !== opYear) return false;
     if (tokens.length === 0) return true;
     return scoreItem(item, tokens, q) >= 0;
   });
@@ -241,3 +260,58 @@ export function searchAll({ query, semester = 'all', subject = 'all', type = 'al
 }
 
 export { formatSize };
+
+// "Did you mean" — closest subject / note title by edit distance, for
+// zero-result searches. Returns { suggestion, kind } or null.
+function editDistance(a, b) {
+  const m = a.length;
+  const n = b.length;
+  if (Math.abs(m - n) > 3) return 99;
+  const dp = Array.from({ length: m + 1 }, (_, i) => [i, ...Array(n).fill(0)]);
+  for (let j = 0; j <= n; j++) dp[0][j] = j;
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = Math.min(
+        dp[i - 1][j] + 1,
+        dp[i][j - 1] + 1,
+        dp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1),
+      );
+    }
+  }
+  return dp[m][n];
+}
+
+export function didYouMean(query) {
+  const q = norm(query).trim();
+  if (q.length < 3) return null;
+  const index = buildSearchIndex();
+  const words = new Set();
+  index.forEach((it) => {
+    norm(it.subject).split(/[^a-z0-9]+/).filter((w) => w.length >= 3).forEach((w) => words.add(w));
+    norm(it.title).split(/[^a-z0-9]+/).filter((w) => w.length >= 4).forEach((w) => words.add(w));
+  });
+  let best = null;
+  let bestD = 99;
+  for (const w of words) {
+    const d = editDistance(q.split(/\s+/)[0], w);
+    if (d < bestD) {
+      bestD = d;
+      best = w;
+    }
+  }
+  if (best && bestD <= 2 && best !== q) return { suggestion: best, kind: 'word' };
+  return null;
+}
+
+// One context line under a result: the matched unit/topic + subject.
+export function snippetFor(item, query) {
+  const tokens = tokenize(norm(query)).filter((t) => !/^(sem|sub|type|year):/.test(t));
+  let title = item.title;
+  for (const t of tokens) {
+    if (t.length < 3) continue;
+    const re = new RegExp(`(${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'ig');
+    title = title.replace(re, '**$1**');
+  }
+  return { title, meta: `${item.semesterName} · ${item.subject}${item.session ? ` · ${item.session}` : ''}` };
+}
+

@@ -1,6 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { trackEvent } from '../lib/analytics';
-import { recordPageView, recordSession } from '../lib/study';
+import { recordPageView, recordSession, getFrequentlyTogether } from '../lib/study';
+import {
+  getFlags, setFlag, getAnnotations, addAnnotation, deleteAnnotation,
+  getHighlights, addHighlight, deleteHighlight, getPageBookmarks,
+  togglePageBookmark, FLAG_LABELS,
+} from '../lib/pageMarks';
+import { semestersData } from '../data/notesData';
 
 // IMAGE-BASED document viewer — the browser NEVER receives a PDF file.
 // The build renders every PDF under notes-source/ to page images
@@ -78,7 +84,7 @@ export const prefetchViewerManifest = () => {
   loadManifest().catch(() => {});
 };
 
-const ImageViewer = ({ file, title, onClose, context }) => {
+const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext }) => {
   const [status, setStatus] = useState('loading'); // loading|ready|missing|error|unsupported
   const [statusNote, setStatusNote] = useState('');
   const [numPages, setNumPages] = useState(null);
@@ -88,6 +94,7 @@ const ImageViewer = ({ file, title, onClose, context }) => {
   const [fitWidth, setFitWidth] = useState(true);
   const [pageTexts, setPageTexts] = useState(null);
   const [entryDir, setEntryDir] = useState(null);
+  const [hwPages, setHwPages] = useState(null); // Set of page numbers rendered in handwriting, or null
   const [searchQuery, setSearchQuery] = useState('');
   const [searching, setSearching] = useState(false);
   // matches: [{ page, count }] — one entry per page that contains a hit.
@@ -95,6 +102,46 @@ const ImageViewer = ({ file, title, onClose, context }) => {
   const [matchIndex, setMatchIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [blurred, setBlurred] = useState(false);
+  // F2 — viewer tools (all local, overlays/metadata only; images untouched).
+  const [toolsOpen, setToolsOpen] = useState(false); // overflow panel
+  const [filmstrip, setFilmstrip] = useState(false);
+  const [spread, setSpread] = useState(false); // two-page spread (desktop)
+  const [rotateDeg, setRotateDeg] = useState(0);
+  const [rulerOn, setRulerOn] = useState(false); // reading ruler / focus line
+  const [rulerY, setRulerY] = useState(50); // % down the page wrap
+  const [focusMode, setFocusMode] = useState(false);
+  const [together, setTogether] = useState([]);
+
+  useEffect(() => {
+    setTogether(file ? getFrequentlyTogether(file, 3) : []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [file]); // dim all chrome
+  const [brightness, setBrightness] = useState(100); // night-reading %
+  const [quality, setQuality] = useState('sharp'); // fast | sharp
+  const [playing, setPlaying] = useState(false); // slideshow auto-advance
+  const [slideSecs, setSlideSecs] = useState(5);
+  const [flags, setFlags] = useState({});
+  const [annotations, setAnnotations] = useState({});
+  const [highlights, setHighlights] = useState({});
+  const [pageBookmarks, setPageBookmarks] = useState({});
+  const [noteText, setNoteText] = useState('');
+  const [hlMode, setHlMode] = useState(false); // drag to draw a highlight
+  const [hlDrag, setHlDrag] = useState(null); // {x0,y0,x1,y1} in %
+  const [touchX, setTouchX] = useState(null); // swipe to change page
+  const wrapRef = useRef(null);
+  const refreshMarks = () => {
+    setFlags(getFlags(file));
+    setAnnotations(getAnnotations(file));
+    setHighlights(getHighlights(file));
+    setPageBookmarks(getPageBookmarks(file));
+  };
+  useEffect(refreshMarks, [file]);
+  useEffect(() => {
+    const onMarks = () => refreshMarks();
+    window.addEventListener('bn-marks-changed', onMarks);
+    return () => window.removeEventListener('bn-marks-changed', onMarks);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [file]);
   // imgReady: the current page image has arrived + decoded. While false the
   // skeleton holds the page's place — never a blank wait. imgError: the
   // page image itself failed to load (missing file on disk).
@@ -116,7 +163,12 @@ const ImageViewer = ({ file, title, onClose, context }) => {
     [matches],
   );
 
-  const pageSrc = (n) => (entryDir ? `/generated/${entryDir}/page-${pad(n)}.jpg` : null);
+  const pageSrc = (n) =>
+    entryDir
+      ? hwPages && hwPages.has(n)
+        ? `/generated/${entryDir}/hw/page-${pad(n)}.jpg`
+        : `/generated/${entryDir}/page-${pad(n)}.jpg`
+      : null;
 
   useEffect(() => {
     numPagesRef.current = numPages;
@@ -241,6 +293,9 @@ const ImageViewer = ({ file, title, onClose, context }) => {
       } else if (e.key === 'ArrowRight') {
         e.preventDefault();
         goNext();
+      } else if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        toggleFullscreen();
       }
     };
     window.addEventListener('keydown', onKey);
@@ -272,6 +327,7 @@ const ImageViewer = ({ file, title, onClose, context }) => {
     setFitWidth(true);
     setPageTexts(null);
     setEntryDir(null);
+    setHwPages(null);
     setSearchQuery('');
     setMatches([]);
     setMatchIndex(0);
@@ -324,6 +380,7 @@ const ImageViewer = ({ file, title, onClose, context }) => {
           return;
         }
         setEntryDir(entry.dir);
+        setHwPages(Array.isArray(entry.hwPages) && entry.hwPages.length > 0 ? new Set(entry.hwPages) : null);
         setNumPages(entry.pages);
         // Ready NOW — the <img> for page 1 mounts and its request starts
         // immediately; the search index follows in the background.
@@ -360,20 +417,107 @@ const ImageViewer = ({ file, title, onClose, context }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
 
-  // INSTANT PAGE TURNS: preload the previous page and the NEXT 3 pages
+  // INSTANT PAGE TURNS: preload the previous page and the NEXT pages
   // while the user reads the current one, so a turn finds the image
   // already in the browser cache. Plain Image() prefetches — they do not
   // block the visible page; the browser deprioritises them behind it.
+  // Quality: Sharp preloads 3 ahead (default); Fast preloads only the
+  // next page, for slow networks / low-data reading.
   useEffect(() => {
     if (status !== 'ready') return;
-    [pageNumber - 1, pageNumber + 1, pageNumber + 2, pageNumber + 3].forEach((n) => {
+    const ahead = quality === 'fast' ? [pageNumber + 1] : [pageNumber - 1, pageNumber + 1, pageNumber + 2, pageNumber + 3];
+    ahead.forEach((n) => {
       if (n >= 1 && n <= (numPagesRef.current || 0)) {
         const img = new Image();
         img.src = pageSrc(n);
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageNumber, status]);
+  }, [pageNumber, status, quality]);
+
+  // Slideshow: hands-free revision — advance a page every N seconds.
+  useEffect(() => {
+    if (!playing || status !== 'ready') return undefined;
+    const t = setInterval(() => {
+      const total = numPagesRef.current || 0;
+      if (pageRef.current >= total) {
+        setPlaying(false);
+        return;
+      }
+      goToPage(pageRef.current + 1);
+    }, slideSecs * 1000);
+    return () => clearInterval(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playing, slideSecs, status]);
+
+  // Where does this note sit in its subject? (syllabus chip + up-next)
+  const noteMeta = useMemo(() => {
+    for (const sem of Object.values(semestersData || {})) {
+      for (const sub of sem.subjects || []) {
+        const idx = (sub.notes || []).findIndex((n) => n.file === file);
+        if (idx !== -1) {
+          const notes = sub.notes || [];
+          const next = notes.slice(idx + 1).find((n) => {
+            try {
+              const p = JSON.parse(localStorage.getItem('bn-progress') || '{}')[n.file];
+              return !p || !p.done;
+            } catch {
+              return true;
+            }
+          });
+          const unit = (title || '').match(/unit\s*(\d+)/i);
+          return {
+            subject: sub.name, subjectId: sub.id, semId: sem.id, semName: sem.name,
+            unit: unit ? `Unit ${unit[1]}` : '', next,
+          };
+        }
+      }
+    }
+    return null;
+  }, [file, title]);
+
+  // Highlight drawing: drag on the page to mark a region (percent coords).
+  const hlPos = (e) => {
+    const r = wrapRef.current ? wrapRef.current.getBoundingClientRect() : { left: 0, top: 0, width: 1, height: 1 };
+    const x = Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100));
+    const y = Math.max(0, Math.min(100, ((e.clientY - r.top) / r.height) * 100));
+    return { x, y };
+  };
+  const hlStart = (e) => {
+    if (!hlMode) return;
+    const p = hlPos(e);
+    setHlDrag({ x0: p.x, y0: p.y, x1: p.x, y1: p.y });
+  };
+  const hlMove = (e) => {
+    if (!hlDrag) return;
+    const p = hlPos(e);
+    setHlDrag({ ...hlDrag, x1: p.x, y1: p.y });
+  };
+  const hlEnd = () => {
+    if (!hlDrag) return;
+    const x = Math.min(hlDrag.x0, hlDrag.x1);
+    const y = Math.min(hlDrag.y0, hlDrag.y1);
+    const w = Math.abs(hlDrag.x1 - hlDrag.x0);
+    const h = Math.abs(hlDrag.y1 - hlDrag.y0);
+    setHlDrag(null);
+    if (w > 2 && h > 1) addHighlight(file, pageNumber, { x, y, w, h });
+  };
+  // Swipe left/right to change page (mobile-first); swipe down closes.
+  const onTouchStart = (e) => {
+    if (e.touches.length === 1) setTouchX({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+  };
+  const onTouchEnd = (e) => {
+    if (!touchX || e.changedTouches.length !== 1) return;
+    const dx = e.changedTouches[0].clientX - touchX.x;
+    const dy = e.changedTouches[0].clientY - touchX.y;
+    setTouchX(null);
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (dx < 0) goNext();
+      else goPrev();
+    } else if (dy > 90 && Math.abs(dy) > Math.abs(dx) * 2) {
+      onClose();
+    }
+  };
 
   // Track whether the current page image has actually arrived. Reset on
   // every page change; if the image is already cached, `complete` is true
@@ -479,17 +623,27 @@ const ImageViewer = ({ file, title, onClose, context }) => {
       aria-label={title || 'Document preview'}
     >
       <div
-        className="docviewer-modal glass"
+        className={`docviewer-modal glass${focusMode ? ' docviewer-modal--focus' : ''}`}
         ref={modalRef}
         onClick={(e) => e.stopPropagation()}
         onContextMenu={blockIfNotTyping}
         onCopy={blockIfNotTyping}
         onCut={blockIfNotTyping}
       >
+        {focusMode && (
+          <button type="button" className="focus-show-btn" onClick={() => setFocusMode(false)} title="Show controls">
+            <i className="fa-solid fa-eye"></i> Show controls
+          </button>
+        )}
         <div className="docviewer-header">
           <span className="docviewer-title" title={title}>
             <i className="fa-solid fa-eye" style={{ marginRight: '8px' }}></i>
             {title || 'Document preview'}
+            {hwPages && hwPages.has(pageNumber) && (
+              <span className="viewer-hw-badge" title="This page is re-set in handwriting from the original notes">
+                <i className="fa-solid fa-pen"></i> Handwritten
+              </span>
+            )}
           </span>
           <div className="docviewer-actions">
             <button
@@ -639,13 +793,218 @@ const ImageViewer = ({ file, title, onClose, context }) => {
                 <i className={isFullscreen ? 'fa-solid fa-minimize' : 'fa-solid fa-maximize'}></i>
                 <span>{isFullscreen ? 'Exit' : 'Full'}</span>
               </button>
+              <button
+                type="button"
+                className="pdf-nav-btn pdf-fit-btn"
+                onClick={() => setFilmstrip((f) => !f)}
+                aria-pressed={filmstrip}
+                title="Page thumbnails"
+                aria-label="Page thumbnails"
+              >
+                <i className="fa-solid fa-images"></i>
+                <span>Pages</span>
+              </button>
+              <button
+                type="button"
+                className="pdf-nav-btn pdf-fit-btn"
+                onClick={() => setToolsOpen((t) => !t)}
+                aria-pressed={toolsOpen}
+                title="More reading tools"
+                aria-label="More reading tools"
+              >
+                <i className="fa-solid fa-ellipsis-vertical"></i>
+                <span>Tools</span>
+              </button>
             </div>
           </div>
         )}
 
+        {ready && toolsOpen && (
+          <div className="viewer-tools" role="region" aria-label="Reading tools">
+            <div className="viewer-tools-row">
+              <span className="viewer-tools-label">Zoom</span>
+              {[50, 75, 100, 150, 200].map((z) => (
+                <button
+                  key={z}
+                  type="button"
+                  className={`viewer-chip ${Math.round(scale * 100) === z ? 'active' : ''}`}
+                  onClick={() => { setFitWidth(false); setScale(z / 100); }}
+                >
+                  {z}%
+                </button>
+              ))}
+              <input
+                type="range" min="60" max="200" step="5" value={Math.round(scale * 100)}
+                aria-label="Zoom level slider"
+                onChange={(e) => { setFitWidth(false); setScale(Number(e.target.value) / 100); }}
+              />
+            </div>
+            <div className="viewer-tools-row">
+              <span className="viewer-tools-label">View</span>
+              <button type="button" className={`viewer-chip ${spread ? 'active' : ''}`} onClick={() => setSpread((s) => !s)} title="Two-page spread (desktop)">
+                <i className="fa-solid fa-book-open"></i> Spread
+              </button>
+              <button type="button" className="viewer-chip" onClick={() => setRotateDeg((d) => (d + 90) % 360)} title="Rotate page 90°">
+                <i className="fa-solid fa-rotate-right"></i> Rotate {rotateDeg}°
+              </button>
+              <button type="button" className={`viewer-chip ${rulerOn ? 'active' : ''}`} onClick={() => setRulerOn((r) => !r)} title="Reading ruler — a focus line that follows your pointer">
+                <i className="fa-solid fa-ruler-horizontal"></i> Ruler
+              </button>
+              <button type="button" className={`viewer-chip ${focusMode ? 'active' : ''}`} onClick={() => setFocusMode((f) => !f)} title="Focus mode — hide all chrome, show only the page">
+                <i className="fa-solid fa-eye-low-vision"></i> Focus
+              </button>
+              <label className="viewer-chip viewer-slider-chip" title="Night-reading brightness">
+                <i className="fa-solid fa-moon"></i>
+                <input type="range" min="50" max="100" step="5" value={brightness} aria-label="Page brightness" onChange={(e) => setBrightness(Number(e.target.value))} />
+                <span>{brightness}%</span>
+              </label>
+              <span className="viewer-tools-label">Quality</span>
+              <button type="button" className={`viewer-chip ${quality === 'fast' ? 'active' : ''}`} onClick={() => setQuality('fast')} title="Fast — loads only the next page (slow networks)">Fast</button>
+              <button type="button" className={`viewer-chip ${quality === 'sharp' ? 'active' : ''}`} onClick={() => setQuality('sharp')} title="Sharp — preloads 3 pages ahead">Sharp</button>
+            </div>
+            <div className="viewer-tools-row">
+              <span className="viewer-tools-label">Slideshow</span>
+              <button type="button" className={`viewer-chip ${playing ? 'active' : ''}`} onClick={() => setPlaying((p) => !p)}>
+                <i className={`fa-solid ${playing ? 'fa-pause' : 'fa-play'}`}></i> {playing ? 'Pause' : 'Play'}
+              </button>
+              <select value={slideSecs} onChange={(e) => setSlideSecs(Number(e.target.value))} aria-label="Seconds per page" className="viewer-select">
+                <option value={3}>3s / page</option>
+                <option value={5}>5s / page</option>
+                <option value={8}>8s / page</option>
+              </select>
+              <span className="viewer-tools-label">Flag this page</span>
+              {Object.entries(FLAG_LABELS).map(([k, label]) => (
+                <button
+                  key={k}
+                  type="button"
+                  className={`viewer-chip flag-${k} ${flags[pageNumber] === k ? 'active' : ''}`}
+                  onClick={() => setFlag(file, pageNumber, flags[pageNumber] === k ? null : k)}
+                >
+                  {label}
+                </button>
+              ))}
+              <button
+                type="button"
+                className={`viewer-chip ${pageBookmarks[pageNumber] ? 'active' : ''}`}
+                onClick={() => togglePageBookmark(file, pageNumber, title)}
+                title="Bookmark this exact page"
+              >
+                <i className="fa-solid fa-bookmark"></i> {pageBookmarks[pageNumber] ? 'Page saved' : 'Save page'}
+              </button>
+              <button
+                type="button"
+                className={`viewer-chip ${hlMode ? 'active' : ''}`}
+                onClick={() => setHlMode((h) => !h)}
+                title="Drag on the page to mark an important area"
+              >
+                <i className="fa-solid fa-highlighter"></i> Highlight
+              </button>
+            </div>
+            <div className="viewer-tools-row">
+              <span className="viewer-tools-label">My note on p.{pageNumber}</span>
+              <input
+                type="text"
+                className="viewer-note-input"
+                value={noteText}
+                placeholder="Add a sticky note on this page…"
+                aria-label="Add a note on this page"
+                onChange={(e) => setNoteText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && noteText.trim()) {
+                    addAnnotation(file, pageNumber, noteText);
+                    setNoteText('');
+                  }
+                }}
+              />
+              <button
+                type="button"
+                className="viewer-chip"
+                onClick={() => {
+                  if (noteText.trim()) {
+                    addAnnotation(file, pageNumber, noteText);
+                    setNoteText('');
+                  }
+                }}
+              >
+                Add note
+              </button>
+              {(annotations[pageNumber] || []).map((a) => (
+                <span key={a.id} className="viewer-note-item">
+                  {a.text}
+                  <button type="button" aria-label="Delete note" onClick={() => deleteAnnotation(file, pageNumber, a.id)}>×</button>
+                </span>
+              ))}
+              {noteMeta && noteMeta.unit && (
+                <button
+                  type="button"
+                  className="viewer-chip syllabus-chip"
+                  title="See what the syllabus says for this unit"
+                  onClick={() => onOpenSyllabus && onOpenSyllabus(noteMeta.semId)}
+                >
+                  <i className="fa-solid fa-list-check"></i> Syllabus: {noteMeta.subject} · {noteMeta.unit}
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {ready && filmstrip && numPages && (
+          <div className="viewer-filmstrip" role="region" aria-label="Page thumbnails">
+            {Array.from({ length: numPages }, (_, i) => i + 1).map((n) => (
+              <button
+                key={n}
+                type="button"
+                className={`film-thumb ${n === pageNumber ? 'active' : ''}`}
+                onClick={() => goToPage(n)}
+                title={`Page ${n}${flags[n] ? ` — ${FLAG_LABELS[flags[n]]}` : ''}${pageBookmarks[n] ? ' — saved' : ''}`}
+              >
+                <img src={pageSrc(n)} alt={`Page ${n}`} loading="lazy" draggable={false} />
+                <span>
+                  {n}
+                  {flags[n] && <i className={`film-dot flag-${flags[n]}`}></i>}
+                  {pageBookmarks[n] && <i className="fa-solid fa-bookmark film-bm"></i>}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+
         <div className="docviewer-body">
+          {together.length > 0 && onOpenNext && (
+            <div className="viewer-together">
+              <span><i className="fa-solid fa-people-arrows"></i> Often read with:</span>
+              {together.map((t) => (
+                <button key={t.file} type="button" className="viewer-chip" onClick={() => onOpenNext(t.file, t.title)}>
+                  {t.title}
+                </button>
+              ))}
+            </div>
+          )}
           {ready ? (
-            <div className={`pdf-page-wrap${!imgReady && !imgError ? ' pdf-page-wrap--loading' : ''}`}>
+            <div
+              className={`pdf-page-wrap${!imgReady && !imgError ? ' pdf-page-wrap--loading' : ''}${spread ? ' pdf-page-wrap--spread' : ''}`}
+              ref={wrapRef}
+              onMouseMove={(e) => {
+                if (rulerOn && wrapRef.current) {
+                  const r = wrapRef.current.getBoundingClientRect();
+                  setRulerY(Math.max(0, Math.min(100, ((e.clientY - r.top) / r.height) * 100)));
+                }
+                hlMove(e);
+              }}
+              onMouseDown={hlStart}
+              onMouseUp={hlEnd}
+              onMouseLeave={() => setHlDrag(null)}
+              onTouchStart={onTouchStart}
+              onTouchEnd={onTouchEnd}
+              onDoubleClick={() => {
+                if (fitWidth || scale < 2.0) {
+                  setFitWidth(false);
+                  setScale(2.0);
+                } else {
+                  setScale(1.0);
+                }
+              }}
+            >
               <img
                 ref={imgRef}
                 className={`img-page${blurred ? ' img-blurred' : ''}`}
@@ -657,8 +1016,71 @@ const ImageViewer = ({ file, title, onClose, context }) => {
                 onLoad={() => setImgReady(true)}
                 onError={() => setImgError(true)}
                 onContextMenu={(e) => e.preventDefault()}
-                style={{ width: fitWidth ? '100%' : `${Math.round(scale * 100)}%` }}
+                style={{
+                  width: fitWidth ? '100%' : `${Math.round(scale * 100)}%`,
+                  filter: brightness !== 100 ? `brightness(${brightness}%)` : undefined,
+                  transform: rotateDeg ? `rotate(${rotateDeg}deg)` : undefined,
+                }}
               />
+              {spread && pageNumber < numPages && (
+                <img
+                  className={`img-page img-page--spread${blurred ? ' img-blurred' : ''}`}
+                  src={pageSrc(pageNumber + 1)}
+                  alt={`Page ${pageNumber + 1} of ${numPages} — ${title || 'note'}`}
+                  draggable={false}
+                  loading="lazy"
+                  decoding="async"
+                  onContextMenu={(e) => e.preventDefault()}
+                  style={{
+                    width: fitWidth ? '100%' : `${Math.round(scale * 100)}%`,
+                    filter: brightness !== 100 ? `brightness(${brightness}%)` : undefined,
+                    transform: rotateDeg ? `rotate(${rotateDeg}deg)` : undefined,
+                  }}
+                />
+              )}
+              {rulerOn && (
+                <>
+                  <div className="ruler-dim ruler-dim--top" style={{ height: `${Math.max(0, rulerY - 4)}%` }} aria-hidden="true" />
+                  <div className="ruler-line" style={{ top: `${rulerY}%` }} aria-hidden="true" />
+                  <div className="ruler-dim ruler-dim--bottom" style={{ top: `${Math.min(100, rulerY + 4)}%` }} aria-hidden="true" />
+                </>
+              )}
+              {(highlights[pageNumber] || []).map((h) => (
+                <div
+                  key={h.id}
+                  className="page-highlight"
+                  style={{ left: `${h.x}%`, top: `${h.y}%`, width: `${h.w}%`, height: `${h.h}%` }}
+                  title={hlMode ? 'Click to remove this highlight' : 'Highlighted area'}
+                  onClick={(e) => {
+                    if (hlMode) {
+                      e.stopPropagation();
+                      deleteHighlight(file, pageNumber, h.id);
+                    }
+                  }}
+                />
+              ))}
+              {hlDrag && (
+                <div
+                  className="page-highlight page-highlight--drag"
+                  style={{
+                    left: `${Math.min(hlDrag.x0, hlDrag.x1)}%`,
+                    top: `${Math.min(hlDrag.y0, hlDrag.y1)}%`,
+                    width: `${Math.abs(hlDrag.x1 - hlDrag.x0)}%`,
+                    height: `${Math.abs(hlDrag.y1 - hlDrag.y0)}%`,
+                  }}
+                  aria-hidden="true"
+                />
+              )}
+              {(annotations[pageNumber] || []).length > 0 && (
+                <div className="page-notes-badge" title={(annotations[pageNumber] || []).map((a) => a.text).join(' · ')}>
+                  <i className="fa-solid fa-note-sticky"></i> {(annotations[pageNumber] || []).length} note{(annotations[pageNumber] || []).length === 1 ? '' : 's'}
+                </div>
+              )}
+              {flags[pageNumber] && (
+                <div className={`page-flag-badge flag-${flags[pageNumber]}`} title={FLAG_LABELS[flags[pageNumber]]}>
+                  {FLAG_LABELS[flags[pageNumber]]}
+                </div>
+              )}
               {!imgReady && !imgError && (
                 <div className="pdf-skeleton pdf-skeleton--overlay" aria-hidden="true">
                   <span>Loading page…</span>
@@ -681,6 +1103,15 @@ const ImageViewer = ({ file, title, onClose, context }) => {
                 <span>thebhavesh.online</span>
                 <span>thebhavesh.online</span>
               </div>
+              {pageNumber >= numPages && noteMeta && noteMeta.next && onOpenNext && (
+                <button
+                  type="button"
+                  className="viewer-upnext"
+                  onClick={() => onOpenNext(noteMeta.next.file, noteMeta.next.title)}
+                >
+                  <i className="fa-solid fa-arrow-right"></i> Up next: {noteMeta.next.title}
+                </button>
+              )}
             </div>
           ) : status === 'loading' ? (
             <div className="pdf-skeleton pdf-skeleton--standalone" aria-hidden="true">

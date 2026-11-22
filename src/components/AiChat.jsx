@@ -24,6 +24,7 @@ const AiChat = ({ onPreview }) => {
   ]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
+  const [expandedExtra, setExpandedExtra] = useState(new Set());
   const bottomRef = useRef(null);
   const timerRef = useRef(null);
 
@@ -55,8 +56,13 @@ const AiChat = ({ onPreview }) => {
           const lines = rag.hits.map(
             (h) => `**${h.title} — page ${h.page}:**\n${h.excerpt}`,
           );
-          reply = `Here's what your notes say about **${topic || text}**:\n\n${lines.join('\n\n')}\n\nTap a note below to open that page.`;
+          reply = `In short: ${rag.synthesis}\n\nHere's what your notes say about **${topic || text}**:\n\n${lines.join('\n\n')}\n\nTap a note below to open that page.`;
           results = rag.hits.map((h) => ({ ...h, page: h.page }));
+          const extra = rag.hits.filter((h) => h.excerptMore).map((h) => ({ title: h.title, page: h.page, text: h.excerptMore }));
+          const followUps = rag.followUps || [];
+          setTyping(false);
+          setMessages((m) => [...m, { from: 'bot', text: reply, results, extra, followUps }]);
+          return;
         } else if (rag.status === 'no-index') {
           reply = 'The notes are still being converted into a searchable index, so I can only find notes by title right now — try “dsa unit 3 sem 4”. Topic answers switch on automatically once the conversion finishes.';
           results = (rag.candidates || []).slice(0, 3);
@@ -88,6 +94,36 @@ const AiChat = ({ onPreview }) => {
           <div key={i} className={`aichat-msg ${msg.from === 'bot' ? 'bot' : 'user'}`}>
             <div className="aichat-bubble">
               <span style={{ whiteSpace: 'pre-line' }}>{renderRich(msg.text)}</span>
+              {msg.extra && msg.extra.length > 0 && (
+                <div className="aichat-extra">
+                  {expandedExtra.has(i) ? (
+                    <>
+                      {msg.extra.map((x, xi) => (
+                        <p key={xi} className="aichat-extra-text" style={{ whiteSpace: 'pre-line' }}>
+                          <strong>{x.title} — page {x.page} (continued):</strong> {renderRich(x.text)}
+                        </p>
+                      ))}
+                      <button type="button" className="aichat-more-btn" onClick={() => setExpandedExtra((s) => { const n = new Set(s); n.delete(i); return n; })}>
+                        Show less
+                      </button>
+                    </>
+                  ) : (
+                    <button type="button" className="aichat-more-btn" onClick={() => setExpandedExtra((s) => new Set(s).add(i))}>
+                      Show more from these pages ({msg.extra.length})
+                    </button>
+                  )}
+                </div>
+              )}
+              {msg.followUps && msg.followUps.length > 0 && (
+                <div className="aichat-followups">
+                  <span>Keep going:</span>
+                  {msg.followUps.map((f, fi) => (
+                    <button key={fi} type="button" className="aichat-followup-chip" onClick={() => send(f)}>
+                      {f}
+                    </button>
+                  ))}
+                </div>
+              )}
               {msg.results && msg.results.length > 0 && (
                 <div className="aichat-results">
                   {msg.results.map((r, ri) => (
@@ -102,7 +138,7 @@ const AiChat = ({ onPreview }) => {
                       </span>
                       <span className="aichat-result-text">
                         <strong>{r.title}</strong>
-                        <small>{r.semesterName} · {r.subject}{r.page ? ` · page ${r.page}` : ''}</small>
+                        <small>{[r.semesterName, r.subject, r.page ? `page ${r.page}` : ''].filter(Boolean).join(' · ')}</small>
                       </span>
                       <i className="fa-solid fa-eye"></i>
                     </button>

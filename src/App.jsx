@@ -12,12 +12,15 @@ import SearchResults from './pages/SearchResults';
 import AddNotesForm from './pages/AddNotesForm';
 import Bookmarks from './pages/Bookmarks';
 import MyStudy from './pages/MyStudy';
+import TopicsAZ from './pages/TopicsAZ';
+import CommandPalette from './components/CommandPalette';
 import { getBookmarks } from './lib/bookmarks';
-import { getSettings } from './lib/study';
+import { getSettings, getStreak } from './lib/study';
 import { trackPageView } from './lib/analytics';
 import { prefetchViewerManifest } from './components/DocViewer';
 import { pyqSubjectsFor } from './lib/subjectPyq';
 import { semestersData } from './data/notesData';
+import { buildSearchIndex } from './lib/searchIndex';
 
 const TICKER_ITEMS = [
   'Added New B.Tech Semester 2 Notes! Check them now.',
@@ -56,6 +59,10 @@ function App() {
   const [bmCount, setBmCount] = useState(() => getBookmarks().length);
   // Get PYQ filter: { subjects: [pyq subject names], label } or null
   const [pyqFilter, setPyqFilter] = useState(null);
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [cheatOpen, setCheatOpen] = useState(false);
+  const [whatsNewOpen, setWhatsNewOpen] = useState(false);
+  const [streak, setStreak] = useState(() => getStreak());
   const searchInputRef = useRef(null);
   const headerRef = useRef(null);
   const prevViewRef = useRef('notes');
@@ -92,11 +99,74 @@ function App() {
       el.setAttribute('data-font-size', s.fontSize || 'm');
       el.setAttribute('data-reduce-motion', s.reduceMotion ? 'true' : 'false');
       el.setAttribute('data-high-contrast', s.highContrast ? 'true' : 'false');
+      el.setAttribute('data-dyslexia-font', s.dyslexiaFont ? 'true' : 'false');
+      el.style.setProperty('--ui-line-height', String(s.lineHeight || 1.5));
+      el.style.setProperty('--ui-letter-spacing', `${s.letterSpacing || 0}em`);
+      setStreak(getStreak());
     };
     apply();
     window.addEventListener('bn-study-changed', apply);
     return () => window.removeEventListener('bn-study-changed', apply);
   }, []);
+
+  // Command palette (Ctrl/⌘+K), shortcuts cheat-sheet (?), scoped search
+  // (NotesHub "Search in subject only"), and shared-collection links (#col=).
+  useEffect(() => {
+    const onKey = (e) => {
+      const tag = (e.target.tagName || '').toLowerCase();
+      const typing = tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable;
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setPaletteOpen((o) => !o);
+        return;
+      }
+      if (e.key === '?' && !typing) {
+        e.preventDefault();
+        setCheatOpen((o) => !o);
+      }
+      if (e.key === 'Escape') {
+        setPaletteOpen(false);
+        setCheatOpen(false);
+        setWhatsNewOpen(false);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    const onSearchSet = (e) => {
+      const q = (e && e.detail && e.detail.q) || '';
+      setSearchQuery(q);
+      setCurrentView('search');
+    };
+    window.addEventListener('bn-search-set', onSearchSet);
+    const importColFromHash = () => {
+      const m = (window.location.hash || '').match(/^#col=(.+)$/);
+      if (!m) return;
+      try {
+        const data = JSON.parse(decodeURIComponent(escape(atob(m[1]))));
+        if (data && data.name && Array.isArray(data.items)) {
+          window.dispatchEvent(new CustomEvent('bn-import-collection', { detail: data }));
+          setCurrentView('bookmarks');
+          window.history.replaceState(null, '', window.location.pathname);
+        }
+      } catch {
+        // bad link — ignore
+      }
+    };
+    importColFromHash();
+    window.addEventListener('hashchange', importColFromHash);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('bn-search-set', onSearchSet);
+      window.removeEventListener('hashchange', importColFromHash);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const randomNoteAll = () => {
+    const notes = buildSearchIndex().filter((i) => i.type === 'note');
+    if (notes.length === 0) return;
+    const pick = notes[Math.floor(Math.random() * notes.length)];
+    openNoteFromStudy(pick.file, pick.title, { semester: pick.semesterName, source: 'random' });
+  };
 
   // Open a note from My Study / the chatbot: navigate to the notes view
   // (right semester) then ask NotesHub to open the viewer for that file.
@@ -252,8 +322,38 @@ function App() {
           value={searchQuery}
           onChange={handleSearchChange}
           onEscape={() => { setSearchQuery(''); setCurrentView(prevViewRef.current); }}
+          onNavigate={(v) => goToView(v)}
         />
         <div className="header-actions">
+          {streak.current > 0 && (
+            <button
+              type="button"
+              className="header-streak-chip"
+              onClick={() => goToView('study')}
+              title={`Best streak: ${streak.best} days — open My Study`}
+              aria-label={`${streak.current}-day streak, best ${streak.best} days`}
+            >
+              <i className="fa-solid fa-fire"></i> {streak.current}
+            </button>
+          )}
+          <button
+            type="button"
+            className="icon-btn"
+            onClick={() => setWhatsNewOpen((o) => !o)}
+            aria-label="What's new"
+            title="What's new"
+          >
+            <i className="fa-solid fa-wand-magic-sparkles"></i>
+          </button>
+          <button
+            type="button"
+            className="icon-btn"
+            onClick={() => setPaletteOpen(true)}
+            aria-label="Jump to anything (Ctrl+K)"
+            title="Jump to anything (Ctrl+K)"
+          >
+            <i className="fa-solid fa-terminal"></i>
+          </button>
           <button
             type="button"
             className="icon-btn theme-toggle"
@@ -298,6 +398,12 @@ function App() {
             onClick={() => goToView('study')}
           >
             <i className="fa-solid fa-chart-line"></i> <span className="nav-label">My Study</span>
+          </button>
+          <button
+            className={`nav-btn ${currentView === 'topics' ? 'active' : ''}`}
+            onClick={() => goToView('topics')}
+          >
+            <i className="fa-solid fa-arrow-down-a-z"></i> <span className="nav-label">Topics A–Z</span>
           </button>
           <button
             className={`nav-btn ${currentView === 'add-notes' ? 'active' : ''}`}
@@ -353,6 +459,9 @@ function App() {
         {currentView === 'study' && (
           <MyStudy currentSem={currentSem} onOpenNote={openNoteFromStudy} onNavigate={goToView} />
         )}
+        {currentView === 'topics' && (
+          <TopicsAZ onOpenNote={openNoteFromStudy} />
+        )}
         {currentView === 'search' && (
           <SearchResults
             query={searchQuery}
@@ -370,6 +479,70 @@ function App() {
 
       {/* Back to top */}
       <BackToTop />
+
+      {/* Command palette (Ctrl/⌘+K) */}
+      <CommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        onNavigate={goToView}
+        onOpenNote={openNoteFromStudy}
+        onRandom={randomNoteAll}
+        onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+      />
+
+      {/* Shortcuts cheat-sheet (?) */}
+      {cheatOpen && (
+        <div className="modal-backdrop" onClick={() => setCheatOpen(false)} role="dialog" aria-modal="true" aria-label="Keyboard shortcuts">
+          <div className="modal-panel glass" onClick={(e) => e.stopPropagation()}>
+            <h3><i className="fa-solid fa-keyboard"></i> Keyboard shortcuts</h3>
+            <dl className="shortcuts-list">
+              <div><dt>Ctrl / ⌘ + K</dt><dd>Jump to anything</dd></div>
+              <div><dt>/</dt><dd>Focus search</dd></div>
+              <div><dt>?</dt><dd>This cheat-sheet</dd></div>
+              <div><dt>Esc</dt><dd>Close viewer / search / dialogs</dd></div>
+              <div><dt>← →</dt><dd>Previous / next page in the viewer</dd></div>
+              <div><dt>F</dt><dd>Fullscreen in the viewer</dd></div>
+            </dl>
+            <button type="button" className="viewer-chip" onClick={() => setCheatOpen(false)}>Close</button>
+          </div>
+        </div>
+      )}
+
+      {/* What's new */}
+      {whatsNewOpen && (
+        <div className="modal-backdrop" onClick={() => setWhatsNewOpen(false)} role="dialog" aria-modal="true" aria-label="What's new">
+          <div className="modal-panel glass" onClick={(e) => e.stopPropagation()}>
+            <h3><i className="fa-solid fa-wand-magic-sparkles"></i> What’s new</h3>
+            <ul className="whatsnew-list">
+              <li><strong>My Study hub</strong> — streaks, goals, revision queue, exam plan, syllabus tracker.</li>
+              <li><strong>Notes as page images</strong> — faster, protected viewer with search, jump, fullscreen.</li>
+              <li><strong>Reading tools</strong> — thumbnails, spread view, ruler, focus mode, highlights, page notes.</li>
+              <li><strong>Collections</strong> — group notes, share them as a link, print a checklist.</li>
+              <li><strong>Flashcards &amp; self-quiz</strong> — make your own, review with Again / Hard / Easy.</li>
+              <li><strong>Command palette</strong> — Ctrl/⌘+K jumps to anything. <strong>?</strong> lists shortcuts.</li>
+              <li><strong>Handwritten notes</strong> — typed Sem 2–3 notes re-set in real handwriting (rolling out).</li>
+            </ul>
+            <button type="button" className="viewer-chip" onClick={() => setWhatsNewOpen(false)}>Close</button>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile bottom navigation */}
+      <nav className="bottom-nav" aria-label="Quick navigation">
+        <button type="button" className={currentView === 'notes' ? 'active' : ''} onClick={() => goToView('notes')} aria-label="Home">
+          <i className="fa-solid fa-house"></i><span>Home</span>
+        </button>
+        <button type="button" className={currentView === 'search' ? 'active' : ''} onClick={() => { setCurrentView('search'); setTimeout(() => searchInputRef.current && searchInputRef.current.focus(), 0); }} aria-label="Search">
+          <i className="fa-solid fa-magnifying-glass"></i><span>Search</span>
+        </button>
+        <button type="button" className={currentView === 'bookmarks' ? 'active' : ''} onClick={() => goToView('bookmarks')} aria-label="Bookmarks">
+          <i className="fa-solid fa-bookmark"></i><span>Saved</span>
+          {bmCount > 0 && <span className="bottom-nav-badge">{bmCount}</span>}
+        </button>
+        <button type="button" className={currentView === 'study' ? 'active' : ''} onClick={() => goToView('study')} aria-label="My Study">
+          <i className="fa-solid fa-chart-line"></i><span>Study</span>
+        </button>
+      </nav>
 
       {/* Footer */}
       <footer className="site-footer">
@@ -391,11 +564,14 @@ function App() {
             <button type="button" onClick={() => goToView('pyq')}>PYQ Papers</button>
             <button type="button" onClick={() => goToView('bookmarks')}>Bookmarks{bmCount > 0 ? ` (${bmCount})` : ''}</button>
             <button type="button" onClick={() => goToView('study')}>My Study</button>
+            <button type="button" onClick={() => goToView('topics')}>Topics A–Z</button>
             <button type="button" onClick={() => goToView('add-notes')}>Add Notes</button>
           </nav>
           <nav className="footer-col" aria-label="Links">
             <h4>Links</h4>
             <a href="https://thebhavesh.online" target="_blank" rel="noopener noreferrer">Portfolio — thebhavesh.online</a>
+            <button type="button" onClick={() => setWhatsNewOpen(true)}>What’s new</button>
+            <button type="button" onClick={() => setCheatOpen(true)}>Keyboard shortcuts (?)</button>
           </nav>
         </div>
         <p className="footer-base">Made for students, by a student · Bhavesh Sharma · Bikaner Technical University</p>

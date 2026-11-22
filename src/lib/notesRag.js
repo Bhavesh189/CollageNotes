@@ -96,27 +96,58 @@ function stripHeader(text) {
   return t;
 }
 
-/** Best ~360-char window around the first matched term. */
+/** Detailed excerpts: a ~700-char main window around the first matched
+ * term + a second ~500-char window from a later occurrence on the same
+ * page (the "show more" expand in the chat bubble). Returns { main, more }. */
 function excerptFor(text, terms) {
   const clean = stripHeader(text);
   const lower = clean.toLowerCase();
+  const bold = (s) => {
+    let out = s;
+    for (const t of terms) {
+      const re = new RegExp(`(${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+      out = out.replace(re, '**$1**');
+    }
+    return out;
+  };
+  const windowAt = (start, len) => {
+    let excerpt = clean.slice(start, start + len);
+    if (start > 0) excerpt = excerpt.replace(/^\S+\s/, '');
+    excerpt = excerpt.replace(/\s+\S*$/, '');
+    return bold(excerpt);
+  };
   let best = -1;
   for (const t of terms) {
     const i = lower.indexOf(t);
     if (i !== -1 && (best === -1 || i < best)) best = i;
   }
-  if (best === -1) return clean.slice(0, 360);
-  const start = Math.max(0, best - 140);
-  let excerpt = clean.slice(start, start + 380);
-  // Trim to word boundaries.
-  if (start > 0) excerpt = excerpt.replace(/^\S+\s/, '');
-  excerpt = excerpt.replace(/\s+\S*$/, '');
-  // Bold the matched terms (the chat renders **bold**).
+  if (best === -1) return { main: bold(clean.slice(0, 700)), more: null };
+  const main = windowAt(Math.max(0, best - 160), 720);
+  // Second window: the next matched occurrence at least 720 chars past the
+  // first window's start, so "show more" adds genuinely new text.
+  let second = -1;
   for (const t of terms) {
-    const re = new RegExp(`(${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-    excerpt = excerpt.replace(re, '**$1**');
+    let i = lower.indexOf(t, best + 720);
+    while (i !== -1) {
+      if (i > best + 720) { second = i; break; }
+      i = lower.indexOf(t, i + t.length);
+    }
+    if (second !== -1) break;
   }
-  return excerpt;
+  const more = second !== -1 ? windowAt(Math.max(0, second - 120), 520) : null;
+  return { main, more };
+}
+
+/** One-line plain-text synthesis: the first sentence that actually
+ * contains a query term (the answer), not the note's running header.
+ * Falls back to the first full sentence. */
+function synthesisFor(excerpt, terms) {
+  const plain = String(excerpt || '').replace(/\*\*/g, '');
+  const sentences = plain.match(/[^.!?]{20,220}[.!?]/g) || [];
+  const lower = (s) => s.toLowerCase();
+  const withTerm = sentences.find((s) => (terms || []).some((t) => lower(s).includes(t)));
+  if (withTerm) return withTerm.trim();
+  return sentences[0] ? sentences[0].trim() : plain.slice(0, 200).trim();
 }
 
 /** Real note title from the data (not the file name) for source labels. */
@@ -197,6 +228,7 @@ export async function answerFromNotes(question) {
       const score = scoreText(text, terms);
       if (score <= 0) continue;
       const meta = candidates.find((c) => c.file === file) || {};
+      const ex = excerptFor(text, terms);
       hits.push({
         file,
         title: meta.title || titleFor(file, candidates),
@@ -205,13 +237,24 @@ export async function answerFromNotes(question) {
         type: 'note',
         page: p,
         score,
-        excerpt: excerptFor(text, terms),
+        excerpt: ex.main,
+        excerptMore: ex.more,
       });
     }
   }
   hits.sort((a, b) => b.score - a.score);
   if (hits.length === 0) return { status: 'no-match', candidates };
-  return { status: 'ok', hits: hits.slice(0, 3), candidates };
+  const top = hits.slice(0, 4);
+  // Follow-ups: the next-best notes' topics, so the student can keep
+  // digging without re-typing a question.
+  const followUps = top.slice(1, 4).map((h) => `Tell me more about ${h.title}`);
+  return {
+    status: 'ok',
+    hits: top,
+    candidates,
+    synthesis: synthesisFor(top[0].excerpt, terms),
+    followUps,
+  };
 }
 
 /** Is this a "teach me" question (needs content) vs a lookup (needs a file)? */

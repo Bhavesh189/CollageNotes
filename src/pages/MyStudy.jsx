@@ -7,6 +7,7 @@ import {
   getStreak, getGoal, setGoal, getExam, setExam, daysUntilExam, buildExamPlan,
   getSyllabusTicks, toggleSyllabusUnit, deriveUnits, getSettings, setSettings,
   exportAllData, importAllData, resetAllData, markRevise, markDone,
+  getWeeklyReport, getPersonalRecords, getNoteRequests, getFrequentlyTogether,
 } from '../lib/study';
 import { semestersData } from '../data/notesData';
 
@@ -143,6 +144,42 @@ export default function MyStudy({ currentSem, onOpenNote, onNavigate }) {
   };
 
   const maxBar = Math.max(1, ...stats.daily.map((d) => d.mins));
+  const weekly = useMemo(() => getWeeklyReport(), []);
+  const records = useMemo(() => getPersonalRecords(), []);
+  const requests = useMemo(() => getNoteRequests(), []);
+  const [shareMsg, setShareMsg] = useState('');
+
+  const shareText = async (text) => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'Bhavesh Notes', text });
+        return;
+      } catch {
+        // cancelled — fall through to copy
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      setShareMsg('Copied — paste it anywhere.');
+      setTimeout(() => setShareMsg(''), 3000);
+    } catch {
+      setShareMsg(text);
+    }
+  };
+
+  const shareProgress = () => {
+    const s = getStats();
+    const st = getStreak();
+    shareText(
+      `My Bhavesh Notes progress: ${s.notesDone} notes done, ${s.pagesRead} pages read, ${s.minutes} min studying, ${st.current}-day streak. Free B.Tech CSE notes at notes.thebhavesh.online`,
+    );
+  };
+
+  const sharePlan = () => {
+    const due = getRevisionDue();
+    const lines = due.slice(0, 8).map((d) => `• ${d.title}`).join('\n');
+    shareText(`My revision plan (${due.length} due):\n${lines || 'Nothing due — all caught up!'}\n— Bhavesh Notes`);
+  };
 
   return (
     <div className="study-page">
@@ -287,6 +324,54 @@ export default function MyStudy({ currentSem, onOpenNote, onNavigate }) {
             {Object.keys(stats.perSubject).length === 0 && <p className="study-empty">Open a note to start your first bar.</p>}
           </div>
         </div>
+        <div className="study-weekly">
+          <div className="study-weekly-card glass">
+            <h4><i className="fa-solid fa-calendar-week"></i> This week</h4>
+            <p><strong>{weekly.weekNow}m</strong> reading (last week {weekly.weekPrev}m) · <strong>{weekly.notes}</strong> notes opened · <strong>{weekly.pages}</strong> pages</p>
+          </div>
+          <div className="study-weekly-card glass">
+            <h4><i className="fa-solid fa-trophy"></i> Personal records</h4>
+            <p>
+              {records.mostPagesDay ? <>Most pages in a day: <strong>{records.mostPagesDay.pages}</strong> ({records.mostPagesDay.day}) · </> : 'No records yet — '}
+              Longest day: <strong>{records.longestSessionMins}m</strong>
+              {records.earliest ? <> · Earliest: <strong>{records.earliest}</strong></> : ''}
+              {records.latest ? <> · Latest: <strong>{records.latest}</strong></> : ''}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Share */}
+      <div className="study-section">
+        <h3><i className="fa-solid fa-share-nodes"></i> Share</h3>
+        <div className="study-settings glass">
+          <div className="study-btn-row" style={{ flexWrap: 'wrap' }}>
+            <button type="button" className="study-mini-btn primary" onClick={shareProgress}>Share my progress</button>
+            <button type="button" className="study-mini-btn" onClick={sharePlan}>Share my revision plan</button>
+            <button
+              type="button"
+              className="study-mini-btn"
+              onClick={() => {
+                const url = `${window.location.origin}${window.location.pathname}#${currentSem || 'sem3'}`;
+                shareText(`Free B.Tech CSE notes, syllabus & PYQs — Bhavesh Notes: ${url}`);
+              }}
+            >
+              Invite a friend
+            </button>
+            <a
+              className="study-mini-btn"
+              href={`https://wa.me/?text=${encodeURIComponent(`Free B.Tech CSE notes — Bhavesh Notes: ${window.location.origin}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Send to myself (WhatsApp)
+            </a>
+          </div>
+          {shareMsg && <p className="study-export-msg">{shareMsg}</p>}
+          {requests.length > 0 && (
+            <p className="study-empty">Notes you requested: {requests.map((r) => r.text).join(' · ')}</p>
+          )}
+        </div>
       </div>
 
       {/* Achievements */}
@@ -379,6 +464,15 @@ export default function MyStudy({ currentSem, onOpenNote, onNavigate }) {
           </div>
           <label className="study-setting-row"><span>Reduce motion (calmer animations)</span><input type="checkbox" checked={settings.reduceMotion} onChange={(e) => setSettings({ reduceMotion: e.target.checked })} /></label>
           <label className="study-setting-row"><span>High contrast (stronger borders &amp; text)</span><input type="checkbox" checked={settings.highContrast} onChange={(e) => setSettings({ highContrast: e.target.checked })} /></label>
+          <label className="study-setting-row"><span>Dyslexia-friendly font (Lexend) for UI text</span><input type="checkbox" checked={settings.dyslexiaFont} onChange={(e) => setSettings({ dyslexiaFont: e.target.checked })} /></label>
+          <label className="study-setting-row">
+            <span>Line height ({settings.lineHeight.toFixed(1)})</span>
+            <input type="range" min="1.3" max="2" step="0.1" value={settings.lineHeight} aria-label="Line height" onChange={(e) => setSettings({ lineHeight: Number(e.target.value) })} />
+          </label>
+          <label className="study-setting-row">
+            <span>Letter spacing ({settings.letterSpacing.toFixed(2)}em)</span>
+            <input type="range" min="0" max="0.08" step="0.01" value={settings.letterSpacing} aria-label="Letter spacing" onChange={(e) => setSettings({ letterSpacing: Number(e.target.value) })} />
+          </label>
           <label className="study-setting-row"><span>Vibrate on bookmark / done / page-turn (mobile)</span><input type="checkbox" checked={settings.haptics} onChange={(e) => setSettings({ haptics: e.target.checked })} /></label>
           <label className="study-setting-row"><span>Low-data mode (don’t preload next pages)</span><input type="checkbox" checked={settings.lowData} onChange={(e) => setSettings({ lowData: e.target.checked })} /></label>
           <div className="study-setting-row">

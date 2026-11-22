@@ -377,8 +377,10 @@ export function getGoal() { return read(K.goal, { pages: 20, minutes: 30 }); }
 export function setGoal(pages, minutes) { write(K.goal, { pages: pages || 20, minutes: minutes || 30 }); }
 
 // ---- settings / data -------------------------------------------------------
+const SETTINGS_DEFAULTS = { fontSize: 'm', reduceMotion: false, highContrast: false, haptics: true, lowData: false, defaultFit: 'width', dyslexiaFont: false, lineHeight: 1.5, letterSpacing: 0 };
+
 export function getSettings() {
-  return read(K.settings, { fontSize: 'm', reduceMotion: false, highContrast: false, haptics: true, lowData: false, defaultFit: 'width' });
+  return { ...SETTINGS_DEFAULTS, ...read(K.settings, {}) };
 }
 export function setSettings(patch) { write(K.settings, { ...getSettings(), ...patch }); }
 
@@ -445,3 +447,171 @@ export function deleteCollection(id) {
   write(K.collections, getCollections().filter((c) => c.id !== id));
 }
 export function newCollectionId() { return `col-${Date.now().toString(36)}`; }
+
+// ---- search counts + note requests (F3) -------------------------------
+export function recordSearch(q) {
+  const term = String(q || '').trim().toLowerCase();
+  if (term.length < 2) return;
+  pushSearchHistory(term);
+  const counts = read('bn-search-counts', {});
+  counts[term] = (counts[term] || 0) + 1;
+  write('bn-search-counts', counts);
+}
+
+export function getTrendingSearches(limit = 5) {
+  const counts = read('bn-search-counts', {});
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([term, n]) => ({ term, n }));
+}
+
+export function requestNote(text) {
+  const t = String(text || '').trim();
+  if (!t) return;
+  const list = read('bn-note-requests', []);
+  list.unshift({ text: t, at: Date.now() });
+  write('bn-note-requests', list.slice(0, 20));
+}
+
+export function getNoteRequests() { return read('bn-note-requests', []); }
+
+// ---- flashcards (F3): self-made, SM-2-lite boxes -----------------------
+export function getFlashcards(file) { return read(K.flashcards, {})[file] || []; }
+
+export function addFlashcard(file, front, back) {
+  const f = String(front || '').trim();
+  const b = String(back || '').trim();
+  if (!f || !b) return null;
+  const all = read(K.flashcards, {});
+  const arr = all[file] || [];
+  const card = { id: Date.now(), front: f, back: b, box: 1, nextReview: todayStr() };
+  arr.push(card);
+  all[file] = arr;
+  write(K.flashcards, all);
+  return card;
+}
+
+export function deleteFlashcard(file, id) {
+  const all = read(K.flashcards, {});
+  all[file] = (all[file] || []).filter((c) => c.id !== id);
+  write(K.flashcards, all);
+}
+
+export function reviewFlashcard(file, id, grade) {
+  // grade: 'again' (1 day) | 'hard' (2 days) | 'easy' (box+1: 4/7/14 days)
+  const all = read(K.flashcards, {});
+  const arr = all[file] || [];
+  const card = arr.find((c) => c.id === id);
+  if (!card) return;
+  const days = { again: 1, hard: 2, easy: [0, 4, 7, 14, 30][Math.min(card.box, 4)] || 4 }[grade] || 1;
+  if (grade === 'easy') card.box = Math.min(5, card.box + 1);
+  else if (grade === 'again') card.box = 1;
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  card.nextReview = todayStr(d);
+  write(K.flashcards, all);
+}
+
+export function getFlashcardsDue() {
+  const all = read(K.flashcards, {});
+  const today = todayStr();
+  const out = [];
+  for (const [file, arr] of Object.entries(all)) {
+    for (const c of arr || []) {
+      if ((c.nextReview || today) <= today) out.push({ file, ...c });
+    }
+  }
+  return out;
+}
+
+// ---- self-quiz (F3): write your own Q&A, test yourself ------------------
+export function getQuiz(file) { return read(K.quiz, {})[file] || []; }
+
+export function addQuizQA(file, q, a) {
+  const qq = String(q || '').trim();
+  const aa = String(a || '').trim();
+  if (!qq || !aa) return null;
+  const all = read(K.quiz, {});
+  const arr = all[file] || [];
+  const item = { id: Date.now(), q: qq, a: aa };
+  arr.push(item);
+  all[file] = arr;
+  write(K.quiz, all);
+  return item;
+}
+
+export function deleteQuizQA(file, id) {
+  const all = read(K.quiz, {});
+  all[file] = (all[file] || []).filter((x) => x.id !== id);
+  write(K.quiz, all);
+}
+
+// ---- personal records + weekly report (F4) -----------------------------
+export function getPersonalRecords() {
+  const hist = getHistory();
+  const perDay = {};
+  let longest = 0;
+  let earliest = null;
+  let latest = null;
+  for (const h of hist) {
+    const day = String(h.at || '').slice(0, 10);
+    perDay[day] = (perDay[day] || 0) + 1;
+  }
+  const mostPagesDay = Object.entries(perDay).sort((a, b) => b[1] - a[1])[0];
+  const streak = getStreak();
+  // Longest single session: max minutes recorded in one day (approx).
+  longest = Math.max(0, ...Object.values(streak.days || {}).map((m) => m || 0));
+  for (const h of hist) {
+    const t = String(h.at || '').slice(11, 16);
+    if (!t) continue;
+    if (!earliest || t < earliest) earliest = t;
+    if (!latest || t > latest) latest = t;
+  }
+  return {
+    mostPagesDay: mostPagesDay ? { day: mostPagesDay[0], pages: mostPagesDay[1] } : null,
+    longestSessionMins: longest,
+    earliest,
+    latest,
+  };
+}
+
+export function getWeeklyReport() {
+  const stats = getStats();
+  return {
+    notes: stats.notesRead,
+    pages: stats.pagesRead,
+    minutes: stats.minutes,
+    weekNow: stats.weekNow,
+    weekPrev: stats.weekPrev,
+  };
+}
+
+// Frequently read together: notes opened on the same day as `file`,
+// from local history (co-view counts). Used under a note in the viewer.
+export function getFrequentlyTogether(file, limit = 3) {
+  const hist = getHistory();
+  const byDay = {};
+  for (const h of hist) {
+    const day = String(h.at || '').slice(0, 10);
+    if (!day) continue;
+    (byDay[day] = byDay[day] || new Set()).add(h.file);
+  }
+  const counts = {};
+  for (const day of Object.values(byDay)) {
+    if (!day.has(file)) continue;
+    for (const f of day) {
+      if (f === file) continue;
+      counts[f] = (counts[f] || 0) + 1;
+    }
+  }
+  const map = getProgressMap();
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([f, n]) => ({
+      file: f,
+      title: (map[f] && map[f].title) || f.split('/').pop().replace(/\.pdf$/i, ''),
+      n,
+    }));
+}

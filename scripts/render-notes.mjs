@@ -83,6 +83,7 @@ async function renderDoc({ rel, srcPath, outDir }) {
     .promise;
   fs.mkdirSync(outDir, { recursive: true });
   const texts = [];
+  const words = []; // per-page word boxes for the viewer text layer
   const suspicious = [];
   let bytes = 0;
   for (let i = 1; i <= doc.numPages; i += 1) {
@@ -102,8 +103,48 @@ async function renderDoc({ rel, srcPath, outDir }) {
       .trim()
       .slice(0, MAX_TEXT_CHARS);
     texts.push(text);
+    // Word boxes for the viewer text layer (2026-11-23): each
+    // getTextContent item carries its PDF-space transform + width/height.
+    // Map through the viewport transform to image pixels, then to % of the
+    // page, so the viewer can overlay a transparent selectable text layer
+    // on the page image. Items are line fragments, not single words — the
+    // browser's native selection works across them, and highlight rects
+    // come from the spans' boxes. Written as words.json next to
+    // search.json; the viewer fetches it lazily (select mode only).
+    // NOTE: kept in sync with scripts/extract-words.mjs (backfill tool).
+    const m = vp.transform; // PDF pt -> image px
+    const pageWords = [];
+    for (const it of tc.items) {
+      const s = it.str || '';
+      if (!s.trim()) continue;
+      const t = it.transform;
+      const e = t[4];
+      const f = t[5];
+      const vx = m[0] * e + m[2] * f + m[4];
+      const vy = m[1] * e + m[3] * f + m[5];
+      const wx = m[0] * (it.width || 0);
+      const wy = m[1] * (it.width || 0);
+      const hx = m[2] * (it.height || 0);
+      const hy = m[3] * (it.height || 0);
+      const xs = [vx, vx + wx, vx + hx, vx + wx + hx];
+      const ys = [vy, vy + wy, vy + hy, vy + wy + hy];
+      const x0 = Math.min(...xs);
+      const x1 = Math.max(...xs);
+      const y0 = Math.min(...ys);
+      const y1 = Math.max(...ys);
+      pageWords.push([
+        +(x0 / vp.width * 100).toFixed(2),
+        +(y0 / vp.height * 100).toFixed(2),
+        +((x1 - x0) / vp.width * 100).toFixed(2),
+        +((y1 - y0) / vp.height * 100).toFixed(2),
+        s,
+      ]);
+      if (pageWords.length >= 2000) break;
+    }
+    words.push(pageWords);
   }
   fs.writeFileSync(path.join(outDir, 'search.json'), JSON.stringify({ pages: texts }));
+  fs.writeFileSync(path.join(outDir, 'words.json'), JSON.stringify({ v: 1, pages: words }));
   return {
     pages: doc.numPages,
     bytes,

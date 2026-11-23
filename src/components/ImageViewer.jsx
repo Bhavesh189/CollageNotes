@@ -3,8 +3,9 @@ import { trackEvent } from '../lib/analytics';
 import { recordPageView, recordSession, getFrequentlyTogether } from '../lib/study';
 import {
   getFlags, setFlag, getAnnotations, addAnnotation, deleteAnnotation,
-  getHighlights, addHighlight, deleteHighlight, getPageBookmarks,
-  togglePageBookmark, FLAG_LABELS,
+  getHighlights, addHighlight, deleteHighlight, getTextHighlights,
+  addTextHighlight, deleteTextHighlight, clearTextHighlights,
+  getPageBookmarks, togglePageBookmark, FLAG_LABELS,
 } from '../lib/pageMarks';
 import { semestersData } from '../data/notesData';
 
@@ -17,7 +18,7 @@ import { semestersData } from '../data/notesData';
 // only serves public/ + the built assets, so no raw file URL exists).
 //
 // COPY PROTECTION, by design:
-//  - page images only — no text layer, nothing selectable;
+//  - page images only — no text layer, nothing selectable BY DEFAULT;
 //  - no Download button anywhere;
 //  - user-select:none on the page area, context menu + copy/cut/save
 //    shortcuts blocked inside the modal (inputs exempt);
@@ -30,6 +31,12 @@ import { semestersData } from '../data/notesData';
 //    OS capture all bypass the page). These deterrents stop casual copying;
 //    the watermark is the real traceability. Never claim "screenshot-proof"
 //    in any UI copy.
+//  - TEXT SELECT (2026-11-23, opt-in "Select" toggle): a transparent
+//    selectable text layer (words.json, built at render time) over the page
+//    image, fit-to-width typed pages only. Selecting text inherently means
+//    the selected text can also be copied with Ctrl+C — that is the honest
+//    trade-off of the feature; the images themselves stay non-downloadable
+//    and nothing else about the protection changes.
 // Search works against the per-doc search index (page-level matches, jump
 // to a match's page). No word highlight — images can't be highlighted.
 // `context` is optional metadata for analytics: { semester, source }.
@@ -51,6 +58,20 @@ import { semestersData } from '../data/notesData';
 const SEARCH_MIN_LEN = 2;
 const SEARCH_DEBOUNCE_MS = 300;
 const BLUR_MS_AFTER_PRINTSCREEN = 1500;
+// Text-highlight colours (background rgba; the popover swatch uses the same value).
+const HL_COLORS = [
+  { name: 'Yellow', bg: 'rgba(250, 204, 21, 0.35)' },
+  { name: 'Green', bg: 'rgba(134, 239, 172, 0.45)' },
+  { name: 'Pink', bg: 'rgba(244, 114, 182, 0.4)' },
+];
+// Tap zones (WhatsApp-like): left/right 22% of the page = prev/next page.
+// A tap is a short press with (almost) no movement; the navigation is
+// delayed ~240ms so a double-tap can still zoom instead of navigating twice.
+const TAP_EDGE = 0.22;
+const TAP_MAX_MS = 300;
+const TAP_MAX_MOVE = 8;
+const TAP_DELAY_MS = 240;
+const TAP_DOUBLE_MS = 400;
 
 // RESUME READING + ZOOM MEMORY (same keys as the PDF viewer — a note
 // resumed in either viewer reopens on the same page, with the same zoom).
@@ -128,11 +149,27 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
   const [hlMode, setHlMode] = useState(false); // drag to draw a highlight
   const [hlDrag, setHlDrag] = useState(null); // {x0,y0,x1,y1} in %
   const [touchX, setTouchX] = useState(null); // swipe to change page
+  // Selectable text + tap zones (2026-11-23).
+  const [selectMode, setSelectMode] = useState(false); // text layer on/off
+  const [words, setWords] = useState(null); // words.json pages for this doc
+  const [wordsState, setWordsState] = useState('idle'); // idle|loading|ready|none
+  const [textHls, setTextHls] = useState({});
+  const [tapHintSeen, setTapHintSeen] = useState(true);
+  const [selPop, setSelPop] = useState(null); // highlight popover {x, y} in wrap %
+  const [selColor, setSelColor] = useState(HL_COLORS[0].bg);
+  const [layerSize, setLayerSize] = useState({ w: 0, h: 0 });
+  const textLayerRef = useRef(null);
+  const tapTimerRef = useRef(null);
+  const pointerRef = useRef(null); // {x, y, t} of the current press
+  const hlClickPosRef = useRef(null); // mousedown pos on a text highlight (drag-vs-click)
+  const lastTapUpRef = useRef(0); // double-tap guard
+  const lastTouchRef = useRef(0); // last touchstart — kills emulated mouse taps
   const wrapRef = useRef(null);
   const refreshMarks = () => {
     setFlags(getFlags(file));
     setAnnotations(getAnnotations(file));
     setHighlights(getHighlights(file));
+    setTextHls(getTextHighlights(file));
     setPageBookmarks(getPageBookmarks(file));
   };
   useEffect(refreshMarks, [file]);
@@ -234,6 +271,7 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
     pageRef.current = clamped;
     setPageNumber(clamped);
     setPageInput(String(clamped));
+    setSelPop(null); // a page turn dismisses the highlight popover
     // Resume reading: remember the last page read for this file.
     try {
       localStorage.setItem(PAGE_KEY(file), String(clamped));
@@ -284,6 +322,11 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
       }
       if (isTyping(e.target)) return;
       if ((e.ctrlKey || e.metaKey) && ['c', 'x', 's'].includes(e.key.toLowerCase())) {
+        // Text selection is a real feature now (select mode): allow copying
+        // the selected text with Ctrl+C when the selection is inside the
+        // text layer. The images stay non-downloadable; Ctrl+S / Ctrl+X
+        // stay blocked.
+        if (e.key.toLowerCase() === 'c' && selectionInTextLayer()) return;
         e.preventDefault();
         return;
       }
@@ -334,6 +377,22 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
     setSearching(false);
     setImgReady(false);
     setImgError(false);
+    setSelectMode(false);
+    setWords(null);
+    setWordsState('idle');
+    // NOTE: do NOT clear textHls here. refreshMarks (useEffect on [file],
+    // declared BEFORE this effect) already loads this file's text
+    // highlights — and this reset effect runs after it in the same commit,
+    // so a setTextHls({}) here wiped the just-loaded highlights and none
+    // ever rendered on reopen. The other mark types (flags/annotations)
+    // were never cleared here for the same reason. 2026-11-23.
+    setSelPop(null);
+    clearPendingTap();
+    try {
+      setTapHintSeen(!!localStorage.getItem('bn-tap-hint-seen'));
+    } catch {
+      setTapHintSeen(true);
+    }
     pageRef.current = 1;
     numPagesRef.current = null;
     resumePageRef.current = null;
@@ -345,7 +404,13 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
     }
     try {
       const z = JSON.parse(localStorage.getItem(ZOOM_KEY) || 'null');
-      if (z && typeof z.scale === 'number' && z.scale >= 0.6 && z.scale <= 2.0) {
+      // Only restore a FIXED scale when the user actually zoomed (stored
+      // fitWidth === false). The zoom-memory effect saves {scale: 1.0,
+      // fitWidth: true} on mount, so a bare "scale is a number" check
+      // misreads fit-to-width as a fixed 100% zoom and forced fitWidth
+      // off on EVERY open — which also silently disabled the text layer
+      // (it requires fitWidth). 2026-11-23.
+      if (z && z.fitWidth === false && typeof z.scale === 'number' && z.scale >= 0.6 && z.scale <= 2.0) {
         setScale(z.scale);
         setFitWidth(false);
       } else if (z && z.fitWidth) {
@@ -450,6 +515,74 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playing, slideSecs, status]);
 
+  // Text layer: lazily load words.json when select mode is first enabled
+  // for this doc (one fetch per doc; ~50 KB). A 404 (corrupt doc / old
+  // build) just means no selectable text — never an error state.
+  useEffect(() => {
+    if (!selectMode || !entryDir || words) return undefined;
+    let cancelled = false;
+    setWordsState('loading');
+    fetch(`/generated/${entryDir}/words.json`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => {
+        if (cancelled) return;
+        if (j && Array.isArray(j.pages)) {
+          // A scan doc has a words.json (backfilled) but zero word items
+          // on every page — that is "no text", not "ready": the scan note
+          // ("This page is a scan…") only shows for wordsState 'none'.
+          const hasWords = j.pages.some((pg) => Array.isArray(pg) && pg.length > 0);
+          if (hasWords) { setWords(j.pages); setWordsState('ready'); }
+          else setWordsState('none');
+        }
+        else setWordsState('none');
+      })
+      .catch(() => { if (!cancelled) setWordsState('none'); });
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectMode, entryDir]);
+
+  // Measure the page wrap (the text layer's box) so span font sizes match
+  // the rendered image height.
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return undefined;
+    const update = () => {
+      const r = el.getBoundingClientRect();
+      setLayerSize({ w: r.width, h: r.height });
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    window.addEventListener('resize', update);
+    return () => { ro.disconnect(); window.removeEventListener('resize', update); };
+  }, [status, entryDir, pageNumber, fitWidth, scale, spread, rotateDeg]);
+
+  // Show the Highlight popover next to a text selection (mouse, touch or
+  // keyboard selection — all funnel through selectionchange). Only when
+  // the selection is inside the text layer.
+  useEffect(() => {
+    if (!selectMode) { setSelPop(null); return undefined; }
+    const onSel = () => {
+      const sel = window.getSelection();
+      const layer = textLayerRef.current;
+      if (!sel || sel.isCollapsed || sel.rangeCount === 0 || !layer || !sel.anchorNode || !layer.contains(sel.anchorNode)) {
+        setSelPop(null);
+        return;
+      }
+      const wrap = wrapRef.current;
+      if (!wrap) return;
+      const rect = sel.getRangeAt(0).getBoundingClientRect();
+      const wrect = wrap.getBoundingClientRect();
+      if (rect.width === 0 && rect.height === 0) { setSelPop(null); return; }
+      setSelPop({
+        x: Math.max(10, Math.min(90, ((rect.left + rect.width / 2 - wrect.left) / wrect.width) * 100)),
+        y: Math.max(12, ((rect.top - wrect.top) / wrect.height) * 100),
+      });
+    };
+    document.addEventListener('selectionchange', onSel);
+    return () => document.removeEventListener('selectionchange', onSel);
+  }, [selectMode]);
+
   // Where does this note sit in its subject? (syllabus chip + up-next)
   const noteMeta = useMemo(() => {
     for (const sem of Object.values(semestersData || {})) {
@@ -519,6 +652,112 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
     }
   };
 
+  // --- Tap zones (WhatsApp-like) + text selection helpers (2026-11-23) ---
+  const clearPendingTap = () => {
+    if (tapTimerRef.current) { clearTimeout(tapTimerRef.current); tapTimerRef.current = null; }
+  };
+  const scheduleTapNav = (clientX) => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const r = wrap.getBoundingClientRect();
+    const fx = (clientX - r.left) / r.width;
+    const dir = fx < TAP_EDGE ? -1 : fx > 1 - TAP_EDGE ? 1 : 0;
+    if (dir === 0) return;
+    clearPendingTap();
+    tapTimerRef.current = setTimeout(() => {
+      tapTimerRef.current = null;
+      if (dir < 0) goPrev();
+      else goNext();
+    }, TAP_DELAY_MS);
+  };
+  const isTapTarget = (target) => {
+    // Taps on controls / marks / overlays never navigate — only taps on the
+    // page image itself (or the text layer) count as page-turn taps.
+    if (!target || !target.closest) return true;
+    return !target.closest('button, a, input, select, textarea, .page-highlight, .page-notes-badge, .page-flag-badge, .viewer-upnext, .textsel-pop, .tap-hint, .viewer-tools, .viewer-filmstrip');
+  };
+  const tapUpCommon = (clientX, clientY, target, eventTime) => {
+    const p = pointerRef.current;
+    pointerRef.current = null;
+    if (!p) return;
+    const nowWall = Date.now();
+    // Second tap in quick succession = double-tap (zoom) — never navigate.
+    // Wall-clock on purpose: it also swallows the emulated mouseup that
+    // follows a touch tap (it arrives within ~400ms of the touchend).
+    if (nowWall - lastTapUpRef.current < TAP_DOUBLE_MS) { lastTapUpRef.current = nowWall; return; }
+    lastTapUpRef.current = nowWall;
+    // Hold duration from the EVENTS' own timestamps (e.timeStamp), not from
+    // handler wall-clock: on a busy main thread the touchend handler can run
+    // ~800ms after touchstart even for an instant tap, which used to abort
+    // every touch tap (dt > TAP_MAX_MS). e.timeStamp is when the touch
+    // actually started/ended, so dt is the true hold time. 2026-11-23.
+    const dt = eventTime - p.t;
+    const moved = Math.hypot(clientX - p.x, clientY - p.y);
+    if (dt > TAP_MAX_MS || moved > TAP_MAX_MOVE) return;
+    if (!isTapTarget(target)) return;
+    scheduleTapNav(clientX);
+  };
+  const tapDown = (e) => {
+    // Emulated mouse events fired after a touch tap — ignore them entirely.
+    // (The touch path already handled the tap; clearing here would cancel
+    // its pending navigation before the 240ms timer fires.)
+    if (Date.now() - lastTouchRef.current < 500) return;
+    clearPendingTap(); // a second press = likely double-click -> zoom wins
+    pointerRef.current = { x: e.clientX, y: e.clientY, t: e.timeStamp };
+  };
+  const tapUp = (e) => {
+    // Emulated mouse events fired after a touch tap — the touch path
+    // already handled it; ignore mouse taps right after a touch.
+    if (Date.now() - lastTouchRef.current < 500) { pointerRef.current = null; return; }
+    tapUpCommon(e.clientX, e.clientY, e.target, e.timeStamp);
+  };
+  const tapTouchEnd = (e) => {
+    const t = e.changedTouches && e.changedTouches[0];
+    if (!t) return;
+    tapUpCommon(t.clientX, t.clientY, e.target, e.timeStamp);
+  };
+  // True when the user has a real text selection inside the text layer —
+  // the only case where copy (Ctrl+C / the copy event) is allowed.
+  const selectionInTextLayer = () => {
+    const sel = window.getSelection();
+    const layer = textLayerRef.current;
+    return !!(
+      sel && !sel.isCollapsed && sel.rangeCount > 0 && layer &&
+      sel.anchorNode && layer.contains(sel.anchorNode)
+    );
+  };
+  const onCopyGuard = (e) => {
+    if (!isTypingTarget(e.target) && !selectionInTextLayer()) e.preventDefault();
+  };
+  // Save the current text selection as a highlight: rects come from the
+  // Selection's own client rects (per-line, post-transform), so they line
+  // up with the image words even for a partial-line selection.
+  const applyTextHighlight = () => {
+    const sel = window.getSelection();
+    const layer = textLayerRef.current;
+    const wrap = wrapRef.current;
+    if (!sel || sel.rangeCount === 0 || !layer || !wrap) return;
+    if (!sel.anchorNode || !layer.contains(sel.anchorNode)) return;
+    const range = sel.getRangeAt(0);
+    const wrect = wrap.getBoundingClientRect();
+    const rects = [...range.getClientRects()]
+      .map((r) => ({
+        x: +(((r.left - wrect.left) / wrect.width) * 100).toFixed(2),
+        y: +(((r.top - wrect.top) / wrect.height) * 100).toFixed(2),
+        w: +((r.width / wrect.width) * 100).toFixed(2),
+        h: +((r.height / wrect.height) * 100).toFixed(2),
+      }))
+      .filter((r) => r.w > 0.1 && r.h > 0.1);
+    if (rects.length === 0) return;
+    addTextHighlight(file, pageNumber, {
+      text: sel.toString().trim().slice(0, 300),
+      color: selColor,
+      rects,
+    });
+    sel.removeAllRanges();
+    setSelPop(null);
+  };
+
   // Track whether the current page image has actually arrived. Reset on
   // every page change; if the image is already cached, `complete` is true
   // by the time this effect runs and no skeleton flashes at all. Otherwise
@@ -574,6 +813,29 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
   if (!file) return null;
 
   const ready = status === 'ready';
+  // Selectable text layer (2026-11-23): only when the layer can match the
+  // image exactly — fit-to-width, no rotation, no spread, typed page.
+  const isHwPage = !!(hwPages && hwPages.has(pageNumber));
+  const selectAvailable = ready && fitWidth && rotateDeg === 0 && !spread && !isHwPage;
+  const wordsForPage = wordsState === 'ready' && words ? (words[pageNumber - 1] || []) : [];
+  const selectActive = selectMode && selectAvailable && wordsForPage.length > 0;
+  // Span geometry: font size from the layer height; scaleX (via canvas
+  // measure) squeezes each line fragment to its PDF box width, like a
+  // pdf.js text layer — so selection rects line up with the image words.
+  const measureCtx = useMemo(() => {
+    try { return document.createElement('canvas').getContext('2d'); } catch { return null; }
+  }, []);
+  const spanStyle = (w) => {
+    const fontPx = Math.max(6, (w[3] / 100) * layerSize.h);
+    let sx = 1;
+    if (measureCtx && layerSize.w > 0) {
+      measureCtx.font = `${fontPx}px sans-serif`;
+      const tw = measureCtx.measureText(w[4]).width || 1;
+      const bw = (w[2] / 100) * layerSize.w;
+      sx = Math.min(2.5, Math.max(0.4, bw / tw));
+    }
+    return { left: `${w[0]}%`, top: `${w[1]}%`, width: `${w[2]}%`, height: `${w[3]}%`, fontSize: `${fontPx}px`, transform: `scaleX(${sx.toFixed(3)})` };
+  };
   const zoomOut = () => setScale((s) => Math.max(0.6, +(s - 0.2).toFixed(2)));
   const zoomIn = () => setScale((s) => Math.min(2.0, +(s + 0.2).toFixed(2)));
 
@@ -627,7 +889,7 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
         ref={modalRef}
         onClick={(e) => e.stopPropagation()}
         onContextMenu={blockIfNotTyping}
-        onCopy={blockIfNotTyping}
+        onCopy={onCopyGuard}
         onCut={blockIfNotTyping}
       >
         {focusMode && (
@@ -784,6 +1046,16 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
               </button>
               <button
                 type="button"
+                className={`pdf-nav-btn pdf-fit-btn ${selectMode ? 'active' : ''}`}
+                onClick={() => setSelectMode((s) => !s)}
+                aria-pressed={selectMode}
+                title={selectMode ? 'Text select ON — drag over the page to select, then Highlight' : 'Select text on this page (fit-to-width view, typed pages only)'}
+              >
+                <i className="fa-solid fa-i-cursor"></i>
+                <span>Select</span>
+              </button>
+              <button
+                type="button"
                 className="pdf-nav-btn pdf-fit-btn"
                 onClick={toggleFullscreen}
                 aria-pressed={isFullscreen}
@@ -817,6 +1089,23 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
               </button>
             </div>
           </div>
+        )}
+
+        {ready && !tapHintSeen && (
+          <div className="tap-hint">
+            <i className="fa-solid fa-hand-pointer"></i>
+            <span>Tip: tap the left edge for the previous page, right edge for the next — just like WhatsApp.</span>
+            <button type="button" onClick={() => { try { localStorage.setItem('bn-tap-hint-seen', '1'); } catch {} setTapHintSeen(true); }}>Got it</button>
+          </div>
+        )}
+        {ready && selectMode && !selectAvailable && (
+          <div className="tap-hint">
+            <span>Text select needs Fit-to-width view{isHwPage ? ' — this page is handwritten, so there is no text layer for it' : rotateDeg !== 0 ? ' — turn off rotation' : spread ? ' — turn off spread view' : ''}.</span>
+            {!isHwPage && <button type="button" onClick={() => { setFitWidth(true); setRotateDeg(0); setSpread(false); }}>Fit to width</button>}
+          </div>
+        )}
+        {ready && selectMode && selectAvailable && wordsState === 'none' && (
+          <div className="tap-hint"><span>This page is a scan — there is no text to select.</span></div>
         )}
 
         {ready && toolsOpen && (
@@ -945,6 +1234,18 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
                 </button>
               )}
             </div>
+            {(textHls[pageNumber] || []).length > 0 && (
+              <div className="viewer-tools-row">
+                <span className="viewer-tools-label">Text highlights p.{pageNumber}</span>
+                {(textHls[pageNumber] || []).map((h) => (
+                  <span key={h.id} className="viewer-note-item" title={h.text || ''}>
+                    <span style={{ background: h.color, padding: '0 6px', borderRadius: 4 }}>{(h.text || '').slice(0, 24) || 'highlight'}</span>
+                    <button type="button" aria-label="Delete text highlight" onClick={() => deleteTextHighlight(file, pageNumber, h.id)}>×</button>
+                  </span>
+                ))}
+                <button type="button" className="viewer-chip" onClick={() => clearTextHighlights(file, pageNumber)}>Clear page</button>
+              </div>
+            )}
           </div>
         )}
 
@@ -982,7 +1283,7 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
           )}
           {ready ? (
             <div
-              className={`pdf-page-wrap${!imgReady && !imgError ? ' pdf-page-wrap--loading' : ''}${spread ? ' pdf-page-wrap--spread' : ''}`}
+              className={`pdf-page-wrap${!imgReady && !imgError ? ' pdf-page-wrap--loading' : ''}${spread ? ' pdf-page-wrap--spread' : ''}${selectActive ? ' pdf-page-wrap--selecting' : ''}`}
               ref={wrapRef}
               onMouseMove={(e) => {
                 if (rulerOn && wrapRef.current) {
@@ -991,11 +1292,20 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
                 }
                 hlMove(e);
               }}
-              onMouseDown={hlStart}
-              onMouseUp={hlEnd}
+              onMouseDown={(e) => { tapDown(e); hlStart(e); }}
+              onMouseUp={(e) => { hlEnd(); tapUp(e); }}
               onMouseLeave={() => setHlDrag(null)}
-              onTouchStart={onTouchStart}
-              onTouchEnd={onTouchEnd}
+              onTouchStart={(e) => {
+                lastTouchRef.current = Date.now();
+                clearPendingTap();
+                const t = e.touches[0];
+                // e.timeStamp (not Date.now()): the tap-duration check in
+                // tapUpCommon compares event timestamps, so a slow main
+                // thread can't inflate the measured hold time.
+                if (t) pointerRef.current = { x: t.clientX, y: t.clientY, t: e.timeStamp };
+                onTouchStart(e);
+              }}
+              onTouchEnd={(e) => { onTouchEnd(e); tapTouchEnd(e); }}
               onDoubleClick={() => {
                 if (fitWidth || scale < 2.0) {
                   setFitWidth(false);
@@ -1070,6 +1380,48 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
                   }}
                   aria-hidden="true"
                 />
+              )}
+              {selectActive && (
+                <div className="text-layer" ref={textLayerRef} aria-label="Selectable page text">
+                  {wordsForPage.map((w, i) => (
+                    <span key={i} className="text-layer-word" style={spanStyle(w)}>{w[4]}</span>
+                  ))}
+                </div>
+              )}
+              {(textHls[pageNumber] || []).map((h) => (
+                h.rects.map((r, i) => (
+                  <div
+                    key={`${h.id}-${i}`}
+                    className="page-highlight page-highlight--text"
+                    style={{ left: `${r.x}%`, top: `${r.y}%`, width: `${r.w}%`, height: `${r.h}%`, background: h.color, borderColor: 'transparent' }}
+                    title={selectMode ? 'Click to remove this highlight' : (h.text || '')}
+                    onMouseDown={(e) => { hlClickPosRef.current = { x: e.clientX, y: e.clientY }; }}
+                    onClick={(e) => {
+                      if (!selectMode) return;
+                      // A drag that starts on a highlight is a text selection,
+                      // not a delete — only a real click (no movement) removes it.
+                      const p = hlClickPosRef.current;
+                      hlClickPosRef.current = null;
+                      if (p && Math.hypot(e.clientX - p.x, e.clientY - p.y) > TAP_MAX_MOVE) return;
+                      e.stopPropagation();
+                      deleteTextHighlight(file, pageNumber, h.id);
+                    }}
+                  />
+                ))
+              ))}
+              {ready && !selectMode && (
+                <>
+                  <div className="tap-edge tap-edge--left" aria-hidden="true"><i className="fa-solid fa-chevron-left"></i></div>
+                  <div className="tap-edge tap-edge--right" aria-hidden="true"><i className="fa-solid fa-chevron-right"></i></div>
+                </>
+              )}
+              {selPop && selectActive && (
+                <div className="textsel-pop" style={{ left: `${selPop.x}%`, top: `${selPop.y}%` }} onMouseDown={(e) => e.preventDefault()}>
+                  {HL_COLORS.map((c) => (
+                    <button key={c.name} type="button" className={`textsel-swatch ${selColor === c.bg ? 'active' : ''}`} style={{ background: c.bg }} title={`Highlight ${c.name}`} aria-label={`Highlight ${c.name}`} onClick={() => { setSelColor(c.bg); applyTextHighlight(); }} />
+                  ))}
+                  <button type="button" onClick={applyTextHighlight}><i className="fa-solid fa-highlighter"></i> Highlight</button>
+                </div>
               )}
               {(annotations[pageNumber] || []).length > 0 && (
                 <div className="page-notes-badge" title={(annotations[pageNumber] || []).map((a) => a.text).join(' · ')}>

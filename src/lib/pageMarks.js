@@ -63,6 +63,35 @@ export function getHighlights(file) {
   return read('hl', file);
 }
 
+// Text highlights: saved text selections (word-span rects), per page.
+// Stored separately from region highlights ('hl'): { [page]: [{id, text,
+// color, rects, ts}] } — rects are per-line boxes in % of the page, taken
+// from the browser Selection's client rects over the text layer.
+export function getTextHighlights(file) {
+  return read('thl', file);
+}
+
+export function addTextHighlight(file, page, hl) {
+  const m = read('thl', file);
+  const arr = m[page] || [];
+  arr.push({ id: Date.now(), ts: Date.now(), ...hl });
+  m[page] = arr;
+  write('thl', file, m);
+}
+
+export function deleteTextHighlight(file, page, id) {
+  const m = read('thl', file);
+  m[page] = (m[page] || []).filter((h) => h.id !== id);
+  if (!m[page].length) delete m[page];
+  write('thl', file, m);
+}
+
+export function clearTextHighlights(file, page) {
+  const m = read('thl', file);
+  delete m[page];
+  write('thl', file, m);
+}
+
 export function addHighlight(file, page, rect) {
   const m = read('hl', file);
   const arr = m[page] || [];

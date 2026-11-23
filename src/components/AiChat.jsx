@@ -1,10 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { getBotReply, extractEntities, classifyIntent } from '../lib/botBrain';
-import { answerFromNotes, isTopicQuestion, tokenize } from '../lib/notesRag';
+import { answerFromNotes, isTopicQuestion, tokenize, isFollowUp, followUpKind } from '../lib/notesRag';
 
 // No "Who created you?" chip — the answer is correct when asked, but it is
 // not advertised (humble credit lives in the footer line below instead).
-const QUICK_REPLIES = ['Find DSA notes', 'PYQ 2024', 'What can you do?'];
+const QUICK_REPLIES = ['DSA notes dhoondo', 'PYQ 2024', 'Tum kya kar sakte ho?'];
+
+/** Semester the student is currently viewing, from the URL hash (#sem4).
+ * Used as a ranking context — answers from the viewed semester rank higher.
+ * Read at send time (the hash changes as the student browses). */
+function semesterFromHash() {
+  try {
+    const m = String(window.location.hash || '').match(/sem\s*-?\s*([1-8])/i);
+    return m ? `sem${m[1]}` : null;
+  } catch {
+    return null;
+  }
+}
 
 // Renders **bold** spans in bot text (founder answer uses markdown-ish bold)
 function renderRich(text) {
@@ -18,7 +30,7 @@ const AiChat = ({ onPreview }) => {
   const [messages, setMessages] = useState([
     {
       from: 'bot',
-      text: 'Hi! I find notes and PYQ papers — and I can explain a topic from the notes themselves. Try “what is the Carnot cycle?” or “dsa unit 2 sem 4”.',
+      text: 'Namaste! Main notes aur PYQ dhoondhta hoon — aur kisi topic ko notes se samjha bhi sakta hoon. Try karo: “Carnot cycle kya hai?” ya “dsa unit 2 sem 4”.',
       results: [],
     },
   ]);
@@ -27,6 +39,11 @@ const AiChat = ({ onPreview }) => {
   const [expandedExtra, setExpandedExtra] = useState(new Set());
   const bottomRef = useRef(null);
   const timerRef = useRef(null);
+  // Conversation memory (last topic only, capped): follow-ups like "aur
+  // batao" / "iska example do" resolve against the previous topic instead
+  // of failing or starting over. `shown` tracks pages already quoted so a
+  // follow-up shows the NEXT best pages, not the same ones.
+  const ctxRef = useRef({ topic: null, questionType: null, shown: new Set(), turns: 0 });
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -47,16 +64,56 @@ const AiChat = ({ onPreview }) => {
       let reply;
       let results = [];
       const intent = classifyIntent(text);
-      if (isTopicQuestion(text) && intent !== 'founder' && intent !== 'greeting' && intent !== 'thanks') {
-        const topic = text
-          .replace(/^(what is|what are|what does|explain|define|meaning of|how does|how do|why|tell me about)\s+/i, '')
+      const semester = semesterFromHash();
+      // Follow-ups ("aur batao", "iska example do") resolve against the
+      // last topic instead of being searched from scratch.
+      let question = text;
+      let followUp = null;
+      if (isFollowUp(text) && ctxRef.current.topic) {
+        const kind = followUpKind(text);
+        followUp = kind;
+        question = kind === 'example'
+          ? `${ctxRef.current.topic} example`
+          : kind === 'steps'
+            ? `${ctxRef.current.topic} steps`
+            : ctxRef.current.topic;
+      }
+      // A bare topic phrase ("carnot cycel", "normalisation") has no
+      // question words but is still a topic question — route it to RAG
+      // unless the intent is clearly a lookup or small-talk.
+      const topicLike = isTopicQuestion(question)
+        || intent === 'fallback'
+        || followUp !== null;
+      if (topicLike && intent !== 'founder' && intent !== 'greeting' && intent !== 'thanks') {
+        const topic = question
+          .replace(/^(what is|what are|what does|explain|define|meaning of|how does|how do|why|tell me about|kya hai|kya hota hai|kaise|samjhao|matlab|batao)\s+/i, '')
           .replace(/\?+$/, '').trim();
-        const rag = await answerFromNotes(text);
+        const exclude = followUp === 'more' ? ctxRef.current.shown : null;
+        const rag = await answerFromNotes(question, { semester, exclude });
         if (rag.status === 'ok') {
-          const lines = rag.hits.map(
-            (h) => `**${h.title} — page ${h.page}:**\n${h.excerpt}`,
-          );
-          reply = `In short: ${rag.synthesis}\n\nHere's what your notes say about **${topic || text}**:\n\n${lines.join('\n\n')}\n\nTap a note below to open that page.`;
+          ctxRef.current = {
+            topic: rag.topic || topic || text,
+            questionType: rag.questionType || null,
+            shown: new Set([
+              ...ctxRef.current.shown,
+              ...rag.hits.map((h) => `${h.file}|${h.page}`),
+            ]),
+            turns: Math.min(ctxRef.current.turns + 1, 3),
+          };
+          const correctedNote = (rag.corrected && rag.corrected.length > 0)
+            ? `\n(Tumne “${rag.corrected[0].from}” likha tha — maine “${rag.corrected[0].to}” samjha.)`
+            : '';
+          let lines;
+          if (rag.questionType === 'difference' && rag.difference) {
+            lines = rag.difference.map(
+              (d) => `**${d.label}:**\n${d.excerpt}`,
+            );
+          } else {
+            lines = rag.hits.map(
+              (h) => `**${h.title} — page ${h.page}:**\n${h.excerpt}`,
+            );
+          }
+          reply = `Short me: ${rag.synthesis}\n\nNotes me is baare me ye likha hai:\n\n${lines.join('\n\n')}\n\nNeeche wale note pe tap karke us page ko kholo.${correctedNote}`;
           results = rag.hits.map((h) => ({ ...h, page: h.page }));
           const extra = rag.hits.filter((h) => h.excerptMore).map((h) => ({ title: h.title, page: h.page, text: h.excerptMore }));
           const followUps = rag.followUps || [];
@@ -64,13 +121,20 @@ const AiChat = ({ onPreview }) => {
           setMessages((m) => [...m, { from: 'bot', text: reply, results, extra, followUps }]);
           return;
         } else if (rag.status === 'no-index') {
-          reply = 'The notes are still being converted into a searchable index, so I can only find notes by title right now — try “dsa unit 3 sem 4”. Topic answers switch on automatically once the conversion finishes.';
+          reply = 'Notes abhi searchable index me convert ho rahe hain, isliye main abhi sirf title se notes dhoondh sakta hoon — try karo “dsa unit 3 sem 4”. Conversion complete hote hi topic wale jawab apne aap on ho jayenge.';
           results = (rag.candidates || []).slice(0, 3);
         } else {
           const entities = extractEntities(text);
-          const subject = entities.subject ? ` on **${entities.subject}**` : '';
-          reply = `I searched your notes${subject} and couldn't find anything about “${topic || text}”. The notes may not cover it yet — try rephrasing, or open the closest notes below.`;
-          results = (rag.candidates || []).slice(0, 3);
+          const subject = entities.subject ? ` **${entities.subject}** pe` : '';
+          // Only point at "closest notes" when there actually are some —
+          // otherwise the line promises cards that never appear.
+          const cands = (rag.candidates || []).slice(0, 3);
+          if (followUp) {
+            reply = `Is topic pe notes me aur kuch nahi mila — jo tha wo upar dikha diya. ${cands.length > 0 ? 'Koi aur topic poochho, ya neeche closest notes dekho.' : 'Koi aur topic poochho.'}`;
+          } else {
+            reply = `Maine notes me${subject} “${topic || text}” ke baare me kuch nahi paya. Ho sakta hai ye topic notes me cover hi na hua ho — spelling check karke dobara try karo${cands.length > 0 ? ', ya neeche closest notes dekho.' : '.'}`;
+          }
+          results = cands;
         }
       } else {
         const out = getBotReply(text);
@@ -109,14 +173,14 @@ const AiChat = ({ onPreview }) => {
                     </>
                   ) : (
                     <button type="button" className="aichat-more-btn" onClick={() => setExpandedExtra((s) => new Set(s).add(i))}>
-                      Show more from these pages ({msg.extra.length})
+                      In pages se aur dikhao ({msg.extra.length})
                     </button>
                   )}
                 </div>
               )}
               {msg.followUps && msg.followUps.length > 0 && (
                 <div className="aichat-followups">
-                  <span>Keep going:</span>
+                  <span>Aage badho:</span>
                   {msg.followUps.map((f, fi) => (
                     <button key={fi} type="button" className="aichat-followup-chip" onClick={() => send(f)}>
                       {f}
@@ -171,7 +235,7 @@ const AiChat = ({ onPreview }) => {
           className="form-input aichat-input"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Ask for notes… e.g. what is the Carnot cycle?"
+          placeholder="Sawaal likho… e.g. Carnot cycle kya hai?"
           aria-label="Chat message"
           autoComplete="off"
         />

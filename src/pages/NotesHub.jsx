@@ -732,7 +732,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
                                 <circle cx="18" cy="18" r="15.5" fill="none" stroke="rgba(0,0,0,0.15)" strokeWidth="4" />
                                 <circle cx="18" cy="18" r="15.5" fill="none" stroke="#1b7a43" strokeWidth="4" strokeLinecap="round" strokeDasharray="97.4" strokeDashoffset={97.4 * (1 - prog.pct / 100)} transform="rotate(-90 18 18)" />
                               </svg>
-                              {prog.pct}% done · {prog.done}/{prog.total}
+                              {prog.pct}% · {prog.done}/{prog.total}
                             </span>
                             {prog.lastOpened && (
                               <span className="subject-last-line">Last: {prog.lastOpened.title.slice(0, 34)}{prog.lastOpened.title.length > 34 ? '…' : ''}</span>

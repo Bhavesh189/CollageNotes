@@ -438,11 +438,13 @@ body {
   --accent-color: 27, 122, 67;
 }
 
-/* Framed subject card (2026-11-22): ONE wooden-frame image is the card
-   background/border; the subject illustration sits INSIDE the frame and the
-   name sits ON TOP of the illustration (real HTML text, never baked into
-   an image). aspect-ratio matches the frame (1.416) so the wood border is
-   never cropped or stretched; padding 8% lands the illustration exactly
+/* Framed subject card (2026-11-22, redesigned 2026-11-23): ONE wooden-frame
+   image is the card background/border; the subject illustration sits INSIDE
+   the frame and the name sits ON TOP of the illustration in a title band
+   (real HTML text, never baked into an image). The card is TALL (1/1.18)
+   so the illustration is the hero (~70%+ of card height); background-size
+   100% 100% keeps all four wood borders visible at the tall ratio (cover
+   would crop the frame's sides); padding 8% lands the illustration exactly
    inside the frame opening (a hair of black mat shows — intentional). */
 .subject-card {
   --accent-color: 27, 122, 67; /* White glow theme */
@@ -452,19 +454,20 @@ body {
   position: relative;
   display: flex;
   flex-direction: column;
-  aspect-ratio: 1.416;
+  aspect-ratio: 1 / 1.18;
   height: auto;
   padding: 8%;
-  background: url('/subjects/wood-frame.jpg') center / cover no-repeat, var(--bg-card);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  background: url('/subjects/wood-frame.jpg') center / 100% 100% no-repeat, var(--bg-card);
+  box-shadow: 0 14px 34px rgba(20, 30, 20, 0.38), 0 2px 8px rgba(20, 30, 20, 0.18);
   transition: var(--transition-smooth);
 }
 
 .subject-card:hover {
   transform: translateY(-10px) scale(1.03);
   border-color: rgba(var(--accent-color), 0.5);
-  box-shadow: 0 20px 45px rgba(var(--accent-color), 0.12),
-              0 0 15px rgba(var(--accent-color), 0.1);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.38),
+              0 0 0 2px rgba(27, 122, 67, 0.35),
+              0 0 18px rgba(var(--accent-color), 0.14);
 }
 
 .subject-card-img-wrapper {
@@ -489,14 +492,17 @@ body {
   transform: scale(1.08);
 }
 
-/* Dark gradient so the overlaid name reads on any illustration. */
+/* Title-band scrim (2026-11-23): dark at the TOP behind the name, fading to
+   clear — the name always sits on darkness, the lower half of the
+   illustration shows with zero wash-out. (The old bottom scrim washed the
+   art out AND left the name hanging above it on pale cream, white-on-cream.) */
 .subject-card-scrim {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
-  height: 62%;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.82) 0%, rgba(0, 0, 0, 0.45) 55%, rgba(0, 0, 0, 0) 100%);
+  top: 0;
+  height: 58%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.5) 45%, rgba(0, 0, 0, 0.12) 78%, rgba(0, 0, 0, 0) 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -505,14 +511,14 @@ body {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
+  top: 0;
   z-index: 2;
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 4px 10px;
-  padding: 10px 12px;
+  gap: 6px 10px;
+  padding: 12px 12px 10px;
 }
 
 .subject-card-name {
@@ -543,7 +549,8 @@ body {
 }
 
 .subject-card-img-wrapper .secured-indicator {
-  top: 10px;
+  top: auto;
+  bottom: 10px;
   right: 10px;
 }
 
@@ -2581,16 +2588,16 @@ html { scroll-padding-top: 112px; }
      columns; the card is taller so the art actually shows. */
   .subjects-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .subject-card {
-    /* Taller than the 1.416 frame ratio so the illustration has room;
-       background-size 100% 100% keeps all four wood borders visible
-       (cover would crop the frame's sides at this ratio). */
-    aspect-ratio: 1 / 1.05;
+    /* Taller than desktop so the illustration stays the hero on a narrow
+       2-col card; background-size 100% 100% keeps all four wood borders
+       visible (cover would crop the frame's sides at this ratio). */
+    aspect-ratio: 1 / 1.3;
     background-size: 100% 100%;
   }
-  /* Gentler scrim: art stays visible, name still reads. */
+  /* Title-band scrim on phones too: 3-line names fit under a 62% band. */
   .subject-card-scrim {
-    height: 40%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.28) 55%, rgba(0, 0, 0, 0) 100%);
+    height: 62%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.5) 45%, rgba(0, 0, 0, 0.12) 78%, rgba(0, 0, 0, 0) 100%);
   }
   .subject-card-overlay { padding: 8px 10px; }
   /* Slim footer: one progress line only — Next/Last lines hidden on
@@ -3424,9 +3431,12 @@ body { line-height: var(--ui-line-height, 1.5); letter-spacing: var(--ui-letter-
 .study-subjects { display: flex; flex-direction: column; gap: 8px; }
 .study-subj-row { display: grid; grid-template-columns: 1fr 120px auto; gap: 10px; align-items: center; font-size: .88rem; }
 
-/* Subject card footer (progress moved out of the image overlay so the
-   name is never clipped by the card edge) */
-.subject-card-footer { margin-top: 10px; background: rgba(255, 255, 255, .94); border-radius: 10px; padding: 8px 10px; display: flex; flex-direction: column; gap: 3px; color: #1a2e22; }
-.subject-progress-line { display: inline-flex; align-items: center; gap: 6px; font-size: .8rem; font-weight: 600; color: #1a2e22; }
+/* Subject card footer (2026-11-23): ONE compact progress line only — the
+   Last/Next lines are hidden on the card (they live on the subject-detail
+   page); the slim footer leaves the illustration as the hero. */
+.subject-card-footer { margin-top: 8px; background: rgba(255, 255, 255, .94); border-radius: 10px; padding: 7px 10px; display: flex; flex-direction: column; gap: 3px; color: #1a2e22; }
+.subject-card-footer .subject-last-line,
+.subject-card-footer .subject-next-line { display: none; }
+.subject-progress-line { display: inline-flex; align-items: center; gap: 6px; font-size: .8rem; font-weight: 600; color: #1a2e22; white-space: nowrap; }
 .subject-ring { flex: 0 0 auto; }
 .subject-last-line, .subject-next-line { font-size: .78rem; color: #43564a; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

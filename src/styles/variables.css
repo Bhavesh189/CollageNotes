@@ -1,13 +1,15 @@
 :root {
-  /* ---- Light green + warm skin/cream theme ---- */
+  /* ---- Rich warm paper + deep green theme (2026-11-23 refresh) ----
+     Deeper cream paper, richer greens, green-tinted ink — same green
+     identity, more premium depth. Dark mode below is untouched. */
   --green: #1b7a43;
-  --green-dark: #14532d;
+  --green-dark: #0e4423;
   --green-soft: #7fb069;
-  --green-light: #e6f4ea;
-  --cream: #fbf7ef;
-  --cream-deep: #f3ecdd;
-  --skin: #f7ead9;
-  --card: #fffdf8;
+  --green-light: #dcefd8;
+  --cream: #f8f1e2;
+  --cream-deep: #eee1c6;
+  --skin: #f3e2c8;
+  --card: #fffaf1;
   /* Text that sits on a green background (buttons, active tabs) */
   --on-green: #ffffff;
 
@@ -18,14 +20,14 @@
   --neon-yellow: #b7791f;
   --neon-pink: #c05621;
 
-  --bg-dark: #fbf7ef;
-  --bg-card: #fffdf8;
-  --glass-border: rgba(45, 42, 38, 0.12);
-  --glass-glow: rgba(27, 122, 67, 0.10);
+  --bg-dark: #f4ecdb;
+  --bg-card: #fffaf1;
+  --glass-border: rgba(34, 48, 31, 0.16);
+  --glass-glow: rgba(27, 122, 67, 0.12);
 
-  --text-primary: #2d2a26;
-  --text-secondary: #5c564e;
-  --text-muted: #8a8378;
+  --text-primary: #22301f;
+  --text-secondary: #4e564b;
+  --text-muted: #7d8478;
 
   --font-main: 'Poppins', sans-serif;
   --font-display: 'Outfit', sans-serif;

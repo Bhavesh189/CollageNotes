@@ -126,7 +126,7 @@ const PyqFinder = ({ initialSubjects, initialLabel, onClearInitialSubjects }) =>
       <div className="notes-list-container">
         {results.length > 0 ? (
           results.map((p, index) => {
-            const openView = () => setPreview({ file: p.file, title: `${p.subject} — ${p.session}`, context: { source: 'pyq' } });
+            const openView = () => setPreview({ file: p.file, title: `${p.subject} — ${p.session}`, context: { subject: p.subject, source: 'pyq' } });
             const bmId = `pyq:${p.id}`;
             return (
             <div

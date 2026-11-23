@@ -50,7 +50,7 @@ const CommandPalette = ({ open, onClose, onNavigate, onOpenNote, onRandom, onTog
       else if (r.act.id === 'act-theme') r.act.run(onNavigate, null, onToggleTheme);
       else r.act.run(onNavigate);
     } else if (r.item) {
-      onOpenNote && onOpenNote(r.item.file, r.item.title, { semester: r.item.semesterName, source: r.item.type || 'search' });
+      onOpenNote && onOpenNote(r.item.file, r.item.title, { semester: r.item.semesterName, subject: r.item.subject, source: r.item.type || 'search' });
     }
     onClose();
   };

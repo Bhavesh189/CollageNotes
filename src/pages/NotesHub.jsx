@@ -230,7 +230,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
     });
     if (all.length === 0) return;
     const pick = all[Math.floor(Math.random() * all.length)];
-    setPreview({ file: pick.file, title: pick.title, context: { semester: semData.name, semId: currentSem, source: 'notes' } });
+    setPreview({ file: pick.file, title: pick.title, context: { semester: semData.name, semId: currentSem, subject: pick.subject.name, source: 'notes' } });
   };
 
   const copySemLink = async () => {
@@ -417,7 +417,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
                     window.open(row.file, '_blank', 'noopener,noreferrer');
                     return;
                   }
-                  setPreview({ file: row.file, title: row.title, context: { semester: semData.name, semId: currentSem, source: 'notes' } });
+                  setPreview({ file: row.file, title: row.title, context: { semester: semData.name, semId: currentSem, subject: selectedSubject.name, source: 'notes' } });
                 };
                 const bmId = `note:${currentSem}:${selectedSubject.id}:${row.index}${row.sIdx !== null ? `:${row.sIdx}` : ''}`;
                 const bmItem = { id: bmId, type: 'note', title: row.title, file: row.file, subject: selectedSubject.name, semesterName: semData.name, isExternal: !!row.note.isExternal };
@@ -583,7 +583,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
                     <button
                       type="button"
                       className="home-extra-btn"
-                      onClick={() => setPreview({ file: recentHistory[0].file, title: recentHistory[0].title, context: { semester: semData.name, semId: currentSem, source: 'notes' } })}
+                      onClick={() => setPreview({ file: recentHistory[0].file, title: recentHistory[0].title, context: { semester: semData.name, semId: currentSem, subject: recentHistory[0].subject, source: 'notes' } })}
                     >
                       Continue <i className="fa-solid fa-arrow-right"></i>
                     </button>
@@ -616,12 +616,12 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
                       for (const sub of semData.subjects) {
                         const next = flatNotes(sub).find((r) => !progressMap[r.file] || !progressMap[r.file].done);
                         if (next) {
-                          setPreview({ file: next.file, title: next.title, context: { semester: semData.name, semId: currentSem, source: 'guided-path' } });
+                          setPreview({ file: next.file, title: next.title, context: { semester: semData.name, semId: currentSem, subject: sub.name, source: 'guided-path' } });
                           return;
                         }
                       }
                       const first = semData.subjects[0] && flatNotes(semData.subjects[0])[0];
-                      if (first) setPreview({ file: first.file, title: first.title, context: { semester: semData.name, semId: currentSem, source: 'guided-path' } });
+                      if (first) setPreview({ file: first.file, title: first.title, context: { semester: semData.name, semId: currentSem, subject: semData.subjects[0].name, source: 'guided-path' } });
                     }}
                   >
                     {semData.subjects.some((s) => flatNotes(s).some((r) => progressMap[r.file] && progressMap[r.file].done)) ? 'Continue the path' : 'Start the path'} <i className="fa-solid fa-arrow-right"></i>
@@ -637,7 +637,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
                         key={h.file + h.at}
                         type="button"
                         className="recent-rail-item glass"
-                        onClick={() => setPreview({ file: h.file, title: h.title, context: { semester: semData.name, semId: currentSem, source: 'notes' } })}
+                        onClick={() => setPreview({ file: h.file, title: h.title, context: { semester: semData.name, semId: currentSem, subject: h.subject, source: 'notes' } })}
                       >
                         <strong>{h.title}</strong>
                         <small>{h.subject || ''} · page {h.page || 1}</small>
@@ -651,7 +651,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
                   <strong><i className="fa-solid fa-share-nodes"></i> Most shared this week:</strong>
                   {Object.entries(shareCounts).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([file, n]) => {
                     const allRows = [];
-                    (semData.subjects || []).forEach((sub) => flatNotes(sub).forEach((r) => allRows.push(r)));
+                    (semData.subjects || []).forEach((sub) => flatNotes(sub).forEach((r) => allRows.push({ ...r, subject: sub.name })));
                     const row = allRows.find((r) => r.file === file);
                     if (!row) return null;
                     return (
@@ -659,7 +659,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
                         key={file}
                         type="button"
                         className="shared-strip-item"
-                        onClick={() => setPreview({ file: row.file, title: row.title, context: { semester: semData.name, semId: currentSem, source: 'notes' } })}
+                        onClick={() => setPreview({ file: row.file, title: row.title, context: { semester: semData.name, semId: currentSem, subject: row.subject, source: 'notes' } })}
                       >
                         {row.title} · {n} share{n === 1 ? '' : 's'}
                       </button>

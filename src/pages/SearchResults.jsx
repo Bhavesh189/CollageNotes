@@ -214,7 +214,7 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
                 if (r.isExternal) {
                   window.open(r.file, '_blank', 'noopener,noreferrer');
                 } else {
-                  setPreview({ file: r.file, title: r.title, context: { semester: r.semesterName, source: r.type || 'search' }, allowDownload: r.type === 'pyq' });
+                  setPreview({ file: r.file, title: r.title, context: { semester: r.semesterName, subject: r.subject, source: r.type || 'search' }, allowDownload: r.type === 'pyq' });
                 }
               };
               const snip = snippetFor(r, query);

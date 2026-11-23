@@ -166,7 +166,7 @@ function App() {
     const notes = buildSearchIndex().filter((i) => i.type === 'note');
     if (notes.length === 0) return;
     const pick = notes[Math.floor(Math.random() * notes.length)];
-    openNoteFromStudy(pick.file, pick.title, { semester: pick.semesterName, source: 'random' });
+    openNoteFromStudy(pick.file, pick.title, { semester: pick.semesterName, subject: pick.subject, source: 'random' });
   };
 
   // Open a note from My Study / the chatbot: navigate to the notes view

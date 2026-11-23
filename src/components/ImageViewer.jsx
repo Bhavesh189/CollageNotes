@@ -282,7 +282,11 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
     // continue-reading and per-subject bars). Metadata only — no file.
     recordPageView(file, clamped, {
       title,
-      subject: context && context.semester,
+      // Subject name for the "Pick up where you left off" rail: the file
+      // itself is the authority (noteMeta matches it in the catalog), then
+      // the opener's context, then the semester name as last resort — the
+      // semester alone makes same-titled notes indistinguishable.
+      subject: (noteMeta && noteMeta.subject) || (context && context.subject) || (context && context.semester),
       sem: context && context.semId,
       type: 'note',
       total,

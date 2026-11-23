@@ -160,7 +160,9 @@ const PdfViewer = ({ file, title, onClose, context, allowDownload }) => {
     // continue-reading and per-subject bars). Metadata only — no file.
     recordPageView(file, clamped, {
       title,
-      subject: context && context.semester,
+      // Real subject name when the opener passed one (PYQ/search), else the
+      // semester name — so rail cards stay distinguishable.
+      subject: (context && context.subject) || (context && context.semester),
       sem: context && context.semId,
       type: context && context.source === 'pyq' ? 'pyq' : 'note',
       total,

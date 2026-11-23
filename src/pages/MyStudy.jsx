@@ -107,7 +107,7 @@ export default function MyStudy({ currentSem, onOpenNote, onNavigate }) {
   }, []);
 
   const openItem = (it) => {
-    onOpenNote(it.file, it.title, { semester: it.sem || semData.name, source: it.type === 'pyq' ? 'pyq' : 'notes' });
+    onOpenNote(it.file, it.title, { semester: it.sem || semData.name, subject: it.subject, source: it.type === 'pyq' ? 'pyq' : 'notes' });
   };
 
   const saveExam = () => {

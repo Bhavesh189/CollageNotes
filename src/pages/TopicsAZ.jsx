@@ -54,7 +54,7 @@ const TopicsAZ = ({ onOpenNote }) => {
                   key={n.id}
                   type="button"
                   className="note-item glass topics-row"
-                  onClick={() => onOpenNote && onOpenNote(n.file, n.title, { semester: n.semesterName, source: 'topics' })}
+                  onClick={() => onOpenNote && onOpenNote(n.file, n.title, { semester: n.semesterName, subject: n.subject, source: 'topics' })}
                 >
                   <span className="note-item-left">
                     <span className="note-item-title">{n.title}<br /><small className="result-meta">{n.semesterName} · {n.subject}</small></span>

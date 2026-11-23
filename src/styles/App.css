@@ -2574,9 +2574,31 @@ html { scroll-padding-top: 112px; }
 .footer-col button:hover, .footer-col a:hover { color: var(--green-dark); }
 .footer-base { border-top: 1px solid var(--glass-border); padding-top: 1.25rem; color: var(--text-muted); font-size: 0.82rem; }
 
-/* --- Subjects grid breakpoints: 1 col mobile / 2 tablet / 3-4 desktop --- */
+/* --- Subjects grid breakpoints: 2 col phones / 2 tablet / 3-4 desktop --- */
 @media (max-width: 640px) {
-  .subjects-grid { grid-template-columns: 1fr; gap: 16px; }
+  /* 2026-11-23 fix: 1-col cards were giant slabs with the illustration
+     ~60% hidden behind the 62% scrim + footer bar. Phones get 2 compact
+     columns; the card is taller so the art actually shows. */
+  .subjects-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .subject-card {
+    /* Taller than the 1.416 frame ratio so the illustration has room;
+       background-size 100% 100% keeps all four wood borders visible
+       (cover would crop the frame's sides at this ratio). */
+    aspect-ratio: 1 / 1.05;
+    background-size: 100% 100%;
+  }
+  /* Gentler scrim: art stays visible, name still reads. */
+  .subject-card-scrim {
+    height: 40%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.28) 55%, rgba(0, 0, 0, 0) 100%);
+  }
+  .subject-card-overlay { padding: 8px 10px; }
+  /* Slim footer: one progress line only — Next/Last lines hidden on
+     phones so the footer no longer eats a third of the card. */
+  .subject-card-footer { padding: 6px 8px; gap: 2px; margin-top: 8px; }
+  .subject-card-footer .subject-last-line,
+  .subject-card-footer .subject-next-line { display: none; }
+  .subject-progress-line { font-size: .78rem; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 1.25rem; }
   .get-pyq-card { flex-direction: column; align-items: stretch; }
   .get-pyq-btn { justify-content: center; }
@@ -2605,6 +2627,10 @@ html { scroll-padding-top: 112px; }
   .nav-links .nav-label { display: inline !important; }
   .ai-tooltip { display: none; }
   .grid-toolbar { flex-direction: column; align-items: stretch; }
+  /* 2026-11-23 fix: .grid-filter kept `flex: 1 1 220px` here, which in a
+     column layout is a 220px HEIGHT — the input sat centred in a tall
+     wrapper with ~90px of dead space above it on phones. */
+  .grid-filter { flex: 1 1 auto; }
   .grid-sort { flex: 1 1 auto; }
 }
 @media (min-width: 769px) {
@@ -3202,6 +3228,12 @@ html[data-high-contrast="true"] .glass { border-width: 2px; }
   .bottom-nav button i { font-size: 1.15rem; }
   .bottom-nav-badge { position: absolute; top: 0; right: calc(50% - 20px); background: #e11d48; color: #fff; font-size: .6rem; font-weight: 700; border-radius: 999px; padding: 1px 5px; }
   .site-footer { padding-bottom: 76px; }
+  /* 2026-11-23 fix: the bottom nav (z-index 1500, ~60px tall) paints over
+     the floating buttons (z-index 99) at bottom:16px — on phones the
+     assistant button sat hidden behind the nav (only its top arc peeked
+     out) and Back-to-top had the same overlap. Lift both above the nav. */
+  .ai-bot-widget { bottom: 80px; }
+  .back-to-top { bottom: 80px; }
   .palette-backdrop { padding-top: 8vh; }
 }
 

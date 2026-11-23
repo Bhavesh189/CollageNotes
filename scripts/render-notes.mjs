@@ -265,4 +265,13 @@ if (!isMainThread) {
   // scripts/build-keywords.mjs. Rebuilt from all on-disk search.json files
   // so a killed or partial run still leaves a correct index.
   buildKeywordIndex();
+
+  // MANIFEST REWRITE (2026-11-23 fix): runHandwritePass() mutates the
+  // in-memory docs above (entry.hwPages / hwSha) AFTER the manifest was
+  // last written at the end of the render phase. Without this second
+  // write, a FRESH build (Vercel / GitHub Pages — no previous manifest)
+  // deploys a manifest with 0 docs carrying hwPages, so the viewer never
+  // serves handwritten pages even though the hw images were generated.
+  // Same JSON shape + fresh generatedAt as every other write; idempotent.
+  writeManifest();
 }

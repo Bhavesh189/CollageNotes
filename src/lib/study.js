@@ -16,6 +16,7 @@ const K = {
   flashcards: 'bn-flashcards',   // { [file]: [{ id, front, back, box, nextReview }] }
   quiz: 'bn-quiz',               // { [file]: [{ id, q, a }] }
   settings: 'bn-settings',       // { fontSize, reduceMotion, highContrast, haptics, lowData, defaultFit }
+  streak: 'bn-streak',           // { days: { 'YYYY-MM-DD': minutes } } — read by getStreak(), written by addMinutes()
   searchHistory: 'bn-search-history', // [query] newest first, max 8
   shareCounts: 'bn-share-counts', // { [file]: n }
 };

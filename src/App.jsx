@@ -128,6 +128,7 @@ function App() {
         setPaletteOpen(false);
         setCheatOpen(false);
         setWhatsNewOpen(false);
+        setMenuOpen(false);
       }
     };
     window.addEventListener('keydown', onKey);
@@ -193,6 +194,11 @@ function App() {
       if (headerRef.current) {
         headerRef.current.classList.toggle('scrolled', window.scrollY > 8);
       }
+      // 2026-11-23 navbar fix: a page scroll closes the mobile dropdown
+      // menu. The menu itself is an overlay with overscroll-behavior:
+      // contain, so scrolling inside it never fires a window scroll.
+      // (Calling setMenuOpen(false) when already closed is a React no-op.)
+      setMenuOpen(false);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
@@ -338,7 +344,7 @@ function App() {
           )}
           <button
             type="button"
-            className="icon-btn"
+            className="icon-btn header-icon-desktop"
             onClick={() => setWhatsNewOpen((o) => !o)}
             aria-label="What's new"
             title="What's new"
@@ -347,7 +353,7 @@ function App() {
           </button>
           <button
             type="button"
-            className="icon-btn"
+            className="icon-btn header-icon-desktop"
             onClick={() => setPaletteOpen(true)}
             aria-label="Jump to anything (Ctrl+K)"
             title="Jump to anything (Ctrl+K)"
@@ -419,6 +425,29 @@ function App() {
           >
             <i className="fa-solid fa-user"></i> <span className="nav-label">Portfolio</span>
           </a>
+          {/* 2026-11-23 navbar fix: on phones these live ONLY in the dropdown
+              (the header row keeps logo + theme + hamburger). Hidden on
+              desktop/tablet, where the header icons + streak chip show. */}
+          {streak.current > 0 && (
+            <button
+              className="nav-btn nav-row-mobile"
+              onClick={() => goToView('study')}
+            >
+              <i className="fa-solid fa-fire"></i> <span className="nav-label">{streak.current}-day streak</span>
+            </button>
+          )}
+          <button
+            className="nav-btn nav-row-mobile"
+            onClick={() => { setMenuOpen(false); setWhatsNewOpen((o) => !o); }}
+          >
+            <i className="fa-solid fa-wand-magic-sparkles"></i> <span className="nav-label">What's new</span>
+          </button>
+          <button
+            className="nav-btn nav-row-mobile"
+            onClick={() => { setMenuOpen(false); setPaletteOpen(true); }}
+          >
+            <i className="fa-solid fa-terminal"></i> <span className="nav-label">Jump to anything</span>
+          </button>
         </nav>
       </header>
 

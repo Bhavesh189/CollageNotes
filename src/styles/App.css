@@ -2621,9 +2621,39 @@ html { scroll-padding-top: 112px; }
   .header-search { order: 3; flex: 1 1 100%; max-width: none; margin: 0; }
   .header-actions { order: 2; }
   .menu-toggle { display: inline-flex; }
-  .nav-links { display: none; order: 4; flex-direction: column; align-items: stretch; width: 100%; gap: 8px; overflow: visible; padding: 4px 0 2px; }
+  /* 2026-11-23 navbar fix (Defect 1): row 1 is logo + theme + hamburger
+     ONLY. Logo ~222px + 2x44px buttons + gaps + padding fits 390px; the
+     What's-new / palette buttons and the streak chip move into the
+     dropdown as labeled rows (see .nav-row-mobile in App.jsx). */
+  .header-actions .header-icon-desktop,
+  .header-actions .header-streak-chip { display: none; }
+  /* 2026-11-23 navbar fix (Defect 2): the dropdown is an ABSOLUTE overlay
+     anchored under the sticky header — it must not push page content down
+     or grow the header when open. Own background + shadow, scrolls
+     internally if the viewport is short, and never chains scrolls to the
+     page (overscroll-behavior: contain) so a page scroll can close it. */
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 12px 16px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--glass-border);
+    border-top: none;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 18px 32px rgba(45, 42, 38, 0.18);
+    max-height: calc(100dvh - 120px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  [data-theme="dark"] .nav-links { box-shadow: 0 18px 32px rgba(0, 0, 0, 0.5); }
   .nav-links.nav-open { display: flex; }
-  .nav-links .nav-btn { justify-content: flex-start; width: 100%; }
+  .nav-links .nav-btn { flex: none; justify-content: flex-start; width: 100%; }
   .nav-links .nav-label { display: inline !important; }
   .ai-tooltip { display: none; }
   .grid-toolbar { flex-direction: column; align-items: stretch; }
@@ -2635,6 +2665,9 @@ html { scroll-padding-top: 112px; }
 }
 @media (min-width: 769px) {
   .menu-toggle { display: none; }
+  /* 2026-11-23 navbar fix: these rows exist only for the phone dropdown —
+     on desktop/tablet the header icons + streak chip already show them. */
+  .nav-row-mobile { display: none; }
 }
 
 /* ---- PDF viewer (DocViewer.jsx): toolbar groups, watermark, blur ---- */

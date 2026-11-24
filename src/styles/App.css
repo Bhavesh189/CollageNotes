@@ -3061,14 +3061,15 @@ html[data-high-contrast="true"] .glass { border-width: 2px; }
 .pdf-page-wrap {
   position: relative;
 }
-/* The rendered page image — never draggable, no long-press callout. */
+/* The rendered page image — draggable + native context menu allowed
+   (his order 2026-11-24: right-click → Copy image, drag the image out).
+   user-select stays off (no text selection on the image itself); the
+   long-press callout is enabled so mobile long-press offers Copy too. */
 .img-page {
   display: block;
   height: auto;
   -webkit-user-select: none;
   user-select: none;
-  -webkit-touch-callout: none;
-  -webkit-user-drag: none;
 }
 /* Page-shaped skeleton — holds the page's place while its image is
    genuinely not ready yet, so the viewer never shows a blank wait.

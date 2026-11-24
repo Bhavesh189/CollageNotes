@@ -19,9 +19,14 @@ import { semestersData } from '../data/notesData';
 //
 // COPY PROTECTION, by design:
 //  - page images only — no text layer, nothing selectable BY DEFAULT;
-//  - no Download button anywhere;
+//  - no Download button for NOTES (PYQ papers get one — the source PDF);
 //  - user-select:none on the page area, context menu + copy/cut/save
-//    shortcuts blocked inside the modal (inputs exempt);
+//    shortcuts blocked inside the modal (inputs exempt) — EXCEPT the
+//    reading page image itself: right-click → Copy image and dragging
+//    the image work natively (his order 2026-11-24, no custom button;
+//    the native menu IS the feature). Honest trade-off: a copied/dragged
+//    page image leaves the site without the watermark (the watermark is
+//    an HTML overlay, not baked into the JPEG);
 //  - a diagonal "thebhavesh.online" watermark overlays every page;
 //  - SCREENSHOT DETERRENTS (not a guarantee — see below): the page blurs
 //    the moment the window loses focus or the tab is hidden (app-switch /
@@ -105,7 +110,7 @@ export const prefetchViewerManifest = () => {
   loadManifest().catch(() => {});
 };
 
-const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext }) => {
+const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext, downloadUrl, onShowSolution }) => {
   const [status, setStatus] = useState('loading'); // loading|ready|missing|error|unsupported
   const [statusNote, setStatusNote] = useState('');
   const [numPages, setNumPages] = useState(null);
@@ -655,6 +660,8 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
   };
   const hlStart = (e) => {
     if (!hlMode) return;
+    // Right/middle click never starts a highlight drag.
+    if (e.button != null && e.button !== 0) return;
     const p = hlPos(e);
     setHlDrag({ x0: p.x, y0: p.y, x1: p.x, y1: p.y });
   };
@@ -735,6 +742,9 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
     scheduleTapNav(clientX);
   };
   const tapDown = (e) => {
+    // Right/middle click is not a tap — never start a page-turn tap from
+    // it (the context menu / native image drag owns those buttons).
+    if (e.button != null && e.button !== 0) return;
     // Emulated mouse events fired after a touch tap — ignore them entirely.
     // (The touch path already handled the tap; clearing here would cancel
     // its pending navigation before the 240ms timer fires.)
@@ -743,6 +753,7 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
     pointerRef.current = { x: e.clientX, y: e.clientY, t: e.timeStamp };
   };
   const tapUp = (e) => {
+    if (e.button != null && e.button !== 0) { pointerRef.current = null; return; }
     // Emulated mouse events fired after a touch tap — the touch path
     // already handled it; ignore mouse taps right after a touch.
     if (Date.now() - lastTouchRef.current < 500) { pointerRef.current = null; return; }
@@ -764,6 +775,9 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
     );
   };
   const onCopyGuard = (e) => {
+    // Native "Copy image" on the reading page image is allowed (his order
+    // 2026-11-24) — the copy event's target is the image itself.
+    if (e.target && e.target.tagName === 'IMG') return;
     if (!isTypingTarget(e.target) && !selectionInTextLayer()) e.preventDefault();
   };
   // Save the current text selection as a highlight: rects come from the
@@ -1124,6 +1138,30 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
                 <i className="fa-solid fa-ellipsis-vertical"></i>
                 <span>Tools</span>
               </button>
+              {onShowSolution && context?.source === 'pyq' && (
+                <button
+                  type="button"
+                  className="pdf-nav-btn pdf-fit-btn"
+                  onClick={() => onShowSolution?.(file)}
+                  title="View the handwritten solution for this paper"
+                  aria-label="View solution"
+                >
+                  <i className="fa-solid fa-lightbulb"></i>
+                  <span>Solution</span>
+                </button>
+              )}
+              {downloadUrl && (
+                <a
+                  className="pdf-nav-btn pdf-fit-btn pdf-download-btn"
+                  href={downloadUrl}
+                  download
+                  title="Download this file"
+                  aria-label="Download this file"
+                >
+                  <i className="fa-solid fa-download"></i>
+                  <span>Download</span>
+                </a>
+              )}
             </div>
           </div>
         )}
@@ -1371,12 +1409,15 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
                 className={`img-page${blurred ? ' img-blurred' : ''}`}
                 src={pageSrc(pageNumber)}
                 alt={`Page ${pageNumber} of ${numPages} — ${title || 'note'}`}
-                draggable={false}
+                // Native image behaviour (his order 2026-11-24): draggable
+                // (the default for <img>) + the browser's own context menu
+                // (Copy image…). stopPropagation keeps the modal-level
+                // context-menu block from swallowing it.
                 fetchpriority="high"
                 decoding="async"
                 onLoad={() => setImgReady(true)}
                 onError={() => setImgError(true)}
-                onContextMenu={(e) => e.preventDefault()}
+                onContextMenu={(e) => e.stopPropagation()}
                 style={{
                   width: fitWidth ? '100%' : `${Math.round(scale * 100)}%`,
                   filter: brightness !== 100 ? `brightness(${brightness}%)` : undefined,
@@ -1388,10 +1429,10 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
                   className={`img-page img-page--spread${blurred ? ' img-blurred' : ''}`}
                   src={pageSrc(pageNumber + 1)}
                   alt={`Page ${pageNumber + 1} of ${numPages} — ${title || 'note'}`}
-                  draggable={false}
+                  // Same native behaviour as the main page image (see above).
                   loading="lazy"
                   decoding="async"
-                  onContextMenu={(e) => e.preventDefault()}
+                  onContextMenu={(e) => e.stopPropagation()}
                   style={{
                     width: fitWidth ? '100%' : `${Math.round(scale * 100)}%`,
                     filter: brightness !== 100 ? `brightness(${brightness}%)` : undefined,

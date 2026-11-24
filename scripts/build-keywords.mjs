@@ -30,6 +30,11 @@ export function buildKeywordIndex(outDir = OUT) {
   try { manifest = JSON.parse(fs.readFileSync(path.join(outDir, 'manifest.json'), 'utf8')); } catch { /* none yet */ }
   const dirToFile = {};
   for (const [file, d] of Object.entries(manifest.docs || {})) {
+    // PYQ pages are NOT in the chatbot index (2026-11-24): the chatbot
+    // stays grounded in notes — PYQ text is exam questions, not
+    // explanations. Their search.json files still exist (the viewer uses
+    // them for in-document search); they are just never indexed here.
+    if (file.startsWith('/pyq/')) continue;
     if (d && d.dir) dirToFile[d.dir] = file;
   }
   // Null-prototype map: words like "constructor"/"toString" exist on

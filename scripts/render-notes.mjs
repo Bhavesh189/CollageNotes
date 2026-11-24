@@ -8,11 +8,12 @@
 // build output (public/generated/ is gitignored) and cost ~8-12 KB each.
 // Reading pages are UNCHANGED (same 892x1263 q80 files).
 //
-// PYQ EXEMPTION (2026-11-22): only NOTES are rendered. PYQs and syllabus
-// stay as PDFs under public/ (view + download allowed), so this script
-// never touches them — notes-source/pyq/ and notes-source/syllabus/ are
-// not even walked. Notes scope: 168 PDFs, 5,894 pages, 752 MB source;
-// at scale 1.5 / JPEG q80 (~105 KB/page) that's ~600 MB of images.
+// PYQ PAPERS (2026-11-24): PYQs view as PAGE IMAGES like notes (fast,
+// light — the whole PDF no longer loads to read a paper); Download serves
+// the source PDF. Syllabus stays a PDF, never rendered. Notes scope:
+// 227 PDFs; PYQ scope: 301 PDFs, ~1,400 pages. Solutions live under
+// notes-source/pyq-solutions/ and render to page images like notes
+// (protected viewer, no download).
 //
 //   node scripts/render-notes.mjs [--only <substring>] [--force] [--jobs N] [--limit N]
 //   --limit N: render at most N docs this run (batching). The manifest is
@@ -54,6 +55,7 @@ import { runHandwritePass } from './handwrite.mjs';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 const SRC = path.join(ROOT, 'notes-source');
+const PYQ_DIR = path.join(ROOT, 'public', 'pyq');
 const OUT = path.join(ROOT, 'public', 'generated');
 const SCALE = 1.5;
 const QUALITY = 80;
@@ -190,18 +192,24 @@ if (!isMainThread) {
   let prev = { version: 0, docs: {} };
   try { prev = JSON.parse(fs.readFileSync(manifestPath, 'utf8')); } catch { /* first run */ }
 
+  // NOTES + PYQ SOLUTIONS from notes-source/, plus PYQ PAPERS from
+  // public/pyq/ (2026-11-24: PYQs render to page images like notes;
+  // Download serves the source PDF). Syllabus is never rendered.
+  // Each entry is { rel, srcPath } where rel is the manifest-relative
+  // path (manifest key = '/' + rel, render dir = sha1(rel)[0:12]).
   const files = walk(SRC)
     .sort()
-    // NOTES + PYQ SOLUTIONS — PYQ/syllabus PDFs are served as files, never
-    // rendered. Solutions live under notes-source/pyq-solutions/ and render
-    // to page images like notes (protected viewer, no download).
     .filter((f) => {
       const rel = path.relative(SRC, f).split(path.sep).join('/');
       return rel.startsWith('notes/') || rel.startsWith('pyq-solutions/');
-    });
+    })
+    .map((f) => ({ rel: path.relative(SRC, f).split(path.sep).join('/'), srcPath: f }));
+  for (const f of walk(PYQ_DIR).sort()) {
+    files.push({ rel: `pyq/${path.relative(PYQ_DIR, f).split(path.sep).join('/')}`, srcPath: f });
+  }
+  files.sort((a, b) => (a.rel < b.rel ? -1 : 1));
   const plan = [];
-  for (const f of files) {
-    const rel = path.relative(SRC, f).split(path.sep).join('/');
+  for (const { rel, srcPath: f } of files) {
     if (only && !rel.includes(only)) continue;
     const buf = fs.readFileSync(f);
     const hash = sha1(buf);

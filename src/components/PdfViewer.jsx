@@ -58,7 +58,7 @@ const ZOOM_LEVELS = [0.6, 0.8, 1.0, 1.25, 1.5, 2.0];
 const PAGE_KEY = (f) => `bn-viewer-page:${f}`;
 const ZOOM_KEY = 'bn-viewer-zoom';
 
-const PdfViewer = ({ file, title, onClose, context, allowDownload }) => {
+const PdfViewer = ({ file, title, onClose, context, allowDownload, onShowSolution }) => {
   // PYQ / syllabus = downloadable (download button, text layer, no
   // deterrents). Notes = protected. Default (no prop) = protected.
   const downloadable = !!allowDownload;
@@ -582,6 +582,18 @@ const PdfViewer = ({ file, title, onClose, context, allowDownload }) => {
                 <i className={isFullscreen ? 'fa-solid fa-minimize' : 'fa-solid fa-maximize'}></i>
                 <span>{isFullscreen ? 'Exit' : 'Full'}</span>
               </button>
+              {downloadable && context?.source === 'pyq' && (
+                <button
+                  type="button"
+                  className="pdf-nav-btn pdf-fit-btn"
+                  onClick={() => onShowSolution?.(file)}
+                  title="View the handwritten solution for this paper"
+                  aria-label="View solution"
+                >
+                  <i className="fa-solid fa-lightbulb"></i>
+                  <span>Solution</span>
+                </button>
+              )}
               {downloadable && (
                 <a
                   className="pdf-nav-btn pdf-fit-btn pdf-download-btn"
@@ -635,7 +647,15 @@ const PdfViewer = ({ file, title, onClose, context, allowDownload }) => {
                   // text layer ON, as the old viewer had it — the file is
                   // downloadable anyway, so selecting text here is coherent.
                   renderTextLayer={downloadable}
-                  renderAnnotationLayer={downloadable}
+                  // Annotation layer OFF (2026-11-24): PYQ PDFs carry
+                  // full-page link annotations (btubikaner.com,
+                  // pyqonline.com on every page of 124 papers) that turn
+                  // the whole page yellow on hover and navigate the student
+                  // to an external site on any click. No annotation in a
+                  // question paper or syllabus is worth that — links stay
+                  // dead in the viewer. (The infected files are also being
+                  // cleaned at source; this is the permanent guard.)
+                  renderAnnotationLayer={false}
                 />
               </Document>
               {blurred && !downloadable && (

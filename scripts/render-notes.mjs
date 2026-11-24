@@ -192,8 +192,13 @@ if (!isMainThread) {
 
   const files = walk(SRC)
     .sort()
-    // NOTES ONLY — PYQ/syllabus PDFs are served as files, never rendered.
-    .filter((f) => path.relative(SRC, f).split(path.sep).join('/').startsWith('notes/'));
+    // NOTES + PYQ SOLUTIONS — PYQ/syllabus PDFs are served as files, never
+    // rendered. Solutions live under notes-source/pyq-solutions/ and render
+    // to page images like notes (protected viewer, no download).
+    .filter((f) => {
+      const rel = path.relative(SRC, f).split(path.sep).join('/');
+      return rel.startsWith('notes/') || rel.startsWith('pyq-solutions/');
+    });
   const plan = [];
   for (const f of files) {
     const rel = path.relative(SRC, f).split(path.sep).join('/');

@@ -11,7 +11,8 @@ const PyqFinder = ({ initialSubjects, initialLabel, onClearInitialSubjects }) =>
   const [query, setQuery] = useState('');
   const [subject, setSubject] = useState('all');
   const [year, setYear] = useState('all');
-  const [preview, setPreview] = useState(null); // { file, title, context }
+  const [preview, setPreview] = useState(null); // { file, title, context, allowDownload }
+  const [solutionMsg, setSolutionMsg] = useState('');
   const [, setBmTick] = useState(0);
 
   // A new "Get PYQ" navigation resets the free-text/year filters.
@@ -57,6 +58,32 @@ const PyqFinder = ({ initialSubjects, initialLabel, onClearInitialSubjects }) =>
       isExternal: false,
     });
     setBmTick((t) => t + 1);
+  };
+
+  // PYQ SOLUTION — the solution for a paper lives at
+  // /pyq-solutions/<sem>/<paper>-solution.pdf (rendered to page images by
+  // the build, opened in the protected viewer like notes). If it is not in
+  // the manifest yet, say so honestly instead of opening a dead viewer.
+  const solutionKeyFor = (paperFile) => {
+    const m = paperFile.match(/^\/pyq\/(sem\d+)\/(.+)\.pdf$/i);
+    if (!m) return null;
+    return `/pyq-solutions/${m[1]}/${m[2]}-solution.pdf`;
+  };
+
+  const handleShowSolution = async (paperFile) => {
+    const key = solutionKeyFor(paperFile);
+    const paperTitle = preview?.title || 'this paper';
+    if (!key) return;
+    try {
+      const r = await fetch('/generated/manifest.json');
+      const manifest = await r.json();
+      if (manifest.docs && manifest.docs[key]) {
+        setSolutionMsg('');
+        setPreview({ file: key, title: `${paperTitle} — Solution`, context: { subject: paperTitle, source: 'pyq-solution' }, allowDownload: false });
+        return;
+      }
+    } catch { /* manifest unreadable — fall through to the message */ }
+    setSolutionMsg(`Solution for ${paperTitle} is coming soon — we're preparing it.`);
   };
 
   return (
@@ -122,11 +149,20 @@ const PyqFinder = ({ initialSubjects, initialLabel, onClearInitialSubjects }) =>
         </p>
       </div>
 
+      {/* Solution status (shown when a paper has no solution yet) */}
+      {solutionMsg && (
+        <div className="glass" style={{ padding: '0.9rem 1.2rem', margin: '0 auto 1.5rem', maxWidth: '920px', width: '100%', display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <i className="fa-solid fa-lightbulb" style={{ color: 'var(--accent, #22c55e)' }}></i>
+          <span style={{ flex: 1 }}>{solutionMsg}</span>
+          <button type="button" className="back-btn" onClick={() => setSolutionMsg('')}>Dismiss</button>
+        </div>
+      )}
+
       {/* Results */}
       <div className="notes-list-container">
         {results.length > 0 ? (
           results.map((p, index) => {
-            const openView = () => setPreview({ file: p.file, title: `${p.subject} — ${p.session}`, context: { subject: p.subject, source: 'pyq' } });
+            const openView = () => { setSolutionMsg(''); setPreview({ file: p.file, title: `${p.subject} — ${p.session}`, context: { subject: p.subject, source: 'pyq' }, allowDownload: true }); };
             const bmId = `pyq:${p.id}`;
             return (
             <div
@@ -168,7 +204,8 @@ const PyqFinder = ({ initialSubjects, initialLabel, onClearInitialSubjects }) =>
           file={preview.file}
           title={preview.title}
           context={preview.context}
-          allowDownload
+          allowDownload={preview.allowDownload}
+          onShowSolution={handleShowSolution}
           onClose={() => setPreview(null)}
         />
       )}

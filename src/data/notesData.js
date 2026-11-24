@@ -506,11 +506,7 @@ export const semestersData = {
         image: '/subjects/operating-systems.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem5/operating-systems/os-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem5/operating-systems/os-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem5/operating-systems/os-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem5/operating-systems/os-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem5/operating-systems/os-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem5/operating-systems/Operating-Systems-Sem5-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -519,11 +515,7 @@ export const semestersData = {
         image: '/subjects/computer-architecture.jpg',
         colorClass: 'color-bee',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem5/computer-org-architecture/coa-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem5/computer-org-architecture/coa-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem5/computer-org-architecture/coa-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem5/computer-org-architecture/coa-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem5/computer-org-architecture/coa-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem5/computer-org-architecture/Computer-Organization-and-Architecture-Sem5-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -532,11 +524,7 @@ export const semestersData = {
         image: '/subjects/computer-networks.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem5/computer-networks/cn-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem5/computer-networks/cn-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem5/computer-networks/cn-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem5/computer-networks/cn-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem5/computer-networks/cn-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem5/computer-networks/Computer-Networks-Sem5-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -545,11 +533,7 @@ export const semestersData = {
         image: '/subjects/cloud-computing-devops.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem5/cloud-computing-devops/cc-dev-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem5/cloud-computing-devops/cc-dev-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem5/cloud-computing-devops/cc-dev-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem5/cloud-computing-devops/cc-dev-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem5/cloud-computing-devops/cc-dev-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem5/cloud-computing-devops/Cloud-Computing-and-DevOps-Sem5-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -558,11 +542,7 @@ export const semestersData = {
         image: '/subjects/machine-learning.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem5/machine-learning/ml-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem5/machine-learning/ml-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem5/machine-learning/ml-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem5/machine-learning/ml-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem5/machine-learning/ml-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem5/machine-learning/Machine-Learning-Sem5-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -571,11 +551,7 @@ export const semestersData = {
         image: '/subjects/data-mining-warehousing.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem5/data-mining-warehousing/dmw-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem5/data-mining-warehousing/dmw-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem5/data-mining-warehousing/dmw-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem5/data-mining-warehousing/dmw-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem5/data-mining-warehousing/dmw-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem5/data-mining-warehousing/Data-Mining-and-Warehousing-Sem5-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -584,11 +560,88 @@ export const semestersData = {
         image: '/subjects/distributed-systems.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem5/distributed-systems/ds-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem5/distributed-systems/ds-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem5/distributed-systems/ds-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem5/distributed-systems/ds-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem5/distributed-systems/ds-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem5/distributed-systems/Distributed-Systems-Sem5-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'aoa',
+        name: 'Analysis of Algorithms',
+        image: '/subjects/design-analysis-algorithms.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem5/analysis-of-algorithms/Analysis-of-Algorithms-Sem5-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'avr',
+        name: 'Augmented Reality and Virtual Reality',
+        image: '/subjects/computer.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem5/augmented-and-virtual-reality/Augmented-and-Virtual-Reality-Sem5-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'cgm',
+        name: 'Computer Graphics and Multimedia',
+        image: '/subjects/computer.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem5/computer-graphics-and-multimedia/Computer-Graphics-and-Multimedia-Sem5-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'hci',
+        name: 'Human Computer Interaction',
+        image: '/subjects/human-interaction.jpg',
+        colorClass: 'color-mefa',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem5/human-computer-interaction/Human-Computer-Interaction-Sem5-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'itc',
+        name: 'Information Theory and Coding',
+        image: '/subjects/computer-networks.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem5/information-theory-and-coding/Information-Theory-and-Coding-Sem5-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'blockchain',
+        name: 'Introduction to Blockchain',
+        image: '/subjects/information-security.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem5/introduction-to-blockchain/Introduction-to-Blockchain-Sem5-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'ml_apps',
+        name: 'Machine Learning and its Applications',
+        image: '/subjects/machine-learning.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem5/machine-learning-and-its-applications/Machine-Learning-and-its-Applications-Sem5-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'mfc',
+        name: 'Mathematical Foundation Course',
+        image: '/subjects/maths.jpg',
+        colorClass: 'color-maths',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem5/mathematical-foundation-course/Mathematical-Foundation-Course-Sem5-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'uhb',
+        name: 'Understanding the Human Being',
+        image: '/subjects/human-interaction.jpg',
+        colorClass: 'color-mefa',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem5/understanding-the-human-being/Understanding-the-Human-Being-Comprehensive-Human-Aspirations-Sem5-Handwritten-Notes-Full.pdf' },
         ]
       },
     ] },
@@ -599,11 +652,7 @@ export const semestersData = {
         image: '/subjects/compiler-design.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem6/compiler-design/cd-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem6/compiler-design/cd-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem6/compiler-design/cd-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem6/compiler-design/cd-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem6/compiler-design/cd-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem6/compiler-design/Compiler-Design-Sem6-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -612,11 +661,7 @@ export const semestersData = {
         image: '/subjects/design-analysis-algorithms.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem6/design-and-analysis-of-algorithms/daa-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem6/design-and-analysis-of-algorithms/daa-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem6/design-and-analysis-of-algorithms/daa-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem6/design-and-analysis-of-algorithms/daa-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem6/design-and-analysis-of-algorithms/daa-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem6/design-and-analysis-of-algorithms/Design-and-Analysis-of-Algorithms-Sem6-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -625,11 +670,7 @@ export const semestersData = {
         image: '/subjects/information-security.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem6/information-security-systems/iss-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem6/information-security-systems/iss-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem6/information-security-systems/iss-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem6/information-security-systems/iss-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem6/information-security-systems/iss-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem6/information-security-systems/Information-Security-Systems-Sem6-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -638,11 +679,7 @@ export const semestersData = {
         image: '/subjects/digital-image-processing.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem6/digital-image-processing/dip-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem6/digital-image-processing/dip-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem6/digital-image-processing/dip-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem6/digital-image-processing/dip-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem6/digital-image-processing/dip-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem6/digital-image-processing/Digital-Image-Processing-Sem6-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -651,11 +688,7 @@ export const semestersData = {
         image: '/subjects/internet-of-things.jpg',
         colorClass: 'color-bee',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem6/internet-of-things/iot-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem6/internet-of-things/iot-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem6/internet-of-things/iot-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem6/internet-of-things/iot-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem6/internet-of-things/iot-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem6/internet-of-things/Internet-of-Things-Sem6-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -664,11 +697,70 @@ export const semestersData = {
         image: '/subjects/natural-language-processing.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem6/natural-language-processing/nlp-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem6/natural-language-processing/nlp-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem6/natural-language-processing/nlp-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem6/natural-language-processing/nlp-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem6/natural-language-processing/nlp-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem6/natural-language-processing/Natural-Language-Processing-Sem6-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'ansf',
+        name: 'Application and Network Security Fundamentals',
+        image: '/subjects/information-security.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem6/application-and-network-security-fundamentals/Application-and-Network-Security-Fundamentals-Sem6-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'ai',
+        name: 'Artificial Intelligence',
+        image: '/subjects/deep-learning.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem6/artificial-intelligence/Artificial-Intelligence-Sem6-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'bda',
+        name: 'Big Data Analytics',
+        image: '/subjects/data-mining-warehousing.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem6/big-data-analytics/Big-Data-Analytics-Sem6-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'gpu',
+        name: 'GPU Computing',
+        image: '/subjects/computer.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem6/gpu-computing/GPU-Computing-Sem6-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'iccl',
+        name: 'Introduction to Cyber Crime, Law and Investigation',
+        image: '/subjects/information-security.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem6/introduction-to-cyber-crime-law-and-investigation/Introduction-to-Cyber-Crime-Law-and-Investigation-Sem6-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'nsva',
+        name: 'Network System Vulnerability Assessment',
+        image: '/subjects/information-security.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem6/network-system-vulnerability-assessment/Network-System-Vulnerability-Assessment-Sem6-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'smf',
+        name: 'Statistical Modeling and Forecasting',
+        image: '/subjects/maths.jpg',
+        colorClass: 'color-maths',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem6/statistical-modeling-and-forecasting/Statistical-Modeling-and-Forecasting-Sem6-Handwritten-Notes-Full.pdf' },
         ]
       },
     ] },
@@ -679,11 +771,7 @@ export const semestersData = {
         image: '/subjects/deep-learning.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem7/deep-learning/dl-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem7/deep-learning/dl-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem7/deep-learning/dl-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem7/deep-learning/dl-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem7/deep-learning/dl-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem7/deep-learning/Deep-Learning-Sem7-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -692,11 +780,7 @@ export const semestersData = {
         image: '/subjects/disaster-management.jpg',
         colorClass: 'color-mefa',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem7/disaster-management/dm-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem7/disaster-management/dm-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem7/disaster-management/dm-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem7/disaster-management/dm-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem7/disaster-management/dm-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem7/disaster-management/Disaster-Management-Sem7-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -705,9 +789,25 @@ export const semestersData = {
         image: '/subjects/generative-ai.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 2', file: '/notes/sem7/generative-ai/gai-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem7/generative-ai/gai-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem7/generative-ai/gai-unit-4.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem7/generative-ai/Generative-AI-Sem7-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'mc',
+        name: 'Mobile Computing',
+        image: '/subjects/internet-of-things.jpg',
+        colorClass: 'color-bee',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem7/mobile-computing/Mobile-Computing-Sem7-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'soft_comp',
+        name: 'Soft Computing and Evolutionary Algorithms',
+        image: '/subjects/machine-learning.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem7/soft-computing-and-evolutionary-algorithms/Soft-Computing-and-Evolutionary-Algorithms-Sem7-Handwritten-Notes-Full.pdf' },
         ]
       },
     ] },
@@ -718,13 +818,16 @@ export const semestersData = {
         image: '/subjects/human-interaction.jpg',
         colorClass: 'color-mefa',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem8/fhi-subject/fhi-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem8/fhi-subject/fhi-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem8/fhi-subject/fhi-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem8/fhi-subject/fhi-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem8/fhi-subject/fhi-unit-5.pdf' },
-          { title: 'Unit 6', file: '/notes/sem8/fhi-subject/fhi-unit-6.pdf' },
-          { title: 'Unit 7', file: '/notes/sem8/fhi-subject/fhi-unit-7.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem8/fhi-subject/Factor-of-Human-Interaction-Sem8-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'entrepreneurship',
+        name: 'Entrepreneurship',
+        image: '/subjects/mefa.jpg',
+        colorClass: 'color-mefa',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem8/entrepreneurship/Entrepreneurship-Sem8-Handwritten-Notes-Full.pdf' },
         ]
       },
     ] }

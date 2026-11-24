@@ -99,6 +99,12 @@ export function setTextHighlights(file, value) {
   write('thl', file, value || {});
 }
 
+// Replace the whole region-highlight map for a file — the `hl` twin of
+// setTextHighlights (used by undo/redo and Clear All).
+export function setHighlights(file, value) {
+  write('hl', file, value || {});
+}
+
 export function addHighlight(file, page, rect) {
   const m = read('hl', file);
   const arr = m[page] || [];

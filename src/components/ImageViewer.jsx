@@ -5,6 +5,7 @@ import {
   getFlags, setFlag, getAnnotations, addAnnotation, deleteAnnotation,
   getHighlights, addHighlight, deleteHighlight, getTextHighlights,
   addTextHighlight, deleteTextHighlight, clearTextHighlights, setTextHighlights,
+  setHighlights as setRegionHighlights,
   getPageBookmarks, togglePageBookmark, FLAG_LABELS,
 } from '../lib/pageMarks';
 import { semestersData } from '../data/notesData';
@@ -69,6 +70,9 @@ const HL_COLORS = [
   { name: 'Green', bg: 'rgba(134, 239, 172, 0.45)' },
   { name: 'Pink', bg: 'rgba(244, 114, 182, 0.4)' },
 ];
+// Freehand brush stroke: SVG path through drag points (coords in % of the
+// page). Round caps/joins make the stroke read as a marker, not a box.
+const brushPathD = (pts) => pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${(+p.x).toFixed(2)} ${(+p.y).toFixed(2)}`).join(' ');
 // Tap zones (WhatsApp-like): left/right 22% of the page = prev/next page.
 // A tap is a short press with (almost) no movement; the navigation is
 // delayed ~240ms so a double-tap can still zoom instead of navigating twice.
@@ -152,18 +156,19 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
   const [pageBookmarks, setPageBookmarks] = useState({});
   const [noteText, setNoteText] = useState('');
   const [hlMode, setHlMode] = useState(false); // drag to draw a highlight
-  const [hlDrag, setHlDrag] = useState(null); // {x0,y0,x1,y1} in %
+  const [hlDrag, setHlDrag] = useState(null); // { points: [{x, y}] } in % — freehand brush path
   const [touchX, setTouchX] = useState(null); // swipe to change page
   // Selectable text + tap zones (2026-11-23).
   const [selectMode, setSelectMode] = useState(false); // text layer on/off
   const [words, setWords] = useState(null); // words.json pages for this doc
   const [wordsState, setWordsState] = useState('idle'); // idle|loading|ready|none
   const [textHls, setTextHls] = useState({});
-  // Text-highlight undo/redo (2026-11-24): session-scoped per document.
-  // The stacks hold whole-map snapshots of the persisted `thl` state
-  // BEFORE each mutation (add / delete / clear); a new mutation clears
-  // redo. Undo/redo just write a previous snapshot back through the
-  // same helper, so the per-device localStorage persistence is unchanged.
+  // Highlight undo/redo (2026-11-24): session-scoped per document.
+  // The stacks hold whole-map snapshots of BOTH persisted highlight maps
+  // (`thl` text + `hl` region) BEFORE each mutation (add / delete /
+  // clear page / clear all); a new mutation clears redo. Undo/redo write
+  // a previous snapshot back through the same helpers, so the per-device
+  // localStorage persistence is unchanged.
   const hlUndoRef = useRef([]);
   const hlRedoRef = useRef([]);
   const hlFileRef = useRef(file);
@@ -186,38 +191,66 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
     setTextHls(getTextHighlights(file));
     setPageBookmarks(getPageBookmarks(file));
   };
-  // --- Text-highlight undo/redo history (refs only, so the keyboard
-  // listener — bound once — never goes stale) ---
+  // --- Highlight undo/redo history (refs only, so the keyboard
+  // listener — bound once — never goes stale). Snapshots hold BOTH
+  // persisted highlight maps (`thl` text + `hl` region), so undoing one
+  // kind can never clobber the other. ---
+  const snapshotHl = () => {
+    let thl = {};
+    let hl = {};
+    try {
+      thl = JSON.parse(JSON.stringify(getTextHighlights(hlFileRef.current)));
+      hl = JSON.parse(JSON.stringify(getHighlights(hlFileRef.current)));
+    } catch {
+      // fall through with empty maps
+    }
+    return { thl, hl };
+  };
+  const writeHlSnapshot = (snap) => {
+    setTextHighlights(hlFileRef.current, (snap && snap.thl) || {});
+    setRegionHighlights(hlFileRef.current, (snap && snap.hl) || {});
+  };
   const syncHlHist = () => setHlHist({ u: hlUndoRef.current.length, r: hlRedoRef.current.length });
   const recordHlUndo = () => {
-    // Snapshot the CURRENT persisted map before a mutation; cap the stack.
-    try {
-      hlUndoRef.current.push(JSON.parse(JSON.stringify(getTextHighlights(hlFileRef.current))));
-    } catch {
-      hlUndoRef.current.push({});
-    }
+    // Snapshot the CURRENT persisted maps before a mutation; cap the stack.
+    hlUndoRef.current.push(snapshotHl());
     if (hlUndoRef.current.length > 50) hlUndoRef.current.shift();
     hlRedoRef.current = [];
     syncHlHist();
   };
-  const undoTextHl = () => {
+  const undoHl = () => {
     if (hlUndoRef.current.length === 0) return;
     const prev = hlUndoRef.current.pop();
-    hlRedoRef.current.push(getTextHighlights(hlFileRef.current));
-    setTextHighlights(hlFileRef.current, prev);
+    hlRedoRef.current.push(snapshotHl());
+    writeHlSnapshot(prev);
     syncHlHist();
   };
-  const redoTextHl = () => {
+  const redoHl = () => {
     if (hlRedoRef.current.length === 0) return;
     const next = hlRedoRef.current.pop();
-    hlUndoRef.current.push(getTextHighlights(hlFileRef.current));
-    setTextHighlights(hlFileRef.current, next);
+    hlUndoRef.current.push(snapshotHl());
+    writeHlSnapshot(next);
     syncHlHist();
   };
   // Delete one text highlight, recorded so it can be undone.
   const removeTextHl = (page, id) => {
     recordHlUndo();
     deleteTextHighlight(file, page, id);
+  };
+  // Delete one region highlight, recorded so it can be undone.
+  const removeRegionHl = (page, id) => {
+    recordHlUndo();
+    deleteHighlight(file, page, id);
+  };
+  // Clear ALL highlights in this document (every page, both kinds) —
+  // recorded so Undo restores them all. No confirm dialog: Undo is the
+  // way back. Writing empty maps wipes the persisted state too, so a
+  // refresh brings no highlight back and the pages look like the
+  // original images again.
+  const clearAllHl = () => {
+    recordHlUndo();
+    setTextHighlights(file, {});
+    setRegionHighlights(file, {});
   };
   useEffect(refreshMarks, [file]);
   useEffect(() => {
@@ -245,6 +278,15 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
   const totalMatches = useMemo(
     () => matches.reduce((sum, m) => sum + m.count, 0),
     [matches],
+  );
+
+  // Total highlights in this document (text + region, all pages) — drives
+  // the Clear-all row in Tools.
+  const totalHlCount = useMemo(
+    () =>
+      Object.values(textHls).reduce((n, a) => n + (a || []).length, 0) +
+      Object.values(highlights).reduce((n, a) => n + (a || []).length, 0),
+    [textHls, highlights],
   );
 
   const pageSrc = (n) =>
@@ -384,19 +426,19 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
         return;
       }
       if (isTyping(e.target)) return;
-      // Highlight undo/redo (text highlights only): Ctrl+Z undoes the
+      // Highlight undo/redo (both kinds: text + region): Ctrl+Z undoes the
       // last add/delete/clear; Ctrl+Shift+Z or Ctrl+Y redoes it. Typing
       // targets are exempt above, so Ctrl+Z in the note input still does
       // the browser's text undo.
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey) {
         e.preventDefault();
-        undoTextHl();
+        undoHl();
         return;
       }
       if (((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') ||
           ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'z')) {
         e.preventDefault();
-        redoTextHl();
+        redoHl();
         return;
       }
       if ((e.ctrlKey || e.metaKey) && ['c', 'x', 's'].includes(e.key.toLowerCase())) {
@@ -726,21 +768,40 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
     // Right/middle click never starts a highlight drag.
     if (e.button != null && e.button !== 0) return;
     const p = hlPos(e);
-    setHlDrag({ x0: p.x, y0: p.y, x1: p.x, y1: p.y });
+    setHlDrag({ points: [p] });
   };
   const hlMove = (e) => {
     if (!hlDrag) return;
     const p = hlPos(e);
-    setHlDrag({ ...hlDrag, x1: p.x, y1: p.y });
+    const pts = hlDrag.points;
+    const last = pts[pts.length - 1];
+    // Only keep points that moved enough — keeps stored paths small.
+    if (Math.hypot(p.x - last.x, p.y - last.y) < 0.8) return;
+    let next = pts;
+    if (pts.length >= 400) next = pts.filter((_, i) => i % 2 === 0); // decimate long scribbles
+    setHlDrag({ points: [...next, p] });
   };
   const hlEnd = () => {
     if (!hlDrag) return;
-    const x = Math.min(hlDrag.x0, hlDrag.x1);
-    const y = Math.min(hlDrag.y0, hlDrag.y1);
-    const w = Math.abs(hlDrag.x1 - hlDrag.x0);
-    const h = Math.abs(hlDrag.y1 - hlDrag.y0);
+    const pts = hlDrag.points;
     setHlDrag(null);
-    if (w > 2 && h > 1) addHighlight(file, pageNumber, { x, y, w, h });
+    if (pts.length < 2) return;
+    // Total path length — a tap (no real drag) makes no highlight.
+    let len = 0;
+    for (let i = 1; i < pts.length; i++) len += Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
+    if (len < 2) return;
+    const xs = pts.map((p) => p.x);
+    const ys = pts.map((p) => p.y);
+    const x = Math.min(...xs);
+    const y = Math.min(...ys);
+    // Bounding box kept alongside the path (old-code compat + counts).
+    recordHlUndo();
+    addHighlight(file, pageNumber, {
+      points: pts,
+      x, y,
+      w: Math.max(...xs) - x,
+      h: Math.max(...ys) - y,
+    });
   };
   // Swipe left/right to change page (mobile-first); swipe down closes.
   const onTouchStart = (e) => {
@@ -1172,7 +1233,7 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
               <button
                 type="button"
                 className="pdf-nav-btn pdf-fit-btn"
-                onClick={undoTextHl}
+                onClick={undoHl}
                 disabled={hlHist.u === 0}
                 title="Undo highlight (Ctrl+Z)"
                 aria-label="Undo highlight"
@@ -1183,7 +1244,7 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
               <button
                 type="button"
                 className="pdf-nav-btn pdf-fit-btn"
-                onClick={redoTextHl}
+                onClick={redoHl}
                 disabled={hlHist.r === 0}
                 title="Redo highlight (Ctrl+Y)"
                 aria-label="Redo highlight"
@@ -1407,6 +1468,13 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
                 <button type="button" className="viewer-chip" onClick={() => { recordHlUndo(); clearTextHighlights(file, pageNumber); }}>Clear page</button>
               </div>
             )}
+            {totalHlCount > 0 && (
+              <div className="viewer-tools-row">
+                <span className="viewer-tools-label">Highlights</span>
+                <span className="viewer-note-item">{totalHlCount} highlight{totalHlCount === 1 ? '' : 's'} in this note</span>
+                <button type="button" className="viewer-chip" onClick={clearAllHl} title="Remove every highlight in this note (all pages) — Undo brings them back">Clear all highlights</button>
+              </div>
+            )}
           </div>
         )}
 
@@ -1498,7 +1566,12 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
                 // Native image behaviour (his order 2026-11-24): draggable
                 // (the default for <img>) + the browser's own context menu
                 // (Copy image…). stopPropagation keeps the modal-level
-                // context-menu block from swallowing it.
+                // context-menu block from swallowing it. EXCEPT in
+                // Highlight (draw) mode: a draggable image lets Chrome
+                // start a native drag on mousedown, which swallows the
+                // mousemove/mouseup the brush stroke needs — so drawing
+                // would never store. hlMode off = native drag/copy as ordered.
+                draggable={!hlMode}
                 fetchpriority="high"
                 decoding="async"
                 onLoad={() => setImgReady(true)}
@@ -1516,6 +1589,8 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
                   src={pageSrc(pageNumber + 1)}
                   alt={`Page ${pageNumber + 1} of ${numPages} — ${title || 'note'}`}
                   // Same native behaviour as the main page image (see above).
+                  // Same hlMode exception: not draggable while drawing.
+                  draggable={!hlMode}
                   loading="lazy"
                   decoding="async"
                   onContextMenu={(e) => e.stopPropagation()}
@@ -1533,32 +1608,60 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
                   <div className="ruler-dim ruler-dim--bottom" style={{ top: `${Math.min(100, rulerY + 4)}%` }} aria-hidden="true" />
                 </>
               )}
-              {(highlights[pageNumber] || []).map((h) => (
-                <div
-                  key={h.id}
-                  className="page-highlight"
-                  style={{ left: `${h.x}%`, top: `${h.y}%`, width: `${h.w}%`, height: `${h.h}%` }}
-                  title={hlMode ? 'Click to remove this highlight' : 'Highlighted area'}
-                  onClick={(e) => {
-                    if (hlMode) {
-                      e.stopPropagation();
-                      deleteHighlight(file, pageNumber, h.id);
-                    }
-                  }}
-                />
-              ))}
-              {hlDrag && (
-                <div
-                  className="page-highlight page-highlight--drag"
-                  style={{
-                    left: `${Math.min(hlDrag.x0, hlDrag.x1)}%`,
-                    top: `${Math.min(hlDrag.y0, hlDrag.y1)}%`,
-                    width: `${Math.abs(hlDrag.x1 - hlDrag.x0)}%`,
-                    height: `${Math.abs(hlDrag.y1 - hlDrag.y0)}%`,
-                  }}
-                  aria-hidden="true"
-                />
-              )}
+              {/* Region highlights as brush strokes (2026-11-24): new ones
+                  are freehand paths that follow the drag; old saved rects
+                  (no points) render as a rounded brush-style fill, so
+                  nothing already saved breaks or disappears. */}
+              <svg className="brush-layer" viewBox="0 0 100 100" preserveAspectRatio="none" style={{ pointerEvents: 'none' }}>
+                {(highlights[pageNumber] || []).map((h) => (
+                  h.points && h.points.length >= 2 ? (
+                    <path
+                      key={h.id}
+                      d={brushPathD(h.points)}
+                      fill="none"
+                      stroke="rgba(250, 204, 21, 0.55)"
+                      strokeWidth={3}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      style={{ pointerEvents: 'stroke', cursor: hlMode ? 'pointer' : 'default' }}
+                      onClick={(e) => {
+                        if (hlMode) {
+                          e.stopPropagation();
+                          removeRegionHl(pageNumber, h.id);
+                        }
+                      }}
+                    >
+                      <title>{hlMode ? 'Click to remove this highlight' : 'Highlighted area'}</title>
+                    </path>
+                  ) : (
+                    <rect
+                      key={h.id}
+                      x={h.x} y={h.y} width={h.w} height={h.h} rx={1.2}
+                      fill="rgba(250, 204, 21, 0.45)"
+                      style={{ pointerEvents: 'all', cursor: hlMode ? 'pointer' : 'default' }}
+                      onClick={(e) => {
+                        if (hlMode) {
+                          e.stopPropagation();
+                          removeRegionHl(pageNumber, h.id);
+                        }
+                      }}
+                    >
+                      <title>{hlMode ? 'Click to remove this highlight' : 'Highlighted area'}</title>
+                    </rect>
+                  )
+                ))}
+                {hlDrag && hlDrag.points.length >= 2 && (
+                  <path
+                    d={brushPathD(hlDrag.points)}
+                    fill="none"
+                    stroke="rgba(250, 204, 21, 0.5)"
+                    strokeWidth={3}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ pointerEvents: 'none' }}
+                  />
+                )}
+              </svg>
               {selectActive && (
                 <div className="text-layer" ref={textLayerRef} aria-label="Selectable page text">
                   {wordsForPage.map((w, i) => (

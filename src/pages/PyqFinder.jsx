@@ -13,6 +13,14 @@ const PyqFinder = ({ initialSubjects, initialLabel, onClearInitialSubjects }) =>
   const [year, setYear] = useState('all');
   const [preview, setPreview] = useState(null); // { file, title, context, allowDownload }
   const [solutionMsg, setSolutionMsg] = useState('');
+  // The "coming soon" notice must float ABOVE the viewer dialog (z-index
+  // 1000) so its Dismiss button stays clickable while a paper is open,
+  // and it auto-dismisses after 6s so it never sticks around.
+  useEffect(() => {
+    if (!solutionMsg) return;
+    const t = setTimeout(() => setSolutionMsg(''), 6000);
+    return () => clearTimeout(t);
+  }, [solutionMsg]);
   const [, setBmTick] = useState(0);
 
   // A new "Get PYQ" navigation resets the free-text/year filters.
@@ -151,7 +159,7 @@ const PyqFinder = ({ initialSubjects, initialLabel, onClearInitialSubjects }) =>
 
       {/* Solution status (shown when a paper has no solution yet) */}
       {solutionMsg && (
-        <div className="glass" style={{ padding: '0.9rem 1.2rem', margin: '0 auto 1.5rem', maxWidth: '920px', width: '100%', display: 'flex', gap: '10px', alignItems: 'center' }}>
+        <div className="glass" style={{ position: 'fixed', bottom: '20px', left: '50%', transform: 'translateX(-50%)', zIndex: 3000, padding: '0.9rem 1.2rem', maxWidth: '920px', width: 'calc(100% - 32px)', display: 'flex', gap: '10px', alignItems: 'center', boxShadow: '0 12px 40px rgba(0,0,0,.45)' }}>
           <i className="fa-solid fa-lightbulb" style={{ color: 'var(--accent, #22c55e)' }}></i>
           <span style={{ flex: 1 }}>{solutionMsg}</span>
           <button type="button" className="back-btn" onClick={() => setSolutionMsg('')}>Dismiss</button>

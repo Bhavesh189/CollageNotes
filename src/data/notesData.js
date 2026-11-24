@@ -9,9 +9,9 @@ export const semestersData = {
         image: '/subjects/computer.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: '1. C ALL notes 1,2,3 Merged', file: '/cin1.pdf' },
-          { title: '2. Previous Year Full Book', file: '/pc.pdf' },
-          { title: '!!! 70 IMP QUES !!!', file: '/70 CF&P Updated Importnt question (1)BCA.pdf' }
+          { title: '1. C ALL notes 1,2,3 Merged', file: '/notes/sem1/computer/cin1.pdf' },
+          { title: '2. Previous Year Full Book', file: '/notes/sem1/computer/pc.pdf' },
+          { title: '!!! 70 IMP QUES !!!', file: '/notes/sem1/computer/70 CF&P Updated Importnt question (1)BCA.pdf' }
         ]
       },
       {
@@ -20,19 +20,19 @@ export const semestersData = {
         image: '/subjects/chemistry.jpg',
         colorClass: 'color-chemistry',
         notes: [
-          { title: '1. Corrosion', file: '/co.pdf' },
-          { title: '1. Corrosion part 2', file: '/U2[CORROSION].pdf' },
-          { title: '2. Lubricants', file: '/lc.pdf' },
-          { title: '2. Engineering Materials one shot', file: '/U1[Engineering Materials].pdf' },
-          { title: '3. Water + Boiler Troubles', file: '/ce1.pdf' },
-          { title: '4. Fuel', file: '/chemfuel.pdf' },
-          { title: '5. Green Chemistry', file: '/g.docx' },
-          { title: '6. All Unit 1', file: '/CHEMISTRY UNIT 1.pdf' },
-          { title: '7. All Unit 2', file: '/CHEMISTRY UNIT 2.pdf' },
-          { title: '8. All Unit 3', file: '/CHEMISTRY UNIT 3.pdf' },
-          { title: '9. All Unit 4', file: '/CHEMISTRY UNIT 4.pdf' },
-          { title: '10. All Unit 5', file: '/CHEMISTRY UNIT 5.pdf' },
-          { title: '!!! IMP QUES 70 QUES !!!', file: '/Engg. Chemistry Imp. 70 question (1).docx' },
+          { title: '1. Corrosion', file: '/notes/sem1/chemistry/co.pdf' },
+          { title: '1. Corrosion part 2', file: '/notes/sem1/chemistry/U2[CORROSION].pdf' },
+          { title: '2. Lubricants', file: '/notes/sem1/chemistry/lc.pdf' },
+          { title: '2. Engineering Materials one shot', file: '/notes/sem1/chemistry/U1[Engineering Materials].pdf' },
+          { title: '3. Water + Boiler Troubles', file: '/notes/sem1/chemistry/ce1.pdf' },
+          { title: '4. Fuel', file: '/notes/sem1/chemistry/chemfuel.pdf' },
+          { title: '5. Green Chemistry', file: '/notes/sem1/chemistry/g.pdf' },
+          { title: '6. All Unit 1', file: '/notes/sem1/chemistry/CHEMISTRY UNIT 1.pdf' },
+          { title: '7. All Unit 2', file: '/notes/sem1/chemistry/CHEMISTRY UNIT 2.pdf' },
+          { title: '8. All Unit 3', file: '/notes/sem1/chemistry/CHEMISTRY UNIT 3.pdf' },
+          { title: '9. All Unit 4', file: '/notes/sem1/chemistry/CHEMISTRY UNIT 4.pdf' },
+          { title: '10. All Unit 5', file: '/notes/sem1/chemistry/CHEMISTRY UNIT 5.pdf' },
+          { title: '!!! IMP QUES 70 QUES !!!', file: '/notes/sem1/chemistry/Engg. Chemistry Imp. 70 question (1).pdf' },
         ]
       },
       {
@@ -41,11 +41,13 @@ export const semestersData = {
         image: '/subjects/maths.jpg',
         colorClass: 'color-maths',
         notes: [
-          { title: '1. Mathematics 1', file: '/ma111.pdf' },
-          { title: '2. Maths Full Book Answers', file: '/f.pdf' },
+          { title: '1. Mathematics 1', file: '/notes/sem1/maths/ma111.pdf' },
+          { title: '2. Maths Full Book Answers', file: '/notes/sem1/maths/f.pdf' },
           { title: '3. Maths Assignment', file: 'https://acrobat.adobe.com/id/urn:aaid:sc:AP:9c2918d3-b1b4-4410-9ddf-2162308daee1', isExternal: true },
-          { title: '3. Maths Assignment Answers', file: '/mi.pdf' },
-          { title: '3. Maths 10 Minutes Revision', file: '/Mathsimp.pdf' }
+          { title: '3. Maths Assignment Answers', file: '/notes/sem1/maths/mi.pdf' },
+          { title: '3. Maths 10 Minutes Revision', file: '/notes/sem1/maths/Mathsimp.pdf' },
+          { title: 'Unit 3 Differential Equations (handwritten)', file: '/notes/sem1/maths/b.pdf' },
+          { title: 'Differential Equations Solved Examples (handwritten)', file: '/notes/sem1/maths/maths1.pdf' }
         ]
       },
       {
@@ -54,11 +56,11 @@ export const semestersData = {
         image: '/subjects/bee.jpg',
         colorClass: 'color-bee',
         notes: [
-          { title: '1. 1st Chapter in Normal Handwritten', file: '/bee.pdf.docx.pdf' },
-          { title: '2. 2nd Chapter in Normal Handwritten', file: '/bee2.docx.pdf' },
-          { title: '3. 3rd Chapter in Normal Handwritten', file: '/3b.pdf' },
-          { title: '4. 4th Chapter in Normal Handwritten', file: '/4b.pdf' },
-          { title: '5. Important Notes', file: '/imp.pdf' },
+          { title: '1. 1st Chapter in Normal Handwritten', file: '/notes/sem1/bee/bee.pdf.docx.pdf' },
+          { title: '2. 2nd Chapter in Normal Handwritten', file: '/notes/sem1/bee/bee2.docx.pdf' },
+          { title: '3. 3rd Chapter in Normal Handwritten', file: '/notes/sem1/bee/3b.pdf' },
+          { title: '4. 4th Chapter in Normal Handwritten', file: '/notes/sem1/bee/4b.pdf' },
+          { title: '5. Important Notes', file: '/notes/sem1/bee/imp.pdf' },
           { title: '6. All Syllabus Notes', file: '/Bee Full syllabus.pdf' }
         ]
       },
@@ -68,17 +70,17 @@ export const semestersData = {
         image: '/subjects/mefa.jpg',
         colorClass: 'color-mefa',
         notes: [
-          { title: '1. 1st Chapter Sir wala', file: '/mefa1.docx' },
-          { title: '1.1 1st Chapter Sir wala (Part 2)', file: '/mefa1p.docx' },
-          { title: '2. 2nd Chapter Sir wala', file: '/mefa2.docx' },
-          { title: '3. Cost', file: '/cost.pdf.docx' },
-          { title: '3. Unit 3 Production', file: '/m3p.docx' },
-          { title: '4. 4th Chapter Sir wala', file: '/m4.docx' },
-          { title: '5. 5th Chapter Sir wala', file: '/m51.docx' },
-          { title: '5. Part 2 Chapter 5', file: '/m52.docx' },
-          { title: '5. Part 3 Chapter 5', file: '/m53.docx' },
-          { title: '5. Part 4 Chapter 5', file: '/m54.docx' },
-          { title: '!!! MEFA IMP 70 QUES !!!', file: '/MEFA_imp_Q & A_Merged.pdf' }
+          { title: '1. 1st Chapter Sir wala', file: '/notes/sem1/mefa/mefa1.pdf' },
+          { title: '1.1 1st Chapter Sir wala (Part 2)', file: '/notes/sem1/mefa/mefa1p.pdf' },
+          { title: '2. 2nd Chapter Sir wala', file: '/notes/sem1/mefa/mefa2.pdf' },
+          { title: '3. Cost', file: '/notes/sem1/mefa/cost.pdf' },
+          { title: '3. Unit 3 Production', file: '/notes/sem1/mefa/m3p.pdf' },
+          { title: '4. 4th Chapter Sir wala', file: '/notes/sem1/mefa/m4.pdf' },
+          { title: '5. 5th Chapter Sir wala', file: '/notes/sem1/mefa/m51.pdf' },
+          { title: '5. Part 2 Chapter 5', file: '/notes/sem1/mefa/m52.pdf' },
+          { title: '5. Part 3 Chapter 5', file: '/notes/sem1/mefa/m53.pdf' },
+          { title: '5. Part 4 Chapter 5', file: '/notes/sem1/mefa/m54.pdf' },
+          { title: '!!! MEFA IMP 70 QUES !!!', file: '/notes/sem1/mefa/MEFA_imp_Q & A_Merged.pdf' }
         ]
       },
       {
@@ -91,28 +93,28 @@ export const semestersData = {
           {
             title: 'Computer Fundamentals Practicals',
             subnotes: [
-              { title: '1. Normal Pdf Sir wala', file: '/c.pdf.docx' },
-              { title: '2. Handwritten', file: '/ch1.pdf' }
+              { title: '1. Normal Pdf Sir wala', file: '/notes/sem1/practical/c.pdf' },
+              { title: '2. Handwritten', file: '/notes/sem1/practical/ch1.pdf' }
             ]
           },
           {
             title: 'Chemistry Practicals',
             subnotes: [
               { title: '1. Experiment 1 to 4 in Normal Handwritten', file: '/chemq.pdf.docx' },
-              { title: '2. Alternate File (Communication File)', file: '/chamq.pdf' }
+              { title: '2. Alternate File (Communication File)', file: '/notes/sem1/practical/chamq.pdf' }
             ]
           },
           {
             title: 'Communication Practicals',
             subnotes: [
-              { title: '1. FULL FILE Normal Handwritten', file: '/commu.pdf' },
-              { title: '2. Communication File', file: '/chamq.pdf' }
+              { title: '1. FULL FILE Normal Handwritten', file: '/notes/sem1/practical/commu.pdf' },
+              { title: '2. Communication File', file: '/notes/sem1/practical/chamq.pdf' }
             ]
           },
           {
             title: 'BEE Practicals',
             subnotes: [
-              { title: '1. BEE file', file: '/beep.pdf' },
+              { title: '1. BEE file', file: '/notes/sem1/practical/beep.pdf' },
               { title: '2. Practical 1 to 4 Handwritten', file: '/beep.pdf.docx' }
             ]
           }
@@ -124,9 +126,9 @@ export const semestersData = {
         image: '/subjects/midsem.jpg',
         colorClass: 'color-midsem',
         notes: [
-          { title: '1. 1st Mid Term 2025–26', file: '/1midsemp.pdf' },
-          { title: '2. 2nd Mid Term 2025–26', file: '/smid.pdf' },
-          { title: '3. Pre-University-Exam 2025–26', file: '/All.pdf' }
+          { title: '1. 1st Mid Term 2025–26', file: '/notes/sem1/midsem/1midsemp.pdf' },
+          { title: '2. 2nd Mid Term 2025–26', file: '/notes/sem1/midsem/smid.pdf' },
+          { title: '3. Pre-University-Exam 2025–26', file: '/notes/sem1/midsem/All.pdf' }
         ]
       }
     ]
@@ -141,7 +143,7 @@ export const semestersData = {
         image: '/subjects/comm_skills.jpg',
         colorClass: 'color-comm_skills',
         notes: [
-          { title: '70 IMP + All Syllabus', file: '/2ndseminpcomm.pdf' }
+          { title: '70 IMP + All Syllabus', file: '/notes/sem2/communication-skills/2ndseminpcomm.pdf' }
         ]
       },
       {
@@ -150,8 +152,8 @@ export const semestersData = {
         image: '/subjects/built_env.jpg',
         colorClass: 'color-built_env',
         notes: [
-          { title: 'Unit 1 - Notes', file: '/UNIT-1 NOTES.pdf' },
-          { title: 'Unit 2, 3, 4 Merge', file: '/UNIT 3,2,4.pdf.pdf' },
+          { title: 'Unit 1 - Notes', file: '/notes/sem2/introduction-to-build-enviroment/UNIT-1 NOTES.pdf' },
+          { title: 'Unit 2, 3, 4 Merge', file: '/notes/sem2/introduction-to-build-enviroment/UNIT 3,2,4.pdf.pdf' },
           { title: 'Unit 1', file: '/notes/sem2/introduction-to-build-enviroment/ibe-unit-1.pdf' },
           { title: 'Unit 2', file: '/notes/sem2/introduction-to-build-enviroment/ibe-unit-2.pdf' },
           { title: 'Unit 3', file: '/notes/sem2/introduction-to-build-enviroment/ibe-unit-3.pdf' },
@@ -165,12 +167,12 @@ export const semestersData = {
         image: '/subjects/physics.jpg',
         colorClass: 'color-physics',
         notes: [
-          { title: '70 IMP and Full syllabus', file: '/PhysicsIMP.pdf' },
-          { title: 'Unit 1 - Wave Optics', file: '/UNIT-1(WAVE OPTICS).pdf' },
-          { title: 'Unit 2', file: '/PHYSICS U2.pdf' },
-          { title: 'Unit 3 - Laser', file: '/UNIT-3(LASER).pdf' },
-          { title: 'Unit 4 - Semiconductors', file: '/UNIT-4(SEMICONDUUCTORS).pdf' },
-          { title: 'Unit 5 - Electromagnetism', file: '/UNIT-5(INTRO TO ELECTROMAGNETISM).pdf' }
+          { title: '70 IMP and Full syllabus', file: '/notes/sem2/physics/PhysicsIMP.pdf' },
+          { title: 'Unit 1 - Wave Optics', file: '/notes/sem2/physics/UNIT-1(WAVE OPTICS).pdf' },
+          { title: 'Unit 2', file: '/notes/sem2/physics/PHYSICS U2.pdf' },
+          { title: 'Unit 3 - Laser', file: '/notes/sem2/physics/UNIT-3(LASER).pdf' },
+          { title: 'Unit 4 - Semiconductors', file: '/notes/sem2/physics/UNIT-4(SEMICONDUUCTORS).pdf' },
+          { title: 'Unit 5 - Electromagnetism', file: '/notes/sem2/physics/UNIT-5(INTRO TO ELECTROMAGNETISM).pdf' }
         ]
       },
       {
@@ -192,11 +194,11 @@ export const semestersData = {
         image: '/subjects/mech_eng.jpg',
         colorClass: 'color-mech_eng',
         notes: [
-          { title: 'Unit 1 - Notes', file: '/EME- UNIT 01.pdf' },
+          { title: 'Unit 1 - Notes', file: '/notes/sem2/element-of-mecnanical-engineering/EME- UNIT 01.pdf' },
           { title: 'Unit 2', file: '/notes/sem2/element-of-mecnanical-engineering/eme-unit-2.pdf' },
-          { title: 'Unit 3', file: '/EME UNIT - III.pdf' },
-          { title: 'Unit 4', file: '/EME Unit-IV.pdf' },
-          { title: 'Unit 5', file: '/EME-UNIT-5.pdf' }
+          { title: 'Unit 3', file: '/notes/sem2/element-of-mecnanical-engineering/EME UNIT - III.pdf' },
+          { title: 'Unit 4', file: '/notes/sem2/element-of-mecnanical-engineering/EME Unit-IV.pdf' },
+          { title: 'Unit 5', file: '/notes/sem2/element-of-mecnanical-engineering/EME-UNIT-5.pdf' }
         ]
       },
       {

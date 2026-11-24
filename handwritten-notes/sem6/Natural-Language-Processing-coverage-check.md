@@ -1,0 +1,296 @@
+# NLP Sem 6 — Coverage Checklist
+
+Source: Bhavesh189/CollageNotes, notes-source/notes/sem6/natural-language-processing, nlp-unit-1.pdf to nlp-unit-5.pdf (179 source pages).
+Notes PDF: ~/workspace/handwritten_notes/sem6/Natural-Language-Processing-Sem6-Handwritten-Notes-Full.pdf — 251 pages.
+Every heading below is a section from the extracted source (source_u1..5.json). A tick means the section's full content is in the notes PDF under the same (or a normalised) heading; '(merged)' means its content was folded into the preceding section because it was a fragment heading.
+
+## Unit 1
+
+- [x] Introduction NLP — covered
+- [x] Why Is NLP Important? — covered
+- [x] How Does NLP Work? — merged into previous section
+- [x] Computational Linguistics — covered
+- [x] Machine Learning — covered
+- [x] Deep Learning — covered
+- [x] A Computational Framework for Natural Language — covered
+- [x] Introduction to Language Structure — covered
+- [x] Verbs as Arguments and Verb-Verb Modification — covered
+- [x] Verbal Nouns and Overview of the Language Analyser — covered
+- [x] Structure of the Parser — covered
+- [x] English Syntax — covered
+- [x] Word Types and Features — covered
+- [x] Determiners — covered
+- [x] Verbs and Auxiliary Verbs — covered
+- [x] Prepositions — covered
+- [x] Adjectives and Adverbs — covered
+- [x] Conjunctions — covered
+- [x] Wh-Words — covered
+- [x] Part-of-Speech Tags — covered
+- [x] Clauses and Sentences — covered
+- [x] Lexicon in NLP — covered
+- [x] What Is Lexicon? — covered
+- [x] Components of A Lexicon — merged into previous section
+- [x] Words and Their Meanings — covered
+- [x] Part-of-Speech (POS) Tags — covered
+- [x] Pronunciation — merged into previous section
+- [x] Semantic Information — covered
+- [x] Importance of Lexicons — covered
+- [x] A. Sentiment Lexicons — covered
+- [x] B. Emotion Lexicons — covered
+- [x] C. Wordnet — covered (normalised heading)
+- [x] D. Propbank — covered
+- [x] Types of NLP Algorithms — covered
+- [x] Tokenization — covered
+- [x] Stop Words Removal — merged into previous section
+- [x] Text Normalization — covered
+- [x] Feature Extraction — merged into previous section
+- [x] Classification — covered
+- [x] Strings — covered
+- [x] Lists — covered
+- [x] Vectors — covered
+- [x] The Vector Space Model for Information Retrieval — covered
+- [x] Word Embeddings — covered
+- [x] Trees and Graphs — covered
+- [x] Phrase Structure Parse Tree - Example — covered
+- [x] Finite Automata in Natural Language Processing — covered
+- [x] Types of Finite State Automation (FSA) — covered
+- [x] Deterministic Finite Automation (DFA) — covered
+- [x] Non-Deterministic Finite Automation (NDFA) — covered
+- [x] Finite State Transducer — covered
+- [x] Language Recognizer — covered
+- [x] A Simple Machine That Can Laugh — covered
+- [x] Morphological Parsing and Generation — covered
+- [x] Finite State Automata for Recognition — covered
+- [x] Machine Translation — covered
+- [x] Rule-Based Machine Translation (Rbmt): 1970-1990 — covered
+- [x] Advantages — covered
+- [x] Disadvantages — covered
+- [x] Advantages — covered
+- [x] Disadvantages — covered
+- [x] Neural Machine Translation (Nmt): 2014-Present — covered
+- [x] Advantages — covered
+- [x] Disadvantages — covered
+- [x] Machine Translation Algorithms & Models — covered
+- [x] Generative Pre-trained Transformers (GPT) — covered
+- [x] Transformer Model - Encoder — covered
+- [x] Transformer Model - Decoder — merged into previous section
+- [x] Bidirectional Encoder Representation From Transformers (BERT) — covered
+- [x] Google Neural Machine Translation (GNMT) — covered
+- [x] XLM Model by Facebook — covered
+- [x] Generated Pre-trained Transformer (GPT) — covered
+- [x] Multilingual Models Resource — covered
+- [x] Benefits of Machine Translation — covered
+- [x] Final Words — covered
+
+## Unit 2
+
+- [x] Unit 2 — unit opener
+- [x] Regular Expressions — covered
+- [x] Properties of Regular Expressions — covered
+- [x] Examples of Regular Expressions — covered
+- [x] Regular Sets & Their Properties — covered
+- [x] Finite State Automata — covered
+- [x] Relation Between Finite Automata, Regular Grammars and Regular Expressions — covered
+- [x] Types of Finite State Automation (FSA) — covered
+- [x] Morphological Parsing — covered
+- [x] Types of Morphemes — covered
+- [x] Spelling Error Detection and Correction — covered
+- [x] Different Approaches to Spelling Correction — covered
+- [x] Word Classes - 1 and 2 — covered
+- [x] Word Classes - Nouns and Names, Verbs and Adjectives — covered
+- [x] Word Classes - Adverbs and Closed Classes — covered
+- [x] Word Classes - Closed Classes: Determiners, Conjunctions, Pronouns — covered
+- [x] POS(PARTS-OF-SPEECH) Tagging in NLP — covered
+- [x] What Is POS(PARTS-OF-SPEECH) Tagging? — covered
+- [x] Example of POS Tagging — merged into previous section
+- [x] After Performing POS Tagging — covered
+- [x] POS Tagging Algorithms — covered
+- [x] Rule-Based POS Tagging - ENGTWOL — covered
+- [x] Probabilistic Tagging with HMM — covered
+- [x] Open Class — merged into previous section
+- [x] Closed Class — covered
+- [x] Ambiguity — covered
+- [x] Rule-Based POS Tagging — covered
+- [x] Stochastic POS Tagging — covered
+- [x] Phrase Structure Parse Tree - The man read this book — covered
+- [x] What Is Grammar? — covered
+- [x] Types of Grammar in NLP — covered
+- [x] Iv. Structure of MRD — covered
+- [x] Types of Transition Network — covered
+- [x] Recursive Transition Network - Structure and Parse Trace — covered
+
+## Unit 3
+
+- [x] Unit 3 — unit opener
+- [x] Introduction — covered
+- [x] What Is Semantic Analysis — covered
+- [x] Parts — covered
+- [x] Relationship Extraction — covered
+- [x] Elements of Semantic Analysis — covered
+- [x] Conclusion — covered
+- [x] Lexical Semantics — covered
+- [x] What Is Ambiguity in NLP? Types of Ambiguity — merged into previous section
+- [x] Ambiguity — covered
+- [x] Word Sense Disambiguation — covered
+- [x] Evaluation of WSD — covered
+- [x] Approaches and Methods to Word Sense Disambiguation (WSD) — covered
+- [x] Applications of Word Sense Disambiguation (WSD) — covered
+- [x] Difficulties in Word Sense Disambiguation (WSD) — covered
+- [x] Discourse Processing — covered
+- [x] Pre-Requisites — covered
+- [x] Introduction — covered
+- [x] Concept of Coherence — covered
+- [x] Discourse Structure — covered
+- [x] Algorithms for Discourse Segmentation — covered
+- [x] Text Coherence — covered
+- [x] Building Hierarchical Discourse Structure — covered
+- [x] Reference Resolution — covered
+- [x] Referring Expression — covered
+- [x] Referent — merged into previous section
+- [x] Co-refer — covered
+- [x] Antecedent — covered
+- [x] Anaphora & Anaphoric — covered
+- [x] Discourse Model — covered
+- [x] Types of Referring Expressions — covered
+- [x] Indefinite Noun Phrases — covered
+- [x] Definite Noun Phrases — covered
+- [x] Pronouns — covered
+- [x] Demonstratives — covered
+- [x] Names — covered
+- [x] Reference Resolution Tasks — covered
+- [x] Co-reference Resolution — covered
+- [x] Constraint on Co-reference Resolution — covered
+- [x] Pronominal Anaphora Resolution — covered
+- [x] Conclusion — covered
+- [x] Terminology Used in Reference Resolution — covered
+- [x] What Is Knowledge Representation? — covered
+- [x] What to Represent — covered
+- [x] Types of Knowledge — merged into previous section
+- [x] Declarative Knowledge — covered
+- [x] Procedural Knowledge — covered
+- [x] Meta-knowledge — covered
+- [x] The Relation Between Knowledge and Intelligence — covered
+- [x] AI Knowledge Cycle — covered
+- [x] Approaches to Knowledge Representation — merged into previous section
+- [x] Simple Relational Knowledge — covered
+- [x] Inheritable Knowledge — covered
+- [x] Inferential Knowledge — covered
+- [x] Procedural Knowledge — covered
+- [x] Requirements for Knowledge Representation System — covered
+
+## Unit 4
+
+- [x] What Is Natural Language Generation (Nlg)? — covered
+- [x] How Does NLG Work? — covered
+- [x] How Is NLG Used? — merged into previous section
+- [x] Uses of NLG — covered
+- [x] NLG vs. NLU vs. NLP — covered
+- [x] Stages of Natural Language Generation — covered
+- [x] Definition and Taxonomy — covered
+- [x] Text-to-text — merged into previous section
+- [x] Data-to-text — covered
+- [x] Ideas-to-text — covered
+- [x] Applications and Evaluation of NLG — covered
+- [x] Common Architectures — covered
+- [x] Encoder-Decoder Architecture — covered
+- [x] Encoder — covered
+- [x] Decoder — covered
+- [x] Encoder-Decoder (Attention) — covered
+- [x] Decoding Algorithm At Inference — covered
+- [x] Beam Search — covered
+- [x] Pure Sampling Decoder — covered
+- [x] K-Sampling Decoder — merged into previous section
+- [x] Memory Networks — covered
+- [x] Language Models — covered
+- [x] Dialog Systems — covered
+- [x] Types — merged into previous section
+- [x] Architectures — covered
+- [x] Image Captioning System — covered
+- [x] Experiments — covered
+- [x] Image Captioning - Encoder Code (CNN) — covered
+- [x] Image Captioning - Decoder Code (RNN) — covered
+- [x] Applications and Evaluation of NLG — covered
+- [x] Applications of Natural Language Generation — covered
+- [x] Intelligent Automation and Reporting — covered
+- [x] Marketing and Content Creation — covered
+- [x] Medical Records — covered
+- [x] Educational Content and E-learning — covered
+- [x] (Nlg)? — covered
+- [x] Machine Translation Approaches and Survey for Indian Languages — covered
+- [x] MT Approaches — covered
+- [x] Classification of Machine Translation Systems — covered
+- [x] Overview — covered
+- [x] What Is A Machine Translation, and How Does It Work? — covered
+- [x] Why Is Machine Translation So Hard to Tackle? — covered
+- [x] Process of Machine Translation — covered
+- [x] Evolution of Machine Translation — covered
+- [x] Different Types of Machine Translation in NLP — covered
+- [x] Rule-Based Machine Translation or RBMT — covered
+- [x] Corpus-Based Machine Translation Approach or CBMT — covered
+- [x] Example-Based Machine Translation or EBMT — covered
+- [x] Sample Example for Ebmt-Based Approach — covered
+- [x] Statistical Machine Translation or SMT — covered
+- [x] Issues with Smt-Based Approaches — covered
+- [x] Hybrid Machine Translation or HMT — covered
+- [x] Neural Machine Translation or NMT — covered
+- [x] Advantages of NMT Models — covered
+- [x] What Are the Benefits of Machine Translation? — covered
+- [x] Sequence to Sequence Model — covered
+- [x] Attention Model — covered
+- [x] Transformer Model — covered
+- [x] Machine Translation vs. Human Translation — covered
+- [x] Applications of Machine Translation — covered
+- [x] Conclusion — covered
+
+## Unit 5
+
+- [x] Unit 5 — unit opener
+- [x] Systems, Classical, Non-Classical, Alternative Models of Information — covered
+- [x] Design Features of Information Retrieval (IR) Systems — covered
+- [x] Stop Word Elimination — covered
+- [x] Stemming — covered
+- [x] Information Retrieval (IR) Model — covered
+- [x] Types of Information Retrieval (IR) Model — merged into previous section
+- [x] Classical IR Model — covered
+- [x] Non-Classical IR Model — covered
+- [x] Alternative IR Model — covered
+- [x] Alternative Information Retrieval Model — covered
+- [x] The Boolean Model — covered
+- [x] Aspects of Boolean Information Retrieval Model — covered
+- [x] The Vector Space Model — covered
+- [x] Probabilistic Model — covered
+- [x] Conclusion — covered
+- [x] WordNet Tagger in NLTK (Code) — covered
+- [x] Framenet — covered
+- [x] Application of Stemming — covered
+- [x] Types of Stemmer in NLTK — merged into previous section
+- [x] Porter Stemmer – Porterstemmer() — covered (normalised heading)
+- [x] Example of Porterstemmer() — covered (normalised heading)
+- [x] Snowball Stemmer – Snowballstemmer() — covered (normalised heading)
+- [x] Example of Snowballstemmer() — covered (normalised heading)
+- [x] Lancaster Stemmer – Lancasterstemmer() — covered (normalised heading)
+- [x] Regexp Stemmer – Regexpstemmer() — covered (normalised heading)
+- [x] Porter vs Snowball vs Lancaster vs Regex Stemming in NLTK — covered
+- [x] Stemming A Text File with NLTK — covered
+- [x] Conclusion — covered
+
+## Result: 255/255 source sections covered
+
+## Notes on the check
+
+- Unit 3: the source repeats the whole discourse lecture a second time. The extractor merged the repeat into the first occurrence (near-duplicate paragraphs skipped by 5-shingle overlap > 0.6); 'Terminology Used in Reference Resolution' was kept as its own section. All five reference-resolution sections are covered.
+- Unit 1: the source heading 'Nouns, Pronouns, and Proper Nouns' has no body in the source; its content is covered by the word-classes expansion (open/closed classes, nouns, pronouns) in the same unit.
+- Unit 5: the stemmer code sections ('Porter Stemmer - Porterstemmer()', 'Example of Porterstemmer()', etc.) are covered under normalised headings ('Porterstemmer ()'); the NLTK code itself is rendered as text in the notes.
+- Unit 5: 'WordNet Tagger in NLTK (Code)' is covered as 'Word Net Tagger in NLTK (Code)' (heading normalisation splits WordNet).
+- 70 Most Important Questions: 14 per unit, all answered in Part B of the notes PDF (pages 198-251), sized by marks.
+- PYQ solutions: exactly one genuine NLP paper exists in the whole repo — public/pyq/sem7/NLP-2026.pdf (B.Tech VII Sem Main/Back 2025-2026, 71N1701, 70 marks). All 22 questions solved in ~/workspace/handwritten_notes/pyq-solutions/sem6/NLP-2026-solution.pdf (20 pages). Part A Q.8 'shredding' is flagged: the term is not defined in the source notes; the solution gives the best-supported interpretation and says so.
+
+## Quality fixes applied during the build
+
+- Greek/math symbols (Sigma, delta, epsilon, alpha, etc.) were rendering blank because Patrick Hand lacks them; they now render through the DejaVu fallback font. Final scan: 0 null characters in either PDF.
+- Cyrillic homoglyphs in the source ('Роrter' with Cyrillic R/o) normalised to Latin; the horizontal-bar quote (U+2015) added to the symbol fallback.
+- Stray 'o ' sub-bullet glyphs, markdown '**' markers and the 'stege' OCR slip cleaned.
+- Duplicate Boolean incidence table (same table from expansions and from the table library) deduped.
+- A 'reference' substring filter was dropping every Reference Resolution section; fixed to match only bare References/Bibliography headings. All five U3 reference sections are now covered.
+- Garble scan of the final PDFs: only legitimate long hyphenated words (encoder-decoder, machine-readable, etc.) and genuine names (seq2seq, Word2Vec).
+- Sample pages visually inspected from every unit and from the solution PDF (title, DFA 5-tuple, dependency grammar, MRD gloss, Boolean model, 70Q regex/attention/FrameNet pages, solution pp. 1, 2, 14, 20).

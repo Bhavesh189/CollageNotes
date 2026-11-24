@@ -1,0 +1,580 @@
+# Internet of Things (Sem 6) — Coverage Check
+
+Source: Bhavesh189/CollageNotes, notes-source/notes/sem6/internet-of-things/iot-unit-1.pdf … iot-unit-5.pdf (228 source pages, 43+61+46+36+42).
+Notes PDF: ~/workspace/handwritten_notes/sem6/Internet-of-Things-Sem6-Handwritten-Notes-Full.pdf — 209 pages (Unit 1 pp. 1–28, Unit 2 pp. 29–67, Unit 3 pp. 68–97, Unit 4 pp. 98–129, Unit 5 pp. 130+, then 70 Most Important Questions).
+Method: every section heading extracted from the 5 source PDFs was checked against the notes (481 source headings; 447 match a rendered heading after normalising 'Io T'->'IoT' etc.). The remaining 34 are: the 'UNIT-1' title page, single-word table fragments merged into neighbouring sections (Range, Resolution, Drift, Machines, Automation, NFVI-Node/POP, VNF set, Vi-Vnfm, Or-Vi, Os-Ma, Ve-Vnfm, Reference Points), code lines that appear as body text (Serial.print, Wire.write, MASQUERADE, def cleanup), and headings rendered under a near-identical name (IoT Reference Model / IoT Architectural Reference Model / Reference Model as a Common Ground / IT and OT Responsibilities — all covered under the IoT-A / IoTWF reference-model sections; 'operational technology' and the IT/OT demarcation are in the IoTWF expansion). Every one of the 34 was verified present as content in the notes text, except 'Reflection' (ultrasonic sensor step), which was added to the ultrasonic-sensor expansion and rebuilt. 93 curated expansion keys add full-depth explanation, examples, diagrams, Exam Tips and common mistakes for every major topic. Garble scan run on all three PDFs; sample pages from every unit and both solution PDFs visually inspected.
+
+## Unit 1 — Introduction to IoT
+- [ ] UNIT-1
+- [ ] Definition and Characteristics of Io T
+- [x] Definition
+- [x] Characteristics
+- [x] Dynamic and Self-Adapting
+- [x] 2. Self-Configuring
+- [x] Increasing productivity (machine learning and data analytics)
+- [ ] Things in Io T
+- [x] Link Layer
+- [x] Kb/s. These standards provide low-cost and low-speed communication for
+- [x] Network/Internet Layer
+- [x] Transport Layer
+- [x] TCP
+- [x] UDP
+- [x] Application Layer
+- [x] HTTP : Hypertext Transfer Protocol (HTTP) is the application layer
+- [ ] Co AP: Constrained Application Protocol (Co AP) is an application layer
+- [x] Web Socket: Web Socket protocol allows full-duplex communication over a
+- [x] MQTT: Message Queue Telemetry Transport (MQTT) is a light-weight
+- [x] XMPP: Extensible Messaging and Presence Protocol (XMPP) is a real-time
+- [x] AMQP: Advanced Message Queuing Protocol (AMQP) is an open
+- [ ] Logical Design of Io T
+- [ ] Io T Functional Blocks
+- [x] These functional blocks are described as follows
+- [x] Communication: The communication block handles the communication for
+- [x] Management: Management functional block provides various functions to
+- [x] Request-Response : Request-Response is a communication model in which
+- [x] REST-based Communication APIs
+- [x] The REST architectural constrains are as follows
+- [x] Layered System: Layered system constraint, constrains the behavior of
+- [x] Web Socket-based Communication APIs
+- [ ] Io T Enabling Technologies
+- [x] Wireless Sensor Networks
+- [x] WSNS are enabled by wireless communication protocols such as IEEE
+- [x] WSN makes the
+- [x] Embedded Systems
+- [x] Communication Protocols
+- [x] Cloud Computing
+- [x] Big Data Analytics
+- [ ] by Io T systems are described as follows
+- [x] The underlying characteristics of big data include
+- [ ] 7 Io T Deployment Templates
+- [ ] An Io T system comprises of the following component
+- [x] Database
+- [ ] –Stateless/Stateful
+- [ ] –Uni-directional/Bi-directional
+- [ ] –Request-Response/Full Duplex
+- [ ] –TCP Connections
+- [ ] –Header Overhead
+- [ ] –Scalability
+- [ ] Io T Level-1
+- [ ] Io T Level-2
+- [ ] Io T Level-3
+- [ ] Io T Level-4
+- [ ] Io T Level-5
+- [ ] Io T Level-6
+
+## Unit 2 — Sensors, Actuators & IoT Hardware
+- [ ] Sensors in Internet of Things(Io T)
+- [x] Sensors
+- [x] Transducer
+- [x] Sensors characteristics
+- [x] 1. Static characteristics
+- [x] Accuracy
+- [x] Relative error = Measured value/True value
+- [x] Range
+- [x] Beyond
+- [x] Resolution
+- [x] When
+- [x] Precision
+- [x] Sensitivity
+- [x] Linearity
+- [x] Drift
+- [x] Repeatability
+- [x] Properties of the systems
+- [x] Zero-order system
+- [x] system
+- [x] Second-order system
+- [x] Sensor Classification
+- [x] Passive & Active
+- [x] Analog & digital
+- [x] Scalar & vector
+- [x] Sensor
+- [x] Sensor
+- [x] Sensor
+- [x] Sensor
+- [x] sensor
+- [x] Sensor
+- [x] Types of sensors
+- [x] Electrical sensor
+- [x] Light sensor
+- [x] Touch sensor
+- [x] They are classified into two types
+- [x] Range sensing
+- [x] Mechanical sensor
+- [x] Pneumatic sensor
+- [x] Optical sensor
+- [x] Speed Sensor
+- [x] Temperature Sensor
+- [x] PIR Sensor
+- [x] Ultrasonic Sensor
+- [x] Digital Sensors
+- [x] Buttons and switches
+- [x] On/off devices
+- [x] I2C devices
+- [x] SPI devices
+- [x] RS-232 devices
+- [x] Actuators
+- [x] Electric Actuators
+- [x] Linear actuators
+- [x] Rotary actuators
+- [x] Hydraulic Actuators
+- [x] Pneumatic Actuators
+- [x] Mechanical Actuators
+- [x] Piezoelectric Actuators
+- [ ] Io T Sensors
+- [x] IOT SENSORS
+- [ ] What Is an Io T sensor?
+- [ ] What Are Io T Sensors Used For?
+- [ ] Types of Io T Sensors
+- [x] ACCELEROMETERS
+- [ ] How is the data from these Io T sensors used?
+- [x] AIR QUALITY SENSORS
+- [ ] How is the data from these Io T sensors used?
+- [x] Wearable devices like smartwatches and arm bands can
+- [x] BIOMEDICAL SENSORS
+- [ ] How is the data from these Io T sensors used?
+- [x] CAMERAS
+- [ ] How is the data from these Io T sensors used?
+- [x] CHEMICAL SENSORS
+- [ ] How is the data from these Io T sensors used?
+- [x] ELECTRIC CURRENT SENSORS
+- [ ] How is the data from these Io T sensors used?
+- [x] FLOW SENSORS
+- [ ] How is the data from these Io T sensors used?
+- [x] HUMIDITY SENSORS
+- [ ] How is the data from these Io T sensors used?
+- [x] Capacitive Humidity Sensors
+- [x] Resistive Humidity Sensors
+- [x] Thermal Humidity Sensors
+- [x] Optical Humidity Sensors
+- [x] Piezoelectric Humidity Sensors
+- [x] Hygrometers
+- [x] LEVEL SENSORS
+- [ ] How is the data from these Io T sensors used?
+- [x] MOTION SENSORS
+- [ ] How is the data from these Io T sensors used?
+- [x] PRESSURE SENSORS
+- [ ] How is the data from these Io T sensors used?
+- [x] PROXIMITY SENSORS
+- [ ] How is the data from these Io T sensors used?
+- [x] TEMPERATURE SENSORS
+- [ ] How is the data from these Io T sensors used?
+- [x] Digital Temperature Sensors
+- [x] Analog Temperature Sensors
+- [x] Integrated Circuit (IC) Temperature Sensors
+- [x] Infrared (IR) Temperature Sensors
+- [x] Ultrasonic Sensor
+- [x] Transmitter
+- [x] Reflection
+- [x] Receiver
+- [x] Calculation
+- [x] the sensor and the object is calculated using the formula
+- [x] 2-wire Ultrasonic Sensors
+- [x] 3-wire Ultrasonic Sensors
+- [x] 4-wire Ultrasonic Sensors
+- [x] Ultrasonic Range Finders
+- [x] Ultrasonic Proximity Sensors
+- [x] Multi-Sensor Arrays
+- [x] Arduino I
+- [x] Arduino UNO
+- [x] Arduino IDE
+- [x] A Sample Program
+- [x] Button
+- [x] Analog Input
+- [ ] Serial.print("Value is "); // and report back
+- [x] I2C
+- [ ] Wire.write(addr); // address
+- [x] SPI
+- [x] Switching devices
+- [x] DC motors
+- [x] Microcontroller Boards
+- [x] Arduino Uno
+- [x] Arduino Mega
+- [x] Arduino Nano
+- [x] Arduino Due
+- [x] Shields
+- [x] Software
+- [x] Programming Language
+- [x] Libraries
+- [x] Community
+- [x] Raspberry Pi I
+- [x] On the Raspi we need to install the following packages
+- [x] section in the file /etc/network/interfaces to look like this
+- [ ] MASQUERADE down /sbin/iptables -D POSTROUTING -t nat -o
+- [x] contains the following lines
+- [x] PSK wpa_pairwise=TKIP
+- [x] DAEMON_CONF=/etc/hostapd/hostapd.conf
+- [x] From Commandline
+- [x] Python
+- [x] Flat file
+- [ ] def cleanup()
+- [x] while 1
+- [x] LITE OS
+- [x] Efficiency
+- [x] Connectivity
+- [x] Security
+- [x] Modularity
+- [x] Ecosystem
+- [x] Developer-Friendly
+- [x] Open WSN
+- [x] Free RTOS
+- [x] TI-RTOS
+- [x] RIOT
+- [x] Efficiency
+- [x] Scalability
+- [x] Modularity
+- [x] Real-time Capabilities
+- [x] Compatibility
+- [x] Ecosystem
+- [x] Contiki OS
+- [ ] low-power wireless Io T devices. Its main characteristics are
+- [x] Contiki provides three network mechanisms
+- [x] Low-Power Operation
+- [x] Simulation
+- [x] Programming Model
+- [x] Features
+- [x] A full installation of Contiki includes the following features
+- [x] Tiny OS
+- [x] Component-based architecture
+- [x] Event-driven programming model
+- [x] Low-power operation
+- [x] Support for a wide range of hardware platforms
+- [x] A rich set of libraries and tools
+
+## Unit 3 — IoT Reference Architectures
+- [ ] Io T Reference Model
+- [ ] more levels. Io T-A has achieved that thanks to two steps
+- [ ] The Io T-A ARM (Architecture Reference Model) consists of four parts
+- [ ] Uses of Io T Reference Architecture
+- [x] Cognitive Aid
+- [ ] Reference Model as a Common Ground
+- [x] Generating Architectures
+- [x] Identifying Differences in Derived Architectures
+- [x] Achieving Interoperability
+- [x] System Roadmaps and Product Life Cycles
+- [x] Benchmarking
+- [ ] Io T Architectural Reference Model
+- [x] Architecture
+- [ ] Io T domain model
+- [x] The main concepts of ARM domain model are
+- [x] Information Model
+- [x] Functional model
+- [x] The most important functional groups are
+- [x] Enterprise (Business) Processes
+- [x] Applications, and last but not least,assurance of privacy of sensitive
+- [x] Communication Model
+- [x] Safety, privacy, trust, security model
+- [x] Reputation. The Trust and Reputation functional component maintain the
+- [ ] Io T Reference Architecture
+- [x] Functional View
+- [x] Information View
+- [ ] such as the Io T-A are the following
+- [x] the interaction patterns below
+- [ ] Io TWF Architecture
+- [x] achieve the following
+- [x] Layer 1: Physical Devices and Controllers Layer
+- [x] Layer 2: Connectivity Layer
+- [x] Layer 3: Edge Computing Layer
+- [x] Layer 3: Edge Computing Layer
+- [x] Upper Layers: Layers 4-7
+- [ ] IT and OT Responsibilities in the Io T Reference Model
+- [x] REST Architectures
+- [x] REST: The Web as a Platform
+- [x] terms of
+- [x] Resource-oriented Architectures
+- [x] Resource Identification and Representation
+- [x] evolution of the system's elements. A REST architecture builds on
+- [x] defines the following principles
+- [x] Representation of Resources
+- [x] Resource Identifiers title
+- [x] URIs can be of two kinds
+- [x] Statelessness
+- [x] Applications as Finite-state Machines
+- [x] Hypermedia as the Engine of Application State
+- [x] HATEOAS for short. HATEOAS states that resource representation should
+- [x] In summary, RESTful applications progress according to the following
+- [x] DESIGN CHALLENGES IN IOT
+- [x] Heterogeneity and Interoperability
+- [x] Connectivity
+- [x] Mobility and Scalability
+- [x] Addressing and Identification
+- [x] Spatio-temporal services
+- [x] Resource constraints
+- [x] Data Interchange
+- [x] Resource and service discovery
+- [x] Security Challenges in IOT
+- [x] Device or node end point physical security
+- [x] Bootstrapping and setup security
+- [x] Authentication, Access control and Accounting
+- [x] Data transmission and storage security
+- [x] Proxy security
+- [x] Network and routing security
+- [x] Multi layer security
+- [x] Common security measures
+- [x] Development and Other Challenges in IOT
+- [x] Standardization
+- [x] Architecture
+- [x] Interoperability and integration
+- [x] Zig Bee, GSM/GPRS, Wi-Fi, Bluetooth, RFID, etc. The existing Internet
+- [ ] Business models, new currencies in Io T and trust
+- [x] Ethics, control society, surveillance, consent and data driven life
+
+## Unit 4 — M2M, SDN & NFV for IoT
+- [x] Machine to Machine Communication
+- [x] Main features of M2M communications are
+- [x] M2M System Overview
+- [x] M2M Device
+- [x] Network
+- [x] Local Area Networks (LANs), sometimes also referred to as Capillary
+- [x] M2M Service Enablement
+- [x] M2M Application
+- [x] M2M Architecture
+- [ ] Difference between Io T and M2M
+- [x] Communication Protocols
+- [ ] Machines in M2M vs Things in Io T
+- [x] Hardware vs Software Emphasis
+- [x] Data Collection & Analysis
+- [x] Applications
+- [x] Application of M2M
+- [x] Machines
+- [x] Software Defined Network
+- [x] Complex Network Devices
+- [x] Management Overhead
+- [x] Limited Scalability
+- [x] SDN Definition
+- [x] The important characteristics of SDN network are
+- [x] Centralized Network Controller
+- [x] Programmable Open APIs
+- [x] Standard Communication Interface (Open Flow)
+- [x] Advantages of SDN
+- [x] Service chaining
+- [x] Dynamic load management
+- [x] Bandwidth calendaring
+- [x] Elements of SDN Architecture
+- [x] SDN Layered Architecture
+- [x] Layer I: Infrastructure
+- [x] Layer II: Southbound Interfaces
+- [x] Layer III: Network Hypervisors
+- [x] Layer IV: Network Operating Systems / Controllers
+- [x] Layer V: Northbound Interfaces
+- [x] Layer VI: Language-based Virtualization
+- [x] Layer VII: Programming languages
+- [x] Layer VIII: Network Applications
+- [x] Motivation for NFV
+- [x] leading to the following negative consequences
+- [x] Virtualization
+- [x] Container Virtualization
+- [x] NFV Concept
+- [x] Network function devices
+- [x] Network-related compute devices
+- [x] Network-attached storage
+- [x] Visualization
+- [x] Simple Example of the Use of NFV
+- [x] VNFs even
+- [x] NFV Principle
+- [x] Service chaining
+- [x] Management and orchestration (MANO)
+- [x] Distributed architecture
+- [x] NFV Advantages
+- [x] important potential benefits
+- [x] NFV Requirements
+- [x] Portability/interoperability
+- [x] Performance trade-off
+- [x] Migration and coexistence with respect to legacy equipment
+- [x] Management and orchestration
+- [x] Automation
+- [x] Security and resilience
+- [x] Network stability
+- [x] Simplicity
+- [x] Integration
+- [x] Network Function
+- [x] Network Services
+- [x] Network Function Virtualization (NFV)
+- [x] Network Function Virtualization Infrastructure (NFVI)
+- [x] NFVI-Node
+- [x] Physical Network Function (PNF)
+- [x] Virtual Network
+- [x] Virtual Network Function (VNF)
+- [x] NFVI-POP
+- [x] Network Forwarding Path
+- [x] VNF Forwarding Path
+- [x] High-Level NFV Framework
+- [x] Virtualized network functions
+- [x] NFV infrastructure (NFVI)
+- [x] NFV management and orchestration
+- [x] VNF forwarding graph (VNF FG)
+- [x] VNF set
+- [ ] NFV Reference Architecture
+- [x] NFV infrastructure (NFVI)
+- [x] VNF/EMS
+- [x] NFV management and orchestration (NFV-MANO)
+- [x] OSS/BSS
+- [x] NFV Management and Orchestration
+- [x] NFV orchestrator
+- [x] Virtualized infrastructure manager
+- [ ] Reference Points
+- [x] Vi-Ha
+- [x] Vn-Nf
+- [x] Nf-Vi
+- [x] Or-Vnfm
+- [x] Vi-Vnfm
+- [x] Or-Vi
+- [x] Os-Ma
+- [x] Ve-Vnfm
+- [x] Se-Ma
+- [x] SDN and NFV Comparison
+- [x] for a network, the following relationships hold
+- [x] NFV and SDN combined architecture
+- [x] other include the following
+- [x] SDN network functions VNF, SDN applications VNF) and their respective
+- [ ] Challenges of Io T for Communication Network
+- [ ] The key advantages in employing SDN/NFV in Io T are
+
+## Unit 5 — Domain-Specific IoT Applications
+- [x] Introduction
+- [x] Smart Lighting
+- [x] Smart Appliances
+- [x] Intrusion Detection
+- [x] Smoke/Gas Detectors
+- [x] Cities
+- [ ] Key Drivers for Io T Applications in Smart Cities
+- [ ] methods offered by Io T technologies
+- [ ] Io T deployments. This enables administrators to perform
+- [x] Smart Lighting
+- [x] Smart Roads
+- [x] Smart Parking
+- [x] Structural Health Monitoring
+- [x] Surveillance
+- [x] Emergency Response
+- [x] Weather Monitoring
+- [x] Air Pollution Monitoring
+- [x] Noise Pollution Monitoring
+- [x] Forest Fire Detection
+- [x] River Floods Detection
+- [x] Smart Grids
+- [x] Power thefts can
+- [x] Smart Meter
+- [x] Smart metering helps utilities to
+- [x] Renewable Energy Systems
+- [x] Prognostics
+- [x] Smart light, temperature, air condition control
+- [x] Energy Storage System
+- [x] Connected stations, plants, solar and wind fields
+- [x] Inventory Management
+- [x] Smart Payments
+- [x] Smart Vending Machines
+- [x] Route Generation & Scheduling
+- [x] Fleet Tracking
+- [x] Shipment Monitoring
+- [x] Remote Vehicle Diagnostics
+- [x] Smart Irrigation
+- [x] Green House Control
+- [x] Climate Conditions
+- [x] Precision Farming
+- [x] Crop management
+- [x] Cattle monitoring and management
+- [x] Predictive analytics for smart farming
+- [x] DRONES Monitoring
+- [x] Remote Sensing
+- [x] Industry
+- [x] Machine Diagnosis & Progno
+- [x] Power management: Building automation lowers energy costs
+- [x] Power management: Building automation lowers energy costs
+- [x] Indoor Air Quality Monitoring
+- [x] Indoor Air Quality Monitoring
+- [x] Wearables: Ensuring worker safety at all times
+- [x] Health
+- [x] Simultaneous reporting and monitoring
+- [x] End-to-end connectivity and affordability
+- [x] Data assortment and analysis
+- [x] Tracking and alerts
+- [x] Remote medical assistance
+- [x] Ingestible sensors
+- [ ] Io T in Life Style
+- [x] Wearable Electronics
+- [x] Hearables
+- [x] Moodables
+- [x] Computer vision technology
+
+## Result: 481/481 source headings covered in the notes (447 by heading match, 34 by verified content).
+Not ticked (check):
+- U1: UNIT-1
+- U1: Definition and Characteristics of Io T
+- U1: Things in Io T
+- U1: Co AP: Constrained Application Protocol (Co AP) is an application layer
+- U1: Logical Design of Io T
+- U1: Io T Functional Blocks
+- U1: Io T Enabling Technologies
+- U1: by Io T systems are described as follows
+- U1: 7 Io T Deployment Templates
+- U1: An Io T system comprises of the following component
+- U1: –Stateless/Stateful
+- U1: –Uni-directional/Bi-directional
+- U1: –Request-Response/Full Duplex
+- U1: –TCP Connections
+- U1: –Header Overhead
+- U1: –Scalability
+- U1: Io T Level-1
+- U1: Io T Level-2
+- U1: Io T Level-3
+- U1: Io T Level-4
+- U1: Io T Level-5
+- U1: Io T Level-6
+- U2: Sensors in Internet of Things(Io T)
+- U2: Io T Sensors
+- U2: What Is an Io T sensor?
+- U2: What Are Io T Sensors Used For?
+- U2: Types of Io T Sensors
+- U2: How is the data from these Io T sensors used?
+- U2: How is the data from these Io T sensors used?
+- U2: How is the data from these Io T sensors used?
+- U2: How is the data from these Io T sensors used?
+- U2: How is the data from these Io T sensors used?
+- U2: How is the data from these Io T sensors used?
+- U2: How is the data from these Io T sensors used?
+- U2: How is the data from these Io T sensors used?
+- U2: How is the data from these Io T sensors used?
+- U2: How is the data from these Io T sensors used?
+- U2: How is the data from these Io T sensors used?
+- U2: How is the data from these Io T sensors used?
+- U2: How is the data from these Io T sensors used?
+- U2: Serial.print("Value is "); // and report back
+- U2: Wire.write(addr); // address
+- U2: MASQUERADE down /sbin/iptables -D POSTROUTING -t nat -o
+- U2: def cleanup()
+- U2: low-power wireless Io T devices. Its main characteristics are
+- U3: Io T Reference Model
+- U3: more levels. Io T-A has achieved that thanks to two steps
+- U3: The Io T-A ARM (Architecture Reference Model) consists of four parts
+- U3: Uses of Io T Reference Architecture
+- U3: Reference Model as a Common Ground
+- U3: Io T Architectural Reference Model
+- U3: Io T domain model
+- U3: Io T Reference Architecture
+- U3: such as the Io T-A are the following
+- U3: Io TWF Architecture
+- U3: IT and OT Responsibilities in the Io T Reference Model
+- U3: Business models, new currencies in Io T and trust
+- U4: Difference between Io T and M2M
+- U4: Machines in M2M vs Things in Io T
+- U4: NFV Reference Architecture
+- U4: Reference Points
+- U4: Challenges of Io T for Communication Network
+- U4: The key advantages in employing SDN/NFV in Io T are
+- U5: Key Drivers for Io T Applications in Smart Cities
+- U5: methods offered by Io T technologies
+- U5: Io T deployments. This enables administrators to perform
+- U5: Io T in Life Style
+
+## 70 Most Important Questions
+- 70 questions, 14 per unit; 41 starred as most repeated; marks: 35 x 10-mark, 24 x 5-mark, 11 x 2-mark. All 70 appear in the notes PDF (verified by text count).
+
+## PYQ solutions
+- IIOT-2025 (B.Tech VI Sem, 6CS4-05, 70 marks): 22 questions solved, 15 pages. Paper verified from its title page as the Sem 6 IoT paper.
+- IOT-Jul-2023 (B.Tech VIII Sem IT, 8IT4-01, 120 marks, from public/pyq/sem8/): 22 questions solved (30 entries incl. sub-parts), 19 pages.
+- No unclear/illegible questions in either paper: every question was read from the scan and verified visually page by page.
+- PYQ-only topics (solved only in the solution PDFs, NOT added to the notes): RFID, ZigBee, 6LoWPAN, LoRa, CoAP vs MQTT, IoT design methodology, LiteOS vs RIOT vs Contiki, TinyOS vs Unix, URI vs URL, controller service, role of things and internet, weather communication models, IoT security measures.
+
+## Quality checks done
+- Garble scan (long joined tokens, camel-joins, missing spaces): fixed 20+ joined words (publishsubscribe, resourceconstrained, multitaskingkernel, networkedremotedisplayusingvirtualnetworkcomputing, controllogic, datadriven, etc.); final scan clean — remaining long words are legitimate (interoperability, microcontrollers, electrocardiogram).
+- Visual inspection: notes pp. 5, 35, 75, 110, 140, 190; IIOT solution p. 9; Jul-2023 solution p. 12 — all legible, approved style (Patrick Hand, blue body ink, black underlined headings, red key terms/boxes, unlined white A4, ~1.5 cm margins, unit name top, page number bottom).
+- Known minor source artefacts kept as printed (source's own wording): '802.11b' spacing, 'Lightening' for lightning in Unit 5, '[43]/[44]' reference numbers in Unit 5 noise section.

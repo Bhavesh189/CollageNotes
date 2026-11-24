@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { searchAll, buildSearchIndex } from '../lib/searchIndex';
+import { useDebouncedValue } from '../lib/useDebouncedValue';
 import { getStreak } from '../lib/study';
 
 // Command palette (Ctrl/⌘+K): fuzzy-jump to any note, subject, PYQ,
@@ -26,16 +27,20 @@ const CommandPalette = ({ open, onClose, onNavigate, onOpenNote, onRandom, onTog
     }
   }, [open ]);
 
+  // PERF (2026-11-24): the catalogue search used to re-run on every
+  // keystroke; now it waits 150ms after typing pauses. The input stays
+  // instant; the 150ms delay on the list is imperceptible.
+  const dq = useDebouncedValue(q, 150);
   const results = useMemo(() => {
     if (!open) return [];
-    const query = q.trim();
+    const query = dq.trim();
     const acts = ACTIONS.filter((a) => !query || a.label.toLowerCase().includes(query.toLowerCase()) || a.hint.includes(query.toLowerCase()));
     const items = query.length >= 2 ? searchAll({ query }).slice(0, 8) : buildSearchIndex().slice(0, 0);
     return [
       ...acts.map((a) => ({ kind: 'action', id: a.id, title: a.label, sub: a.hint, act: a })),
       ...items.map((it) => ({ kind: 'item', id: it.id, title: it.title, sub: `${it.semesterName} · ${it.subject}`, item: it })),
     ].slice(0, 10);
-  }, [q, open]);
+  }, [dq, open]);
 
   useEffect(() => {
     setSel(0);

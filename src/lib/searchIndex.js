@@ -237,18 +237,24 @@ export function searchAll({ query, semester = 'all', subject = 'all', type = 'al
   const effSubject = subject !== 'all' ? subject : opSubject;
   const effType = type !== 'all' ? type : (opType || 'all');
 
+  // PERF (2026-11-24): scoreItem used to run TWICE per item — once in the
+  // filter, once again to sort by relevance. Cache the score from the
+  // filter pass and reuse it; results are identical, ~2x less work.
+  const scoreCache = tokens.length > 0 ? new Map() : null;
   let results = index.filter((item) => {
     if (effSemester !== 'all' && item.semester !== effSemester) return false;
     if (effSubject && effSubject !== 'all' && norm(item.subject) !== effSubject && item.acronym !== effSubject) return false;
     if (effType !== 'all' && item.type !== effType) return false;
     if (opYear && String(item.year || '') !== opYear) return false;
     if (tokens.length === 0) return true;
-    return scoreItem(item, tokens, q) >= 0;
+    const s = scoreItem(item, tokens, q);
+    if (scoreCache) scoreCache.set(item.id, s);
+    return s >= 0;
   });
 
   if (tokens.length > 0 && sort === 'relevance') {
     results = results
-      .map((item) => ({ item, score: scoreItem(item, tokens, q) }))
+      .map((item) => ({ item, score: scoreCache.get(item.id) ?? 0 }))
       .sort((a, b) => b.score - a.score || a.item.title.localeCompare(b.item.title))
       .map((r) => r.item);
   } else if (sort === 'az') {

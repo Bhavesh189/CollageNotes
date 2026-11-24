@@ -1,6 +1,13 @@
 // Build-time renderer: every NOTES PDF under notes-source/notes/ becomes
 // page images + a per-page text search index under public/generated/.
 //
+// PERF (2026-11-24): every page ALSO gets a small thumbnail
+// (thumb-NNN.jpg, 128px wide, JPEG q60) for the viewer's Pages filmstrip.
+// The strip used to load the full-size page-*.jpg (~170 KB each) for a
+// 64px-wide thumb — up to ~5-10 MB in one burst on phones. Thumbs are
+// build output (public/generated/ is gitignored) and cost ~8-12 KB each.
+// Reading pages are UNCHANGED (same 892x1263 q80 files).
+//
 // PYQ EXEMPTION (2026-11-22): only NOTES are rendered. PYQs and syllabus
 // stay as PDFs under public/ (view + download allowed), so this script
 // never touches them — notes-source/pyq/ and notes-source/syllabus/ are
@@ -50,6 +57,8 @@ const SRC = path.join(ROOT, 'notes-source');
 const OUT = path.join(ROOT, 'public', 'generated');
 const SCALE = 1.5;
 const QUALITY = 80;
+const THUMB_W = 128; // filmstrip thumbs display at 64px (52px on phones) — 128px = 2x
+const THUMB_QUALITY = 60;
 const SUSPICIOUS_BYTES = 12 * 1024;
 const MAX_TEXT_CHARS = 6000;
 
@@ -94,6 +103,14 @@ async function renderDoc({ rel, srcPath, outDir }) {
     const jpg = canvas.encodeSync('jpeg', QUALITY);
     fs.writeFileSync(path.join(outDir, `page-${pad(i)}.jpg`), jpg);
     bytes += jpg.length;
+    // PERF (2026-11-24): filmstrip thumbnail from the same canvas —
+    // 128px wide (2x the 64px display), JPEG q60, ~8-12 KB. Drawn from
+    // the already-rendered canvas, so it costs one draw + one encode.
+    const thumbW = THUMB_W;
+    const thumbH = Math.max(1, Math.round((thumbW * canvas.height) / canvas.width));
+    const thumbCanvas = createCanvas(thumbW, thumbH);
+    thumbCanvas.getContext('2d').drawImage(canvas, 0, 0, thumbW, thumbH);
+    fs.writeFileSync(path.join(outDir, `thumb-${pad(i)}.jpg`), thumbCanvas.encodeSync('jpeg', THUMB_QUALITY));
     if (jpg.length < SUSPICIOUS_BYTES) suspicious.push(i);
     const tc = await page.getTextContent();
     const text = tc.items
@@ -193,6 +210,9 @@ if (!isMainThread) {
       settingsMatch &&
       prevEntry.pages > 0 &&
       Array.from({ length: prevEntry.pages }, (_, i) => path.join(outDir, `page-${pad(i + 1)}.jpg`)).every((p) => fs.existsSync(p)) &&
+      // PERF (2026-11-24): thumbs must exist too — docs rendered before
+      // thumbnails get them on the next prebuild instead of being skipped.
+      Array.from({ length: prevEntry.pages }, (_, i) => path.join(outDir, `thumb-${pad(i + 1)}.jpg`)).every((p) => fs.existsSync(p)) &&
       fs.existsSync(path.join(outDir, 'search.json'));
     if (!force && imagesExist) {
       plan.push({ rel, key, dir, outDir, skip: true, entry: prevEntry });

@@ -395,6 +395,13 @@ export async function convertDoc({ rel, srcPath, outDir, manifestEntry }) {
     if (!rendered) { kept.push(i); continue; } // too dense — keep original
     const jpg = rendered.canvas.encodeSync('jpeg', 88);
     fs.writeFileSync(path.join(hwDir, `page-${pad(i)}.jpg`), jpg);
+    // PERF (2026-11-24): filmstrip thumbnail for the handwritten page —
+    // 128px wide (2x the 64px display), JPEG q60. Same canvas, one draw.
+    const thumbW = 128;
+    const thumbH = Math.max(1, Math.round((thumbW * rendered.canvas.height) / rendered.canvas.width));
+    const thumbCanvas = canvasLib.createCanvas(thumbW, thumbH);
+    thumbCanvas.getContext('2d').drawImage(rendered.canvas, 0, 0, thumbW, thumbH);
+    fs.writeFileSync(path.join(hwDir, `thumb-${pad(i)}.jpg`), thumbCanvas.encodeSync('jpeg', 60));
     hwPages.push(i);
   }
   return { hwPages, kept, pages: doc.numPages };

@@ -1,6 +1,7 @@
-import React, { forwardRef, useState, useRef, useEffect } from 'react';
+import React, { forwardRef, useState, useRef, useEffect, useMemo } from 'react';
 import { Search, X, Mic } from 'lucide-react';
 import { searchAll } from '../lib/searchIndex';
+import { useDebouncedValue } from '../lib/useDebouncedValue';
 import { getSearchHistory, removeSearchHistory, recordSearch } from '../lib/study';
 
 // Prominent header search input. Parent owns value/onChange.
@@ -14,7 +15,14 @@ const SearchBar = forwardRef(({ value, onChange, onEscape, onNavigate, placehold
   const boxRef = useRef(null);
 
   const q = String(value || '').trim();
-  const suggestions = q.length >= 2 ? searchAll({ query: q }).slice(0, 6) : [];
+  // PERF (2026-11-24): suggestions used to re-run the full search on
+  // EVERY keystroke (and every parent re-render). The input itself stays
+  // instant — only the suggestion computation waits 150ms after typing.
+  const dq = useDebouncedValue(q, 150);
+  const suggestions = useMemo(
+    () => (dq.length >= 2 ? searchAll({ query: dq }).slice(0, 6) : []),
+    [dq],
+  );
 
   useEffect(() => {
     const onDoc = (e) => {

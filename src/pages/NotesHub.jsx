@@ -711,7 +711,24 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
                         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSubjectClick(sub); } }}
                       >
                         <div className="subject-card-img-wrapper">
-                          <img src={sub.image} alt={sub.name} className="subject-card-img" loading="lazy" />
+                          {/* PERF (2026-11-24): small cover variant
+                              (<name>-sm.jpg, 500px wide = 2x the ~250px
+                              display, ~30 KB vs ~150 KB). Originals stay
+                              on disk untouched; a missing -sm falls back
+                              to the full cover — never a broken card. */}
+                          <img
+                            src={sub.image.replace(/\.jpg$/i, '-sm.jpg')}
+                            alt={sub.name}
+                            className="subject-card-img"
+                            loading="lazy"
+                            onError={(e) => {
+                              const t = e.currentTarget;
+                              if (!t.dataset.fellBack) {
+                                t.dataset.fellBack = '1';
+                                t.src = sub.image;
+                              }
+                            }}
+                          />
                           <div className="subject-card-scrim" aria-hidden="true" />
                           <div className="subject-card-overlay">
                             <h3 className="subject-card-name">{sub.name}</h3>

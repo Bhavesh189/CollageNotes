@@ -62,6 +62,15 @@ function App() {
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [cheatOpen, setCheatOpen] = useState(false);
   const [whatsNewOpen, setWhatsNewOpen] = useState(false);
+  // PERF (2026-11-24): the notifications ticker is a never-ending
+  // animation — pausing it while the tab is hidden stops the compositor
+  // work (and the battery drain) when nobody is looking at it.
+  const [tabHidden, setTabHidden] = useState(() => (typeof document !== 'undefined' ? document.hidden : false));
+  useEffect(() => {
+    const onVis = () => setTabHidden(document.hidden);
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
+  }, []);
   const [streak, setStreak] = useState(() => getStreak());
   const searchInputRef = useRef(null);
   const headerRef = useRef(null);
@@ -458,7 +467,7 @@ function App() {
           <span className="ticker-title-text">Notifications</span>
         </div>
         <div className="ticker-marquee">
-          <div className="ticker-track">
+          <div className={`ticker-track${tabHidden ? ' ticker-paused' : ''}`}>
             <span className="ticker-chunk">🚀 {tickerText}</span>
             <span className="ticker-chunk" aria-hidden="true">🚀 {tickerText}</span>
           </div>

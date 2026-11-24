@@ -2509,6 +2509,10 @@ html { scroll-padding-top: 112px; }
 .ticker-chunk { flex-shrink: 0; font-size: 0.95rem; color: var(--text-primary); font-weight: 500; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .ticker-wrap:hover .ticker-track { animation-play-state: paused; }
+/* PERF (2026-11-24): the ticker pauses while the tab is hidden (App.jsx
+   toggles .ticker-paused on visibilitychange) — no compositor work and no
+   battery drain when nobody is looking at the page. */
+.ticker-track.ticker-paused { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) {
   .ticker-track { animation: none; }
 }
@@ -3591,3 +3595,40 @@ button.header-suggest-row > span { flex: 1 1 auto; min-width: 0; display: flex; 
 button.header-suggest-row > span strong,
 button.header-suggest-row > span small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .search-count { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+/* ================================================================
+   PERF — phone relief (2026-11-24, students' lag complaints)
+   Everything here is scoped to small screens (or reduced motion), so
+   the desktop look is IDENTICAL. What it removes on phones is
+   compositing work the eye can't see, not visuals:
+   - .glass backdrop blur 25px -> 10px (the frosted look stays; the
+     full-screen viewer modal drops the blur entirely — its background
+     is opaque anyway, so nothing shows through it).
+   - The three glow orbs stop drifting (same colours/positions, no
+     18-25s morph animation) and blur 90px -> 40px. blur(90px) +
+     mix-blend-mode over a fixed full-screen layer is the single most
+     expensive paint on low-end phone GPUs.
+   - The ticker's edge-fade mask is dropped on phones (mask-image
+     forces a repaint every marquee frame on some mobile GPUs).
+   ================================================================ */
+@media (max-width: 640px) {
+  .glass {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .docviewer-modal.glass {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .glow-orb {
+    animation: none;
+    filter: blur(40px);
+  }
+  .ticker-marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glow-orb { animation: none; }
+}

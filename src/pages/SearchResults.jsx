@@ -7,6 +7,7 @@ import {
   didYouMean,
   snippetFor,
 } from '../lib/searchIndex';
+import { useDebouncedValue } from '../lib/useDebouncedValue';
 import DocViewer from '../components/DocViewer';
 import { ViewButton, DownloadButton, OpenButton, BookmarkButton } from '../components/NoteActions';
 import { isBookmarked, toggleBookmark } from '../lib/bookmarks';
@@ -37,9 +38,14 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
     setSubject('all');
   }, [semester]);
 
+  // PERF (2026-11-24): the results computation (full-catalogue scoring +
+  // rendering up to hundreds of rows) used to re-run on EVERY keystroke.
+  // The input above stays instant — only the results wait 150ms after the
+  // user pauses typing.
+  const debouncedQuery = useDebouncedValue(query, 150);
   const results = useMemo(
-    () => searchAll({ query, semester, subject, type, sort }),
-    [query, semester, subject, type, sort]
+    () => searchAll({ query: debouncedQuery, semester, subject, type, sort }),
+    [debouncedQuery, semester, subject, type, sort]
   );
 
   // PYQ facets: year + exam type (midterm/endterm) on PYQ results.

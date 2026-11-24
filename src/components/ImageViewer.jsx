@@ -207,6 +207,18 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
         : `/generated/${entryDir}/page-${pad(n)}.jpg`
       : null;
 
+  // PERF (2026-11-24): filmstrip thumbnails — thumb-NNN.jpg, 128px wide
+  // (2x the 64px display), ~8-12 KB. The strip used to load the full
+  // ~170 KB page image for a 64px thumb: a 28-page doc burst ~4.8 MB.
+  // Thumbs are generated at build time (scripts/render-notes.mjs,
+  // scripts/handwrite.mjs) next to the page images.
+  const thumbSrc = (n) =>
+    entryDir
+      ? hwPages && hwPages.has(n)
+        ? `/generated/${entryDir}/hw/thumb-${pad(n)}.jpg`
+        : `/generated/${entryDir}/thumb-${pad(n)}.jpg`
+      : null;
+
   useEffect(() => {
     numPagesRef.current = numPages;
   }, [numPages]);
@@ -492,15 +504,36 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
   // block the visible page; the browser deprioritises them behind it.
   // Quality: Sharp preloads 3 ahead (default); Fast preloads only the
   // next page, for slow networks / low-data reading.
+  // PERF (2026-11-24): SEQUENTIAL chain — the NEXT page gets the whole
+  // pipe first and the others follow only after it finishes. A 600ms
+  // stagger was tried first and measured NO turn improvement (7.6s turn
+  // on Slow 3G, same as before): on a 50 KB/s pipe the next page still
+  // shared bandwidth with the other three. Sequential is the only shape
+  // that makes a turn instant once the reader has spent a few seconds
+  // on the current page.
   useEffect(() => {
     if (status !== 'ready') return;
-    const ahead = quality === 'fast' ? [pageNumber + 1] : [pageNumber - 1, pageNumber + 1, pageNumber + 2, pageNumber + 3];
-    ahead.forEach((n) => {
-      if (n >= 1 && n <= (numPagesRef.current || 0)) {
-        const img = new Image();
-        img.src = pageSrc(n);
+    const total = numPagesRef.current || 0;
+    const queue = quality === 'fast'
+      ? [pageNumber + 1]
+      : [pageNumber + 1, pageNumber - 1, pageNumber + 2, pageNumber + 3];
+    let cancelled = false;
+    let i = 0;
+    const step = () => {
+      if (cancelled) return;
+      while (i < queue.length) {
+        const n = queue[i++];
+        if (n >= 1 && n <= total && n !== pageNumber) {
+          const img = new Image();
+          img.onload = step;
+          img.onerror = step;
+          img.src = pageSrc(n);
+          return;
+        }
       }
-    });
+    };
+    step();
+    return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNumber, status, quality]);
 
@@ -1263,7 +1296,21 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
                 onClick={() => goToPage(n)}
                 title={`Page ${n}${flags[n] ? ` — ${FLAG_LABELS[flags[n]]}` : ''}${pageBookmarks[n] ? ' — saved' : ''}`}
               >
-                <img src={pageSrc(n)} alt={`Page ${n}`} loading="lazy" draggable={false} />
+                <img
+                  src={thumbSrc(n)}
+                  alt={`Page ${n}`}
+                  loading="lazy"
+                  draggable={false}
+                  // If a thumb is missing (doc rendered before thumbnails),
+                  // fall back to the full page image — slower, never broken.
+                  onError={(e) => {
+                    const t = e.currentTarget;
+                    if (!t.dataset.fellBack) {
+                      t.dataset.fellBack = '1';
+                      t.src = pageSrc(n);
+                    }
+                  }}
+                />
                 <span>
                   {n}
                   {flags[n] && <i className={`film-dot flag-${flags[n]}`}></i>}

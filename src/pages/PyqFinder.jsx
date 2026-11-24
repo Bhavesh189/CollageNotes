@@ -74,8 +74,11 @@ const PyqFinder = ({ initialSubjects, initialLabel, onClearInitialSubjects }) =>
   // the manifest yet, say so honestly instead of opening a dead viewer.
   const solutionKeyFor = (paperFile) => {
     const m = paperFile.match(/^\/pyq\/(sem\d+)\/(.+)\.pdf$/i);
-    if (!m) return null;
-    return `/pyq-solutions/${m[1]}/${m[2]}-solution.pdf`;
+    if (m) return `/pyq-solutions/${m[1]}/${m[2]}-solution.pdf`;
+    // Root paper (e.g. /PYQ Physics.pdf) has no /pyq/semN/ prefix; its
+    // handwritten solution lives under sem1 (PYQ-Physics-solution.pdf).
+    if (/^\/PYQ Physics\.pdf$/i.test(paperFile)) return '/pyq-solutions/sem1/PYQ-Physics-solution.pdf';
+    return null;
   };
 
   const handleShowSolution = async (paperFile) => {

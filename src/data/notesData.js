@@ -9,9 +9,7 @@ export const semestersData = {
         image: '/subjects/computer.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: '1. C ALL notes 1,2,3 Merged', file: '/notes/sem1/computer/cin1.pdf' },
-          { title: '2. Previous Year Full Book', file: '/notes/sem1/computer/pc.pdf' },
-          { title: '!!! 70 IMP QUES !!!', file: '/notes/sem1/computer/70 CF&P Updated Importnt question (1)BCA.pdf' }
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem1/computer/CFP-Sem1-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -20,19 +18,7 @@ export const semestersData = {
         image: '/subjects/chemistry.jpg',
         colorClass: 'color-chemistry',
         notes: [
-          { title: '1. Corrosion', file: '/notes/sem1/chemistry/co.pdf' },
-          { title: '1. Corrosion part 2', file: '/notes/sem1/chemistry/U2[CORROSION].pdf' },
-          { title: '2. Lubricants', file: '/notes/sem1/chemistry/lc.pdf' },
-          { title: '2. Engineering Materials one shot', file: '/notes/sem1/chemistry/U1[Engineering Materials].pdf' },
-          { title: '3. Water + Boiler Troubles', file: '/notes/sem1/chemistry/ce1.pdf' },
-          { title: '4. Fuel', file: '/notes/sem1/chemistry/chemfuel.pdf' },
-          { title: '5. Green Chemistry', file: '/notes/sem1/chemistry/g.pdf' },
-          { title: '6. All Unit 1', file: '/notes/sem1/chemistry/CHEMISTRY UNIT 1.pdf' },
-          { title: '7. All Unit 2', file: '/notes/sem1/chemistry/CHEMISTRY UNIT 2.pdf' },
-          { title: '8. All Unit 3', file: '/notes/sem1/chemistry/CHEMISTRY UNIT 3.pdf' },
-          { title: '9. All Unit 4', file: '/notes/sem1/chemistry/CHEMISTRY UNIT 4.pdf' },
-          { title: '10. All Unit 5', file: '/notes/sem1/chemistry/CHEMISTRY UNIT 5.pdf' },
-          { title: '!!! IMP QUES 70 QUES !!!', file: '/notes/sem1/chemistry/Engg. Chemistry Imp. 70 question (1).pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem1/chemistry/Chemistry-Sem1-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -41,13 +27,7 @@ export const semestersData = {
         image: '/subjects/maths.jpg',
         colorClass: 'color-maths',
         notes: [
-          { title: '1. Mathematics 1', file: '/notes/sem1/maths/ma111.pdf' },
-          { title: '2. Maths Full Book Answers', file: '/notes/sem1/maths/f.pdf' },
-          { title: '3. Maths Assignment', file: 'https://acrobat.adobe.com/id/urn:aaid:sc:AP:9c2918d3-b1b4-4410-9ddf-2162308daee1', isExternal: true },
-          { title: '3. Maths Assignment Answers', file: '/notes/sem1/maths/mi.pdf' },
-          { title: '3. Maths 10 Minutes Revision', file: '/notes/sem1/maths/Mathsimp.pdf' },
-          { title: 'Unit 3 Differential Equations (handwritten)', file: '/notes/sem1/maths/b.pdf' },
-          { title: 'Differential Equations Solved Examples (handwritten)', file: '/notes/sem1/maths/maths1.pdf' }
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem1/maths/Maths-Sem1-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -56,12 +36,7 @@ export const semestersData = {
         image: '/subjects/bee.jpg',
         colorClass: 'color-bee',
         notes: [
-          { title: '1. 1st Chapter in Normal Handwritten', file: '/notes/sem1/bee/bee.pdf.docx.pdf' },
-          { title: '2. 2nd Chapter in Normal Handwritten', file: '/notes/sem1/bee/bee2.docx.pdf' },
-          { title: '3. 3rd Chapter in Normal Handwritten', file: '/notes/sem1/bee/3b.pdf' },
-          { title: '4. 4th Chapter in Normal Handwritten', file: '/notes/sem1/bee/4b.pdf' },
-          { title: '5. Important Notes', file: '/notes/sem1/bee/imp.pdf' },
-          { title: '6. All Syllabus Notes', file: '/Bee Full syllabus.pdf' }
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem1/bee/BEE-Sem1-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -70,17 +45,7 @@ export const semestersData = {
         image: '/subjects/mefa.jpg',
         colorClass: 'color-mefa',
         notes: [
-          { title: '1. 1st Chapter Sir wala', file: '/notes/sem1/mefa/mefa1.pdf' },
-          { title: '1.1 1st Chapter Sir wala (Part 2)', file: '/notes/sem1/mefa/mefa1p.pdf' },
-          { title: '2. 2nd Chapter Sir wala', file: '/notes/sem1/mefa/mefa2.pdf' },
-          { title: '3. Cost', file: '/notes/sem1/mefa/cost.pdf' },
-          { title: '3. Unit 3 Production', file: '/notes/sem1/mefa/m3p.pdf' },
-          { title: '4. 4th Chapter Sir wala', file: '/notes/sem1/mefa/m4.pdf' },
-          { title: '5. 5th Chapter Sir wala', file: '/notes/sem1/mefa/m51.pdf' },
-          { title: '5. Part 2 Chapter 5', file: '/notes/sem1/mefa/m52.pdf' },
-          { title: '5. Part 3 Chapter 5', file: '/notes/sem1/mefa/m53.pdf' },
-          { title: '5. Part 4 Chapter 5', file: '/notes/sem1/mefa/m54.pdf' },
-          { title: '!!! MEFA IMP 70 QUES !!!', file: '/notes/sem1/mefa/MEFA_imp_Q & A_Merged.pdf' }
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem1/mefa/MEFA-Sem1-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -130,7 +95,88 @@ export const semestersData = {
           { title: '2. 2nd Mid Term 2025–26', file: '/notes/sem1/midsem/smid.pdf' },
           { title: '3. Pre-University-Exam 2025–26', file: '/notes/sem1/midsem/All.pdf' }
         ]
-      }
+      },
+      {
+        id: 'bce',
+        name: 'Basic Civil Engineering',
+        image: '/subjects/built_env.jpg',
+        colorClass: 'color-built_env',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem1/basic-civil-engineering/BCE-Sem1-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'bme',
+        name: 'Basic Mechanical Engineering',
+        image: '/subjects/mech_eng.jpg',
+        colorClass: 'color-mech_eng',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem1/basic-mechanical-engineering/BME-Sem1-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'csk',
+        name: 'Communication Skills',
+        image: '/subjects/comm_skills.jpg',
+        colorClass: 'color-comm_skills',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem1/communication-skills/CSK-Sem1-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'eme',
+        name: 'Elements of Mechanical Engineering',
+        image: '/subjects/mech_eng.jpg',
+        colorClass: 'color-mech_eng',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem1/elements-of-mechanical-engineering/EME-Sem1-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'ep',
+        name: 'Engineering Physics',
+        image: '/subjects/physics.jpg',
+        colorClass: 'color-physics',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem1/engineering-physics/EP-Sem1-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'hv',
+        name: 'Human Values',
+        image: '/subjects/human-interaction.jpg',
+        colorClass: 'color-mefa',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem1/human-values/HV-Sem1-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'ibe',
+        name: 'Introduction to Built Environment',
+        image: '/subjects/built_env.jpg',
+        colorClass: 'color-built_env',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem1/introduction-to-built-environment/IBE-Sem1-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'pps',
+        name: 'Programming for Problem Solving',
+        image: '/subjects/computer.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem1/programming-for-problem-solving/PPS-Sem1-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'tc1',
+        name: 'Technical Communication',
+        image: '/subjects/tech_comm.jpg',
+        colorClass: 'color-comm_skills',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem1/technical-communication/TC-Sem1-Handwritten-Notes-Full.pdf' },
+        ]
+      },
     ]
   },
   sem2: {
@@ -143,7 +189,7 @@ export const semestersData = {
         image: '/subjects/comm_skills.jpg',
         colorClass: 'color-comm_skills',
         notes: [
-          { title: '70 IMP + All Syllabus', file: '/notes/sem2/communication-skills/2ndseminpcomm.pdf' }
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem2/communication-skills/Communication-Skills-Sem2-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -152,13 +198,7 @@ export const semestersData = {
         image: '/subjects/built_env.jpg',
         colorClass: 'color-built_env',
         notes: [
-          { title: 'Unit 1 - Notes', file: '/notes/sem2/introduction-to-build-enviroment/UNIT-1 NOTES.pdf' },
-          { title: 'Unit 2, 3, 4 Merge', file: '/notes/sem2/introduction-to-build-enviroment/UNIT 3,2,4.pdf.pdf' },
-          { title: 'Unit 1', file: '/notes/sem2/introduction-to-build-enviroment/ibe-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem2/introduction-to-build-enviroment/ibe-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem2/introduction-to-build-enviroment/ibe-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem2/introduction-to-build-enviroment/ibe-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem2/introduction-to-build-enviroment/ibe-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem2/introduction-to-build-enviroment/IBE-Sem2-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -167,12 +207,7 @@ export const semestersData = {
         image: '/subjects/physics.jpg',
         colorClass: 'color-physics',
         notes: [
-          { title: '70 IMP and Full syllabus', file: '/notes/sem2/physics/PhysicsIMP.pdf' },
-          { title: 'Unit 1 - Wave Optics', file: '/notes/sem2/physics/UNIT-1(WAVE OPTICS).pdf' },
-          { title: 'Unit 2', file: '/notes/sem2/physics/PHYSICS U2.pdf' },
-          { title: 'Unit 3 - Laser', file: '/notes/sem2/physics/UNIT-3(LASER).pdf' },
-          { title: 'Unit 4 - Semiconductors', file: '/notes/sem2/physics/UNIT-4(SEMICONDUUCTORS).pdf' },
-          { title: 'Unit 5 - Electromagnetism', file: '/notes/sem2/physics/UNIT-5(INTRO TO ELECTROMAGNETISM).pdf' }
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem2/physics/Physics-Sem2-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -181,11 +216,7 @@ export const semestersData = {
         image: '/subjects/maths2.jpg',
         colorClass: 'color-maths2',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem2/engineering-mathematics-2/em2-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem2/engineering-mathematics-2/em2-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem2/engineering-mathematics-2/em2-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem2/engineering-mathematics-2/em2-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem2/engineering-mathematics-2/em2-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem2/engineering-mathematics-2/Engineering-Mathematics-2-Sem2-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -194,11 +225,7 @@ export const semestersData = {
         image: '/subjects/mech_eng.jpg',
         colorClass: 'color-mech_eng',
         notes: [
-          { title: 'Unit 1 - Notes', file: '/notes/sem2/element-of-mecnanical-engineering/EME- UNIT 01.pdf' },
-          { title: 'Unit 2', file: '/notes/sem2/element-of-mecnanical-engineering/eme-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem2/element-of-mecnanical-engineering/EME UNIT - III.pdf' },
-          { title: 'Unit 4', file: '/notes/sem2/element-of-mecnanical-engineering/EME Unit-IV.pdf' },
-          { title: 'Unit 5', file: '/notes/sem2/element-of-mecnanical-engineering/EME-UNIT-5.pdf' }
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem2/element-of-mecnanical-engineering/EME-Sem2-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -207,11 +234,43 @@ export const semestersData = {
         image: '/subjects/mefa2.jpg',
         colorClass: 'color-mefa',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem2/managerial-economics-and-financial-accounting/mefa-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem2/managerial-economics-and-financial-accounting/mefa-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem2/managerial-economics-and-financial-accounting/mefa-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem2/managerial-economics-and-financial-accounting/mefa-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem2/managerial-economics-and-financial-accounting/mefa-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem2/managerial-economics-and-financial-accounting/MEFA-Sem2-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'bee2',
+        name: 'Basic Electrical Engineering',
+        image: '/subjects/bee.jpg',
+        colorClass: 'color-bee',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem2/basic-electrical-engineering/BEE-Sem2-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'cfp',
+        name: 'Computer Fundamentals & Programming',
+        image: '/subjects/computer.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem2/computer-fundamentals-programming/CFP-Sem2-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'eng_chem',
+        name: 'Engineering Chemistry',
+        image: '/subjects/chemistry.jpg',
+        colorClass: 'color-chemistry',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem2/engineering-chemistry/Engineering-Chemistry-Sem2-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'python2',
+        name: 'Python Programming',
+        image: '/subjects/python_prog.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem2/python-programming/Python-Programming-Sem2-Handwritten-Notes-Full.pdf' },
         ]
       },
     ]
@@ -226,11 +285,7 @@ export const semestersData = {
         image: '/subjects/adv_maths.jpg',
         colorClass: 'color-maths',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem3/adv-engineering-mathematics/aem-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem3/adv-engineering-mathematics/aem-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem3/adv-engineering-mathematics/aem-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem3/adv-engineering-mathematics/aem-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem3/adv-engineering-mathematics/aem-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem3/adv-engineering-mathematics/AEM-Sem3-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -239,10 +294,7 @@ export const semestersData = {
         image: '/subjects/digital_elec.jpg',
         colorClass: 'color-bee',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem3/digital-electronics/de-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem3/digital-electronics/de-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem3/digital-electronics/de-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem3/digital-electronics/de-unit-4.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem3/digital-electronics/DE-Sem3-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -251,19 +303,7 @@ export const semestersData = {
         image: '/subjects/dsa.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Prerequisite: Linked List', file: '/notes/sem3/data-structures-algorithms/dsa-prerequisite-linked-list.pdf' },
-          { title: 'Unit 1', file: '/notes/sem3/data-structures-algorithms/dsa-unit-1.pdf' },
-          { title: 'Unit 2 (Part 1)', file: '/notes/sem3/data-structures-algorithms/dsa-unit-2-part-1.pdf' },
-          { title: 'Unit 2 (Part 2)', file: '/notes/sem3/data-structures-algorithms/dsa-unit-2-part-2.pdf' },
-          { title: 'Unit 2 (Part 3)', file: '/notes/sem3/data-structures-algorithms/dsa-unit-2-part-3.pdf' },
-          { title: 'Unit 2 (Complete) (Part 1)', file: '/notes/sem3/data-structures-algorithms/dsa-unit-2-complete-part-1.pdf' },
-          { title: 'Unit 2 (Complete) (Part 2)', file: '/notes/sem3/data-structures-algorithms/dsa-unit-2-complete-part-2.pdf' },
-          { title: 'Unit 2 (Complete) (Part 3)', file: '/notes/sem3/data-structures-algorithms/dsa-unit-2-complete-part-3.pdf' },
-          { title: 'Unit 2 (Complete) (Part 4)', file: '/notes/sem3/data-structures-algorithms/dsa-unit-2-complete-part-4.pdf' },
-          { title: 'Unit 3', file: '/notes/sem3/data-structures-algorithms/dsa-unit-3.pdf' },
-          { title: 'Unit 3 (Complete)', file: '/notes/sem3/data-structures-algorithms/dsa-unit-3-complete.pdf' },
-          { title: 'Unit 4', file: '/notes/sem3/data-structures-algorithms/dsa-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem3/data-structures-algorithms/dsa-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem3/data-structures-algorithms/DSA-Sem3-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -272,11 +312,7 @@ export const semestersData = {
         image: '/subjects/oop.jpg',
         colorClass: 'color-mech_eng',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem3/oop-using-c/oop-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem3/oop-using-c/oop-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem3/oop-using-c/oop-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem3/oop-using-c/oop-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem3/oop-using-c/oop-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem3/oop-using-c/OOP-Sem3-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -285,11 +321,7 @@ export const semestersData = {
         image: '/subjects/software_eng.jpg',
         colorClass: 'color-mefa',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem3/software-engineering/se-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem3/software-engineering/se-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem3/software-engineering/se-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem3/software-engineering/se-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem3/software-engineering/se-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem3/software-engineering/SE-Sem3-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -298,11 +330,61 @@ export const semestersData = {
         image: '/subjects/linux_shell.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem3/linux-and-shell-programming/lsp-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem3/linux-and-shell-programming/lsp-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem3/linux-and-shell-programming/lsp-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem3/linux-and-shell-programming/lsp-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem3/linux-and-shell-programming/lsp-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem3/linux-and-shell-programming/LSP-Sem3-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'iai',
+        name: 'Introduction to Artificial Intelligence',
+        image: '/subjects/machine-learning.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem3/introduction-to-artificial-intelligence/IAI-Sem3-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'ics',
+        name: 'Introduction to Cyber Security',
+        image: '/subjects/information-security.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem3/introduction-to-cyber-security/ICS-Sem3-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'ids',
+        name: 'Introduction to Data Science',
+        image: '/subjects/data-mining-warehousing.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem3/introduction-to-data-science/IDS-Sem3-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'mefa3',
+        name: 'Managerial Economics & Financial Accounting',
+        image: '/subjects/mefa.jpg',
+        colorClass: 'color-mefa',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem3/managerial-economics-and-financial-accounting/MEFA-Sem3-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'pic',
+        name: 'Principles of Imperative Computation',
+        image: '/subjects/computer.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem3/principles-of-imperative-computation/PIC-Sem3-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'tc3',
+        name: 'Technical Communication',
+        image: '/subjects/tech_comm.jpg',
+        colorClass: 'color-comm_skills',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem3/technical-communication/TC-Sem3-Handwritten-Notes-Full.pdf' },
         ]
       },
     ]
@@ -314,11 +396,7 @@ export const semestersData = {
         image: '/subjects/discrete_maths.jpg',
         colorClass: 'color-maths',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem4/discrete-mathematics/dm-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem4/discrete-mathematics/dm-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem4/discrete-mathematics/dm-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem4/discrete-mathematics/dm-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem4/discrete-mathematics/dm-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem4/discrete-mathematics/Discrete-Mathematics-Sem4-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -327,11 +405,7 @@ export const semestersData = {
         image: '/subjects/mpi.jpg',
         colorClass: 'color-bee',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem4/microprocessor-and-interfaces/mpi-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem4/microprocessor-and-interfaces/mpi-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem4/microprocessor-and-interfaces/mpi-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem4/microprocessor-and-interfaces/mpi-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem4/microprocessor-and-interfaces/mpi-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem4/microprocessor-and-interfaces/Microprocessor-and-Interfaces-Sem4-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -340,11 +414,7 @@ export const semestersData = {
         image: '/subjects/toc.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem4/theory-of-computation/toc-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem4/theory-of-computation/toc-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem4/theory-of-computation/toc-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem4/theory-of-computation/toc-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem4/theory-of-computation/toc-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem4/theory-of-computation/Theory-of-Computation-Sem4-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -353,11 +423,7 @@ export const semestersData = {
         image: '/subjects/dbms.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem4/database-management-systems/dbms-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem4/database-management-systems/dbms-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem4/database-management-systems/dbms-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem4/database-management-systems/dbms-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem4/database-management-systems/dbms-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem4/database-management-systems/DBMS-Sem4-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -366,11 +432,7 @@ export const semestersData = {
         image: '/subjects/python_prog.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem4/python-programming/py-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem4/python-programming/py-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem4/python-programming/py-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem4/python-programming/py-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem4/python-programming/py-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem4/python-programming/Python-Programming-Sem4-Handwritten-Notes-Full.pdf' },
         ]
       },
       {
@@ -379,11 +441,61 @@ export const semestersData = {
         image: '/subjects/java_prog.jpg',
         colorClass: 'color-computer',
         notes: [
-          { title: 'Unit 1', file: '/notes/sem4/java-programming/jav-unit-1.pdf' },
-          { title: 'Unit 2', file: '/notes/sem4/java-programming/jav-unit-2.pdf' },
-          { title: 'Unit 3', file: '/notes/sem4/java-programming/jav-unit-3.pdf' },
-          { title: 'Unit 4', file: '/notes/sem4/java-programming/jav-unit-4.pdf' },
-          { title: 'Unit 5', file: '/notes/sem4/java-programming/jav-unit-5.pdf' },
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem4/java-programming/Java-Programming-Sem4-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'coa4',
+        name: 'Computer Organization and Architecture',
+        image: '/subjects/computer-architecture.jpg',
+        colorClass: 'color-bee',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem4/computer-organization-and-architecture/Computer-Organization-and-Architecture-Sem4-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'iml',
+        name: 'Introduction to Machine Learning',
+        image: '/subjects/machine-learning.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem4/introduction-to-machine-learning/Introduction-to-Machine-Learning-Sem4-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'iwt',
+        name: 'Introduction to Web Technology',
+        image: '/subjects/computer-networks.jpg',
+        colorClass: 'color-computer',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem4/introduction-to-web-technology/Introduction-to-Web-Technology-Sem4-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'mefa4',
+        name: 'Managerial Economics & Financial Accounting',
+        image: '/subjects/mefa.jpg',
+        colorClass: 'color-mefa',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem4/managerial-economics-and-financial-accounting/Managerial-Economics-and-Financial-Accounting-Sem4-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'spt',
+        name: 'Statistics and Probability Theory',
+        image: '/subjects/maths.jpg',
+        colorClass: 'color-maths',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem4/statistics-and-probability-theory/Statistics-and-Probability-Theory-Sem4-Handwritten-Notes-Full.pdf' },
+        ]
+      },
+      {
+        id: 'tc4',
+        name: 'Technical Communication',
+        image: '/subjects/tech_comm.jpg',
+        colorClass: 'color-comm_skills',
+        notes: [
+          { title: 'Full Notes (Handwritten)', file: '/notes/sem4/technical-communication/Technical-Communication-Sem4-Handwritten-Notes-Full.pdf' },
         ]
       },
     ] },

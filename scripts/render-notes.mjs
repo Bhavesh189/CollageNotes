@@ -27,7 +27,9 @@
 //   mapping the app's file key ('/notes/sem2/.../em2-unit-5.pdf') to its entry.
 // - Scale 1.5, JPEG quality 80: ~105 KB/page (verified readable on phone,
 //   incl. CamScanner notes; deterministic bytes, so Vercel's content-hash
-//   dedupe makes re-deploys cheap).
+//   dedupe makes re-deploys cheap). HANDWRITTEN docs (2026-11-25): scale
+//   1.25, JPEG quality 70 — clean vector handwriting stays crisp and renders
+//   ~35% smaller (BEE 92p: 193 -> 125 KB/page); see HW_SCALE/HW_QUALITY.
 // - Incremental: a doc is skipped when its source SHA-1 + render settings
 //   match the manifest AND its images exist on disk. Locally this makes
 //   re-runs fast; on Vercel (no generated/ dir in the repo) the first build
@@ -59,6 +61,17 @@ const PYQ_DIR = path.join(ROOT, 'public', 'pyq');
 const OUT = path.join(ROOT, 'public', 'generated');
 const SCALE = 1.5;
 const QUALITY = 80;
+// HANDWRITTEN (2026-11-25): the handwritten notes + PYQ solutions are clean
+// vector text (Patrick Hand) on white — they stay crisp at a lower raster
+// scale, and render ~35% smaller (measured: BEE 92p, 193 -> 125 KB/page).
+// Typed/scanned docs keep SCALE 1.5 / QUALITY 80. Per-doc settings are
+// recorded in the manifest, so the incremental skip stays correct.
+const HW_SCALE = 1.25;
+const HW_QUALITY = 70;
+const isHandwritten = (rel) =>
+  rel.includes('-Handwritten-Notes-Full.pdf') || rel.startsWith('pyq-solutions/');
+const settingsFor = (rel) =>
+  isHandwritten(rel) ? { scale: HW_SCALE, quality: HW_QUALITY } : { scale: SCALE, quality: QUALITY };
 const THUMB_W = 128; // filmstrip thumbs display at 64px (52px on phones) — 128px = 2x
 const THUMB_QUALITY = 60;
 const SUSPICIOUS_BYTES = 12 * 1024;
@@ -78,7 +91,7 @@ function walk(dir, out = []) {
 }
 
 // ---------------- worker: renders ONE document ----------------
-async function renderDoc({ rel, srcPath, outDir }) {
+async function renderDoc({ rel, srcPath, outDir, scale = SCALE, quality = QUALITY }) {
   // pdf.js 6.5.438, VENDORED (scripts/vendor/pdfjs-dist-6.5.438/): the
   // npm-installed pdfjs-dist 4.8.69 (pinned for react-pdf 9.2.1) SEGFAULTS
   // inside page.render() in Node — see the vendor README. Do not point
@@ -99,10 +112,10 @@ async function renderDoc({ rel, srcPath, outDir }) {
   let bytes = 0;
   for (let i = 1; i <= doc.numPages; i += 1) {
     const page = await doc.getPage(i);
-    const vp = page.getViewport({ scale: SCALE });
+    const vp = page.getViewport({ scale });
     const canvas = createCanvas(Math.floor(vp.width), Math.floor(vp.height));
     await page.render({ canvasContext: canvas.getContext('2d'), viewport: vp }).promise;
-    const jpg = canvas.encodeSync('jpeg', QUALITY);
+    const jpg = canvas.encodeSync('jpeg', quality);
     fs.writeFileSync(path.join(outDir, `page-${pad(i)}.jpg`), jpg);
     bytes += jpg.length;
     // PERF (2026-11-24): filmstrip thumbnail from the same canvas —
@@ -217,8 +230,9 @@ if (!isMainThread) {
     const dir = dirFor(rel);
     const outDir = path.join(OUT, dir);
     const prevEntry = prev.docs[key];
+    const { scale, quality } = settingsFor(rel);
     const settingsMatch =
-      prevEntry && prevEntry.sha1 === hash && prevEntry.scale === SCALE && prevEntry.quality === QUALITY;
+      prevEntry && prevEntry.sha1 === hash && prevEntry.scale === scale && prevEntry.quality === quality;
     const imagesExist =
       settingsMatch &&
       prevEntry.pages > 0 &&
@@ -228,9 +242,9 @@ if (!isMainThread) {
       Array.from({ length: prevEntry.pages }, (_, i) => path.join(outDir, `thumb-${pad(i + 1)}.jpg`)).every((p) => fs.existsSync(p)) &&
       fs.existsSync(path.join(outDir, 'search.json'));
     if (!force && imagesExist) {
-      plan.push({ rel, key, dir, outDir, skip: true, entry: prevEntry });
+      plan.push({ rel, key, dir, outDir, scale, quality, skip: true, entry: prevEntry });
     } else {
-      plan.push({ rel, key, dir, outDir, skip: false, hash, srcPath: f });
+      plan.push({ rel, key, dir, outDir, scale, quality, skip: false, hash, srcPath: f });
     }
   }
   const todoAll = plan.filter((p) => !p.skip);
@@ -264,20 +278,20 @@ if (!isMainThread) {
   async function runOne(job) {
     return new Promise((resolve) => {
       const w = new Worker(fileURLToPath(import.meta.url), {
-        workerData: { rel: job.rel, srcPath: job.srcPath, outDir: job.outDir },
+        workerData: { rel: job.rel, srcPath: job.srcPath, outDir: job.outDir, scale: job.scale, quality: job.quality },
       });
       w.on('message', (m) => {
         done += 1;
         if (m.ok) {
           docs[job.key] = {
             dir: job.dir, pages: m.pages, bytes: m.bytes, sha1: job.hash,
-            scale: SCALE, quality: QUALITY, suspicious: m.suspicious, textPages: m.textPages,
+            scale: job.scale, quality: job.quality, suspicious: m.suspicious, textPages: m.textPages,
           };
           const flag = m.suspicious.length ? ` SUSPICIOUS p.${m.suspicious.join(',')}` : '';
           const noText = m.textPages === 0 ? ' NO-TEXT' : '';
           console.log(`[${done}/${todo.length}] ${job.rel} ${m.pages}p ${(m.bytes / 1024).toFixed(0)}KB${flag}${noText}`);
         } else {
-          docs[job.key] = { dir: job.dir, pages: 0, sha1: job.hash, scale: SCALE, quality: QUALITY, error: m.error };
+          docs[job.key] = { dir: job.dir, pages: 0, sha1: job.hash, scale: job.scale, quality: job.quality, error: m.error };
           console.log(`[${done}/${todo.length}] ${job.rel} ERROR: ${m.error}`);
         }
         writeManifest();
@@ -292,7 +306,7 @@ if (!isMainThread) {
       });
       w.on('error', (err) => {
         done += 1;
-        docs[job.key] = { dir: job.dir, pages: 0, sha1: job.hash, scale: SCALE, quality: QUALITY, error: String(err?.message || err).slice(0, 200) };
+        docs[job.key] = { dir: job.dir, pages: 0, sha1: job.hash, scale: job.scale, quality: job.quality, error: String(err?.message || err).slice(0, 200) };
         console.log(`[${done}/${todo.length}] ${job.rel} WORKER ERROR: ${err?.message}`);
         writeManifest();
         w.terminate();

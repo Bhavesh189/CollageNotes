@@ -4,7 +4,7 @@ import { recordPageView, recordSession, getFrequentlyTogether } from '../lib/stu
 import {
   getFlags, setFlag, getAnnotations, addAnnotation, deleteAnnotation,
   getHighlights, addHighlight, deleteHighlight, getTextHighlights,
-  addTextHighlight, deleteTextHighlight, clearTextHighlights,
+  addTextHighlight, deleteTextHighlight, clearTextHighlights, setTextHighlights,
   getPageBookmarks, togglePageBookmark, FLAG_LABELS,
 } from '../lib/pageMarks';
 import { semestersData } from '../data/notesData';
@@ -159,6 +159,15 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
   const [words, setWords] = useState(null); // words.json pages for this doc
   const [wordsState, setWordsState] = useState('idle'); // idle|loading|ready|none
   const [textHls, setTextHls] = useState({});
+  // Text-highlight undo/redo (2026-11-24): session-scoped per document.
+  // The stacks hold whole-map snapshots of the persisted `thl` state
+  // BEFORE each mutation (add / delete / clear); a new mutation clears
+  // redo. Undo/redo just write a previous snapshot back through the
+  // same helper, so the per-device localStorage persistence is unchanged.
+  const hlUndoRef = useRef([]);
+  const hlRedoRef = useRef([]);
+  const hlFileRef = useRef(file);
+  const [hlHist, setHlHist] = useState({ u: 0, r: 0 }); // stack depths — drives the buttons' disabled states
   const [tapHintSeen, setTapHintSeen] = useState(true);
   const [selPop, setSelPop] = useState(null); // highlight popover {x, y} in wrap %
   const [selColor, setSelColor] = useState(HL_COLORS[0].bg);
@@ -176,6 +185,39 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
     setHighlights(getHighlights(file));
     setTextHls(getTextHighlights(file));
     setPageBookmarks(getPageBookmarks(file));
+  };
+  // --- Text-highlight undo/redo history (refs only, so the keyboard
+  // listener — bound once — never goes stale) ---
+  const syncHlHist = () => setHlHist({ u: hlUndoRef.current.length, r: hlRedoRef.current.length });
+  const recordHlUndo = () => {
+    // Snapshot the CURRENT persisted map before a mutation; cap the stack.
+    try {
+      hlUndoRef.current.push(JSON.parse(JSON.stringify(getTextHighlights(hlFileRef.current))));
+    } catch {
+      hlUndoRef.current.push({});
+    }
+    if (hlUndoRef.current.length > 50) hlUndoRef.current.shift();
+    hlRedoRef.current = [];
+    syncHlHist();
+  };
+  const undoTextHl = () => {
+    if (hlUndoRef.current.length === 0) return;
+    const prev = hlUndoRef.current.pop();
+    hlRedoRef.current.push(getTextHighlights(hlFileRef.current));
+    setTextHighlights(hlFileRef.current, prev);
+    syncHlHist();
+  };
+  const redoTextHl = () => {
+    if (hlRedoRef.current.length === 0) return;
+    const next = hlRedoRef.current.pop();
+    hlUndoRef.current.push(getTextHighlights(hlFileRef.current));
+    setTextHighlights(hlFileRef.current, next);
+    syncHlHist();
+  };
+  // Delete one text highlight, recorded so it can be undone.
+  const removeTextHl = (page, id) => {
+    recordHlUndo();
+    deleteTextHighlight(file, page, id);
   };
   useEffect(refreshMarks, [file]);
   useEffect(() => {
@@ -342,6 +384,21 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
         return;
       }
       if (isTyping(e.target)) return;
+      // Highlight undo/redo (text highlights only): Ctrl+Z undoes the
+      // last add/delete/clear; Ctrl+Shift+Z or Ctrl+Y redoes it. Typing
+      // targets are exempt above, so Ctrl+Z in the note input still does
+      // the browser's text undo.
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        undoTextHl();
+        return;
+      }
+      if (((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') ||
+          ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'z')) {
+        e.preventDefault();
+        redoTextHl();
+        return;
+      }
       if ((e.ctrlKey || e.metaKey) && ['c', 'x', 's'].includes(e.key.toLowerCase())) {
         // Text selection is a real feature now (select mode): allow copying
         // the selected text with Ctrl+C when the selection is inside the
@@ -408,6 +465,12 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
     // ever rendered on reopen. The other mark types (flags/annotations)
     // were never cleared here for the same reason. 2026-11-23.
     setSelPop(null);
+    // Highlight undo/redo history is session-scoped per document — a new
+    // document starts with empty stacks.
+    hlFileRef.current = file;
+    hlUndoRef.current = [];
+    hlRedoRef.current = [];
+    setHlHist({ u: 0, r: 0 });
     clearPendingTap();
     try {
       setTapHintSeen(!!localStorage.getItem('bn-tap-hint-seen'));
@@ -800,6 +863,7 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
       }))
       .filter((r) => r.w > 0.1 && r.h > 0.1);
     if (rects.length === 0) return;
+    recordHlUndo();
     addTextHighlight(file, pageNumber, {
       text: sel.toString().trim().slice(0, 300),
       color: selColor,
@@ -1108,6 +1172,28 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
               <button
                 type="button"
                 className="pdf-nav-btn pdf-fit-btn"
+                onClick={undoTextHl}
+                disabled={hlHist.u === 0}
+                title="Undo highlight (Ctrl+Z)"
+                aria-label="Undo highlight"
+              >
+                <i className="fa-solid fa-rotate-left"></i>
+                <span>Undo</span>
+              </button>
+              <button
+                type="button"
+                className="pdf-nav-btn pdf-fit-btn"
+                onClick={redoTextHl}
+                disabled={hlHist.r === 0}
+                title="Redo highlight (Ctrl+Y)"
+                aria-label="Redo highlight"
+              >
+                <i className="fa-solid fa-rotate-right"></i>
+                <span>Redo</span>
+              </button>
+              <button
+                type="button"
+                className="pdf-nav-btn pdf-fit-btn"
                 onClick={toggleFullscreen}
                 aria-pressed={isFullscreen}
                 title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
@@ -1315,10 +1401,10 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
                 {(textHls[pageNumber] || []).map((h) => (
                   <span key={h.id} className="viewer-note-item" title={h.text || ''}>
                     <span style={{ background: h.color, padding: '0 6px', borderRadius: 4 }}>{(h.text || '').slice(0, 24) || 'highlight'}</span>
-                    <button type="button" aria-label="Delete text highlight" onClick={() => deleteTextHighlight(file, pageNumber, h.id)}>×</button>
+                    <button type="button" aria-label="Delete text highlight" onClick={() => removeTextHl(pageNumber, h.id)}>×</button>
                   </span>
                 ))}
-                <button type="button" className="viewer-chip" onClick={() => clearTextHighlights(file, pageNumber)}>Clear page</button>
+                <button type="button" className="viewer-chip" onClick={() => { recordHlUndo(); clearTextHighlights(file, pageNumber); }}>Clear page</button>
               </div>
             )}
           </div>
@@ -1496,7 +1582,7 @@ const ImageViewer = ({ file, title, onClose, context, onOpenSyllabus, onOpenNext
                       hlClickPosRef.current = null;
                       if (p && Math.hypot(e.clientX - p.x, e.clientY - p.y) > TAP_MAX_MOVE) return;
                       e.stopPropagation();
-                      deleteTextHighlight(file, pageNumber, h.id);
+                      removeTextHl(pageNumber, h.id);
                     }}
                   />
                 ))

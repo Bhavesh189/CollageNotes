@@ -92,6 +92,13 @@ export function clearTextHighlights(file, page) {
   write('thl', file, m);
 }
 
+// Replace the whole text-highlight map for a file (used by undo/redo —
+// the snapshot IS the previous state, so no per-item logic is needed).
+// Same key/shape as the other thl helpers; fires the same change event.
+export function setTextHighlights(file, value) {
+  write('thl', file, value || {});
+}
+
 export function addHighlight(file, page, rect) {
   const m = read('hl', file);
   const arr = m[page] || [];

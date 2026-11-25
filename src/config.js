@@ -4,4 +4,4 @@
 // Toggle this ONE line and push to main to switch. The deploy takes ~20 min.
 // Rule: turn it ON before any maintenance/development push, and OFF only
 // after the work is live and verified.
-export const MAINTENANCE_MODE = true;
+export const MAINTENANCE_MODE = false;

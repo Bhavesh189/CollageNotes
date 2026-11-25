@@ -21,6 +21,8 @@ import { prefetchViewerManifest } from './components/DocViewer';
 import { pyqSubjectsFor } from './lib/subjectPyq';
 import { semestersData } from './data/notesData';
 import { buildSearchIndex } from './lib/searchIndex';
+import { MAINTENANCE_MODE } from './config';
+import MaintenancePage from './components/MaintenancePage';
 
 const TICKER_ITEMS = [
   'Added New B.Tech Semester 2 Notes! Check them now.',
@@ -315,6 +317,8 @@ function App() {
   };
 
   const tickerText = TICKER_ITEMS.join('  •  ') + '  •  ';
+
+  if (MAINTENANCE_MODE) return <MaintenancePage />;
 
   return (
     <div className="app-container">

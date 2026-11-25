@@ -60,20 +60,6 @@ export const semestersData = {
         ]
       },
       {
-        id: 'mefa',
-        name: 'MEFA',
-        image: '/subjects/mefa.jpg',
-        colorClass: 'color-mefa',
-        notes: [
-                    { title: 'Unit 1 — Introduction to Managerial Economics', file: '/notes/sem1/mefa/MEFA-Sem1-Unit-1.pdf' },
-          { title: 'Unit 2 — Demand Analysis, Elasticity and Forecasting', file: '/notes/sem1/mefa/MEFA-Sem1-Unit-2.pdf' },
-          { title: 'Unit 3 — Production, Cost and Break-Even Analysis', file: '/notes/sem1/mefa/MEFA-Sem1-Unit-3.pdf' },
-          { title: 'Unit 4 — Market Structures and Price Determination', file: '/notes/sem1/mefa/MEFA-Sem1-Unit-4.pdf' },
-          { title: 'Unit 5 — Business Organisations, Business Cycles and Financial Accounting', file: '/notes/sem1/mefa/MEFA-Sem1-Unit-5.pdf' },
-          { title: '70 Most Important Questions', file: '/notes/sem1/mefa/MEFA-Sem1-Important-Questions.pdf' },
-        ]
-      },
-      {
         id: 'practical',
         name: 'Practical',
         image: '/subjects/practical.jpg',
@@ -254,45 +240,17 @@ export const semestersData = {
     name: 'Semester 2',
     subjects: [
       {
-        id: 'comm_skills',
-        name: 'Communication Skills',
-        image: '/subjects/comm_skills.jpg',
-        colorClass: 'color-comm_skills',
+        id: 'eng_chem',
+        name: 'Engineering Chemistry',
+        image: '/subjects/chemistry.jpg',
+        colorClass: 'color-chemistry',
         notes: [
-                    { title: 'Unit 1 — Communication: Meaning, Process and Importance', file: '/notes/sem2/communication-skills/Communication-Skills-Sem2-Unit-1.pdf' },
-          { title: 'Unit 2 — Barriers, Listening and Assertiveness', file: '/notes/sem2/communication-skills/Communication-Skills-Sem2-Unit-2.pdf' },
-          { title: 'Unit 3 — Non-Verbal Communication and Reading', file: '/notes/sem2/communication-skills/Communication-Skills-Sem2-Unit-3.pdf' },
-          { title: 'Unit 4 — Writing Skills: Letters, Reports, Resume and Precis', file: '/notes/sem2/communication-skills/Communication-Skills-Sem2-Unit-4.pdf' },
-          { title: 'Unit 5 — English Grammar and Literature', file: '/notes/sem2/communication-skills/Communication-Skills-Sem2-Unit-5.pdf' },
-          { title: '70 Most Important Questions', file: '/notes/sem2/communication-skills/Communication-Skills-Sem2-Important-Questions.pdf' },
-        ]
-      },
-      {
-        id: 'built_env',
-        name: 'Built Environment',
-        image: '/subjects/built_env.jpg',
-        colorClass: 'color-built_env',
-        notes: [
-                    { title: 'Unit 1 — Built Environment: Definition, Need & Elements', file: '/notes/sem2/introduction-to-build-enviroment/IBE-Sem2-Unit-1.pdf' },
-          { title: 'Unit 2 — Modern World Approach: IoT & the Smart Concept', file: '/notes/sem2/introduction-to-build-enviroment/IBE-Sem2-Unit-2.pdf' },
-          { title: 'Unit 3 — Engineering Divisions & Their Roles', file: '/notes/sem2/introduction-to-build-enviroment/IBE-Sem2-Unit-3.pdf' },
-          { title: 'Unit 4 — Building Planning, Bye-laws & Construction', file: '/notes/sem2/introduction-to-build-enviroment/IBE-Sem2-Unit-4.pdf' },
-          { title: 'Unit 5 — Building Physics: Thermal, Lighting & Acoustic Comfort', file: '/notes/sem2/introduction-to-build-enviroment/IBE-Sem2-Unit-5.pdf' },
-          { title: '70 Most Important Questions', file: '/notes/sem2/introduction-to-build-enviroment/IBE-Sem2-Important-Questions.pdf' },
-        ]
-      },
-      {
-        id: 'physics',
-        name: 'Physics',
-        image: '/subjects/physics.jpg',
-        colorClass: 'color-physics',
-        notes: [
-                    { title: 'Unit 1 — Wave Optics', file: '/notes/sem2/physics/Physics-Sem2-Unit-1.pdf' },
-          { title: 'Unit 2 — Quantum Mechanics', file: '/notes/sem2/physics/Physics-Sem2-Unit-2.pdf' },
-          { title: 'Unit 3 — Laser & Optical Fibre', file: '/notes/sem2/physics/Physics-Sem2-Unit-3.pdf' },
-          { title: 'Unit 4 — Semiconductors & Advanced Materials', file: '/notes/sem2/physics/Physics-Sem2-Unit-4.pdf' },
-          { title: 'Unit 5 — Intro to Electromagnetism', file: '/notes/sem2/physics/Physics-Sem2-Unit-5.pdf' },
-          { title: '70 Most Important Questions', file: '/notes/sem2/physics/Physics-Sem2-Important-Questions.pdf' },
+                    { title: 'Unit 1 — Water', file: '/notes/sem2/engineering-chemistry/Engineering-Chemistry-Sem2-Unit-1.pdf' },
+          { title: 'Unit 2 — Organic Fuels', file: '/notes/sem2/engineering-chemistry/Engineering-Chemistry-Sem2-Unit-2.pdf' },
+          { title: 'Unit 3 — Corrosion', file: '/notes/sem2/engineering-chemistry/Engineering-Chemistry-Sem2-Unit-3.pdf' },
+          { title: 'Unit 4 — Engineering Materials', file: '/notes/sem2/engineering-chemistry/Engineering-Chemistry-Sem2-Unit-4.pdf' },
+          { title: 'Unit 5 — Green Chemistry', file: '/notes/sem2/engineering-chemistry/Engineering-Chemistry-Sem2-Unit-5.pdf' },
+          { title: '70 Most Important Questions', file: '/notes/sem2/engineering-chemistry/Engineering-Chemistry-Sem2-Important-Questions.pdf' },
         ]
       },
       {
@@ -324,6 +282,20 @@ export const semestersData = {
         ]
       },
       {
+        id: 'built_env',
+        name: 'Built Environment',
+        image: '/subjects/built_env.jpg',
+        colorClass: 'color-built_env',
+        notes: [
+                    { title: 'Unit 1 — Built Environment: Definition, Need & Elements', file: '/notes/sem2/introduction-to-build-enviroment/IBE-Sem2-Unit-1.pdf' },
+          { title: 'Unit 2 — Modern World Approach: IoT & the Smart Concept', file: '/notes/sem2/introduction-to-build-enviroment/IBE-Sem2-Unit-2.pdf' },
+          { title: 'Unit 3 — Engineering Divisions & Their Roles', file: '/notes/sem2/introduction-to-build-enviroment/IBE-Sem2-Unit-3.pdf' },
+          { title: 'Unit 4 — Building Planning, Bye-laws & Construction', file: '/notes/sem2/introduction-to-build-enviroment/IBE-Sem2-Unit-4.pdf' },
+          { title: 'Unit 5 — Building Physics: Thermal, Lighting & Acoustic Comfort', file: '/notes/sem2/introduction-to-build-enviroment/IBE-Sem2-Unit-5.pdf' },
+          { title: '70 Most Important Questions', file: '/notes/sem2/introduction-to-build-enviroment/IBE-Sem2-Important-Questions.pdf' },
+        ]
+      },
+      {
         id: 'mefa2',
         name: 'Managerial Economics and Financial Accounting',
         image: '/subjects/mefa2.jpg',
@@ -335,62 +307,6 @@ export const semestersData = {
           { title: 'Unit 4 — Market Structures & Price Determination', file: '/notes/sem2/managerial-economics-and-financial-accounting/MEFA-Sem2-Unit-4.pdf' },
           { title: 'Unit 5 — Business Organisation, Final Accounts & Ratio Analysis', file: '/notes/sem2/managerial-economics-and-financial-accounting/MEFA-Sem2-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem2/managerial-economics-and-financial-accounting/MEFA-Sem2-Important-Questions.pdf' },
-        ]
-      },
-      {
-        id: 'bee2',
-        name: 'Basic Electrical Engineering',
-        image: '/subjects/bee.jpg',
-        colorClass: 'color-bee',
-        notes: [
-                    { title: 'Unit 1 — DC Circuits', file: '/notes/sem2/basic-electrical-engineering/BEE-Sem2-Unit-1.pdf' },
-          { title: 'Unit 2 — AC Circuits', file: '/notes/sem2/basic-electrical-engineering/BEE-Sem2-Unit-2.pdf' },
-          { title: 'Unit 3 — Transformer and Electrical Machines', file: '/notes/sem2/basic-electrical-engineering/BEE-Sem2-Unit-3.pdf' },
-          { title: 'Unit 4 — Basic Electronic Devices', file: '/notes/sem2/basic-electrical-engineering/BEE-Sem2-Unit-4.pdf' },
-          { title: 'Unit 5 — Communication System', file: '/notes/sem2/basic-electrical-engineering/BEE-Sem2-Unit-5.pdf' },
-          { title: '70 Most Important Questions', file: '/notes/sem2/basic-electrical-engineering/BEE-Sem2-Important-Questions.pdf' },
-        ]
-      },
-      {
-        id: 'cfp',
-        name: 'Computer Fundamentals & Programming',
-        image: '/subjects/computer.jpg',
-        colorClass: 'color-computer',
-        notes: [
-                    { title: 'Unit 1 — Fundamentals of Computer & Number System', file: '/notes/sem2/computer-fundamentals-programming/CFP-Sem2-Unit-1.pdf' },
-          { title: 'Unit 2 — C Language: Basics, Operators & Input-Output', file: '/notes/sem2/computer-fundamentals-programming/CFP-Sem2-Unit-2.pdf' },
-          { title: 'Unit 3 — Control Statements & Loops in C', file: '/notes/sem2/computer-fundamentals-programming/CFP-Sem2-Unit-3.pdf' },
-          { title: 'Unit 4 — Arrays, Pointers & Structures in C', file: '/notes/sem2/computer-fundamentals-programming/CFP-Sem2-Unit-4.pdf' },
-          { title: 'Unit 5 — Functions, Strings & Files in C', file: '/notes/sem2/computer-fundamentals-programming/CFP-Sem2-Unit-5.pdf' },
-          { title: '70 Most Important Questions', file: '/notes/sem2/computer-fundamentals-programming/CFP-Sem2-Important-Questions.pdf' },
-        ]
-      },
-      {
-        id: 'eng_chem',
-        name: 'Engineering Chemistry',
-        image: '/subjects/chemistry.jpg',
-        colorClass: 'color-chemistry',
-        notes: [
-                    { title: 'Unit 1 — Water', file: '/notes/sem2/engineering-chemistry/Engineering-Chemistry-Sem2-Unit-1.pdf' },
-          { title: 'Unit 2 — Organic Fuels', file: '/notes/sem2/engineering-chemistry/Engineering-Chemistry-Sem2-Unit-2.pdf' },
-          { title: 'Unit 3 — Corrosion', file: '/notes/sem2/engineering-chemistry/Engineering-Chemistry-Sem2-Unit-3.pdf' },
-          { title: 'Unit 4 — Engineering Materials', file: '/notes/sem2/engineering-chemistry/Engineering-Chemistry-Sem2-Unit-4.pdf' },
-          { title: 'Unit 5 — Green Chemistry', file: '/notes/sem2/engineering-chemistry/Engineering-Chemistry-Sem2-Unit-5.pdf' },
-          { title: '70 Most Important Questions', file: '/notes/sem2/engineering-chemistry/Engineering-Chemistry-Sem2-Important-Questions.pdf' },
-        ]
-      },
-      {
-        id: 'python2',
-        name: 'Python Programming',
-        image: '/subjects/python_prog.jpg',
-        colorClass: 'color-computer',
-        notes: [
-                    { title: 'Unit 1 — Introduction to Python, Data Types and Operators', file: '/notes/sem2/python-programming/Python-Programming-Sem2-Unit-1.pdf' },
-          { title: 'Unit 2 — Decision Making, Loops and Functions', file: '/notes/sem2/python-programming/Python-Programming-Sem2-Unit-2.pdf' },
-          { title: 'Unit 3 — Lists, Tuples, Dictionaries and Sets', file: '/notes/sem2/python-programming/Python-Programming-Sem2-Unit-3.pdf' },
-          { title: 'Unit 4 — Functions in Depth and File Handling', file: '/notes/sem2/python-programming/Python-Programming-Sem2-Unit-4.pdf' },
-          { title: 'Unit 5 — NumPy, Sets and Data Visualization', file: '/notes/sem2/python-programming/Python-Programming-Sem2-Unit-5.pdf' },
-          { title: '70 Most Important Questions', file: '/notes/sem2/python-programming/Python-Programming-Sem2-Important-Questions.pdf' },
         ]
       },
     ]
@@ -526,20 +442,6 @@ export const semestersData = {
         ]
       },
       {
-        id: 'mefa3',
-        name: 'Managerial Economics & Financial Accounting',
-        image: '/subjects/mefa.jpg',
-        colorClass: 'color-mefa',
-        notes: [
-                    { title: 'Unit 1 — Introduction to Managerial Economics', file: '/notes/sem3/managerial-economics-and-financial-accounting/MEFA-Sem3-Unit-1.pdf' },
-          { title: 'Unit 2 — Demand, Elasticity, Forecasting & Supply', file: '/notes/sem3/managerial-economics-and-financial-accounting/MEFA-Sem3-Unit-2.pdf' },
-          { title: 'Unit 3 — Production, Costs & Break-Even Analysis', file: '/notes/sem3/managerial-economics-and-financial-accounting/MEFA-Sem3-Unit-3.pdf' },
-          { title: 'Unit 4 — Market Structures & Price Determination', file: '/notes/sem3/managerial-economics-and-financial-accounting/MEFA-Sem3-Unit-4.pdf' },
-          { title: 'Unit 5 — Business Organisation, Final Accounts & Ratio Analysis', file: '/notes/sem3/managerial-economics-and-financial-accounting/MEFA-Sem3-Unit-5.pdf' },
-          { title: '70 Most Important Questions', file: '/notes/sem3/managerial-economics-and-financial-accounting/MEFA-Sem3-Important-Questions.pdf' },
-        ]
-      },
-      {
         id: 'pic',
         name: 'Principles of Imperative Computation',
         image: '/subjects/computer.jpg',
@@ -551,20 +453,6 @@ export const semestersData = {
           { title: 'Unit 4 — The C Language: Structure, Features, Pointers and Behaviour', file: '/notes/sem3/principles-of-imperative-computation/PIC-Sem3-Unit-4.pdf' },
           { title: 'Unit 5 — Memory, Modularity and Libraries: Building Large Programs', file: '/notes/sem3/principles-of-imperative-computation/PIC-Sem3-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem3/principles-of-imperative-computation/PIC-Sem3-Important-Questions.pdf' },
-        ]
-      },
-      {
-        id: 'tc3',
-        name: 'Technical Communication',
-        image: '/subjects/tech_comm.jpg',
-        colorClass: 'color-comm_skills',
-        notes: [
-                    { title: 'Unit 1 — Foundations of Technical Communication', file: '/notes/sem3/technical-communication/TC-Sem3-Unit-1.pdf' },
-          { title: 'Unit 2 — Reading and Note-Making', file: '/notes/sem3/technical-communication/TC-Sem3-Unit-2.pdf' },
-          { title: 'Unit 3 — Technical Writing and Style', file: '/notes/sem3/technical-communication/TC-Sem3-Unit-3.pdf' },
-          { title: 'Unit 4 — Technical Reports and Project Proposals', file: '/notes/sem3/technical-communication/TC-Sem3-Unit-4.pdf' },
-          { title: 'Unit 5 — Business Communication in Practice', file: '/notes/sem3/technical-communication/TC-Sem3-Unit-5.pdf' },
-          { title: '70 Most Important Questions', file: '/notes/sem3/technical-communication/TC-Sem3-Important-Questions.pdf' },
         ]
       },
     ]
@@ -655,34 +543,6 @@ export const semestersData = {
         ]
       },
       {
-        id: 'coa4',
-        name: 'Computer Organization and Architecture',
-        image: '/subjects/computer-architecture.jpg',
-        colorClass: 'color-bee',
-        notes: [
-                    { title: 'Unit 1 — Register Transfer and Micro Operations', file: '/notes/sem4/computer-organization-and-architecture/Computer-Organization-and-Architecture-Sem4-Unit-1.pdf' },
-          { title: 'Unit 2 — Basic Computer Organization & Design', file: '/notes/sem4/computer-organization-and-architecture/Computer-Organization-and-Architecture-Sem4-Unit-2.pdf' },
-          { title: 'Unit 3 — Central Processing Unit', file: '/notes/sem4/computer-organization-and-architecture/Computer-Organization-and-Architecture-Sem4-Unit-3.pdf' },
-          { title: 'Unit 4 — Pipeline and Vector Processing & Computer Arithmetic', file: '/notes/sem4/computer-organization-and-architecture/Computer-Organization-and-Architecture-Sem4-Unit-4.pdf' },
-          { title: 'Unit 5 — Input-Output and Memory Organization', file: '/notes/sem4/computer-organization-and-architecture/Computer-Organization-and-Architecture-Sem4-Unit-5.pdf' },
-          { title: '70 Most Important Questions', file: '/notes/sem4/computer-organization-and-architecture/Computer-Organization-and-Architecture-Sem4-Important-Questions.pdf' },
-        ]
-      },
-      {
-        id: 'iml',
-        name: 'Introduction to Machine Learning',
-        image: '/subjects/machine-learning.jpg',
-        colorClass: 'color-computer',
-        notes: [
-                    { title: 'Unit 1 — Supervised Learning', file: '/notes/sem4/introduction-to-machine-learning/Introduction-to-Machine-Learning-Sem4-Unit-1.pdf' },
-          { title: 'Unit 2 — Unsupervised Learning', file: '/notes/sem4/introduction-to-machine-learning/Introduction-to-Machine-Learning-Sem4-Unit-2.pdf' },
-          { title: 'Unit 3 — Statistical Learning Theory', file: '/notes/sem4/introduction-to-machine-learning/Introduction-to-Machine-Learning-Sem4-Unit-3.pdf' },
-          { title: 'Unit 4 — Semi-Supervised & Reinforcement Learning', file: '/notes/sem4/introduction-to-machine-learning/Introduction-to-Machine-Learning-Sem4-Unit-4.pdf' },
-          { title: 'Unit 5 — Recommender Systems & Neural Networks', file: '/notes/sem4/introduction-to-machine-learning/Introduction-to-Machine-Learning-Sem4-Unit-5.pdf' },
-          { title: '70 Most Important Questions', file: '/notes/sem4/introduction-to-machine-learning/Introduction-to-Machine-Learning-Sem4-Important-Questions.pdf' },
-        ]
-      },
-      {
         id: 'iwt',
         name: 'Introduction to Web Technology',
         image: '/subjects/computer-networks.jpg',
@@ -697,20 +557,6 @@ export const semestersData = {
         ]
       },
       {
-        id: 'mefa4',
-        name: 'Managerial Economics & Financial Accounting',
-        image: '/subjects/mefa.jpg',
-        colorClass: 'color-mefa',
-        notes: [
-                    { title: 'Unit 1 — Introduction to Managerial Economics', file: '/notes/sem4/managerial-economics-and-financial-accounting/Managerial-Economics-and-Financial-Accounting-Sem4-Unit-1.pdf' },
-          { title: 'Unit 2 — Demand, Elasticity, Forecasting & Supply', file: '/notes/sem4/managerial-economics-and-financial-accounting/Managerial-Economics-and-Financial-Accounting-Sem4-Unit-2.pdf' },
-          { title: 'Unit 3 — Production, Costs & Break-Even Analysis', file: '/notes/sem4/managerial-economics-and-financial-accounting/Managerial-Economics-and-Financial-Accounting-Sem4-Unit-3.pdf' },
-          { title: 'Unit 4 — Market Structures & Price Determination', file: '/notes/sem4/managerial-economics-and-financial-accounting/Managerial-Economics-and-Financial-Accounting-Sem4-Unit-4.pdf' },
-          { title: 'Unit 5 — Business Organisation, Final Accounts & Ratio Analysis', file: '/notes/sem4/managerial-economics-and-financial-accounting/Managerial-Economics-and-Financial-Accounting-Sem4-Unit-5.pdf' },
-          { title: '70 Most Important Questions', file: '/notes/sem4/managerial-economics-and-financial-accounting/Managerial-Economics-and-Financial-Accounting-Sem4-Important-Questions.pdf' },
-        ]
-      },
-      {
         id: 'spt',
         name: 'Statistics and Probability Theory',
         image: '/subjects/maths.jpg',
@@ -722,20 +568,6 @@ export const semestersData = {
           { title: 'Unit 4 — Queueing Theory', file: '/notes/sem4/statistics-and-probability-theory/Statistics-and-Probability-Theory-Sem4-Unit-4.pdf' },
           { title: 'Unit 5 — Markov Process and Stochastic Processes', file: '/notes/sem4/statistics-and-probability-theory/Statistics-and-Probability-Theory-Sem4-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem4/statistics-and-probability-theory/Statistics-and-Probability-Theory-Sem4-Important-Questions.pdf' },
-        ]
-      },
-      {
-        id: 'tc4',
-        name: 'Technical Communication',
-        image: '/subjects/tech_comm.jpg',
-        colorClass: 'color-comm_skills',
-        notes: [
-                    { title: 'Unit 1 — Communication and Technical Communication', file: '/notes/sem4/technical-communication/Technical-Communication-Sem4-Unit-1.pdf' },
-          { title: 'Unit 2 — Listening, Reading and Note Taking', file: '/notes/sem4/technical-communication/Technical-Communication-Sem4-Unit-2.pdf' },
-          { title: 'Unit 3 — Writing Skills and Technical Writing', file: '/notes/sem4/technical-communication/Technical-Communication-Sem4-Unit-3.pdf' },
-          { title: 'Unit 4 — Business Letters, Email and Job Applications', file: '/notes/sem4/technical-communication/Technical-Communication-Sem4-Unit-4.pdf' },
-          { title: 'Unit 5 — Reports, Proposals and Literature', file: '/notes/sem4/technical-communication/Technical-Communication-Sem4-Unit-5.pdf' },
-          { title: '70 Most Important Questions', file: '/notes/sem4/technical-communication/Technical-Communication-Sem4-Important-Questions.pdf' },
         ]
       },
     ] },

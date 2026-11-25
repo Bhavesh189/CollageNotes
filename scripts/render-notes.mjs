@@ -61,7 +61,8 @@ const PYQ_DIR = path.join(ROOT, 'public', 'pyq');
 const OUT = path.join(ROOT, 'public', 'generated');
 const SCALE = 1.5;
 const QUALITY = 80;
-// HANDWRITTEN (2026-11-25): the handwritten notes + PYQ solutions are clean
+// HANDWRITTEN (2026-11-25): the handwritten notes (Full + unit-wise splits)
+// + PYQ solutions are clean
 // vector text (Patrick Hand) on white — they stay crisp at a lower raster
 // scale, and render ~35% smaller (measured: BEE 92p, 193 -> 125 KB/page).
 // Typed/scanned docs keep SCALE 1.5 / QUALITY 80. Per-doc settings are
@@ -69,7 +70,10 @@ const QUALITY = 80;
 const HW_SCALE = 1.25;
 const HW_QUALITY = 70;
 const isHandwritten = (rel) =>
-  rel.includes('-Handwritten-Notes-Full.pdf') || rel.startsWith('pyq-solutions/');
+  rel.includes('-Handwritten-Notes-Full.pdf') ||
+  /-Sem\d+-Unit-[1-7]\.pdf$/.test(rel) ||
+  rel.endsWith('-Important-Questions.pdf') ||
+  rel.startsWith('pyq-solutions/');
 const settingsFor = (rel) =>
   isHandwritten(rel) ? { scale: HW_SCALE, quality: HW_QUALITY } : { scale: SCALE, quality: QUALITY };
 const THUMB_W = 128; // filmstrip thumbs display at 64px (52px on phones) — 128px = 2x

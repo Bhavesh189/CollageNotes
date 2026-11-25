@@ -418,6 +418,8 @@ export function handwriteTargets(docs) {
     .filter(([key, e]) =>
       (key.startsWith('/notes/sem2/') || key.startsWith('/notes/sem3/')) &&
       !key.endsWith('-Handwritten-Notes-Full.pdf') &&
+      !/-Sem\d+-Unit-[1-7]\.pdf$/.test(key) &&
+      !key.endsWith('-Important-Questions.pdf') &&
       e && e.pages > 0 && !e.error && e.textPages && e.pages &&
       e.textPages / e.pages > 0.5)
     .map(([key, e]) => ({ key, entry: e, rel: key.slice(1) }));

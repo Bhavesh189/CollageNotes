@@ -177,7 +177,7 @@ function answerFindNotes(entities) {
       type: 'note',
       sort: 'relevance',
     });
-    if (results.length > 0) scopeNote = ' (us semester me nahi mila, saare semesters me dikha raha hoon)';
+    if (results.length > 0) scopeNote = ' (not found in that semester — showing results from all semesters)';
   }
   if (entities.unit) {
     const u = `unit ${entities.unit}`;
@@ -187,13 +187,13 @@ function answerFindNotes(entities) {
   if (results.length === 0) {
     return {
       reply:
-        'Isse match karte notes nahi mile. Subject ka naam seedha likh ke try karo — e.g. “dsa unit 3 sem 4”.',
+        'No notes matched. Try typing the subject name directly — e.g. “dsa unit 3 sem 4”.',
       results: [],
     };
   }
   const shown = toResults(results);
   return {
-    reply: `${results.length} note${results.length === 1 ? '' : 's'} mile${scopeNote} — top ${shown.length} ye rahe:`,
+    reply: `${results.length} note${results.length === 1 ? '' : 's'} found${scopeNote} — here are the top ${shown.length}:`,
     results: shown,
   };
 }
@@ -212,23 +212,23 @@ function answerFindPyq(entities) {
   if (results.length === 0) {
     return {
       reply:
-        'Isse match karte PYQ papers nahi mile. Hamare PYQ collection me Semester 3 CSE ke papers hain — try karo “dsa pyq 2024”.',
+        'No PYQ papers matched. Our PYQ collection has Semester 3 CSE papers — try “dsa pyq 2024”.',
       results: [],
     };
   }
   const shown = toResults(results);
   return {
-    reply: `${results.length} PYQ paper${results.length === 1 ? '' : 's'} mile — top ${shown.length} ye rahe:`,
+    reply: `${results.length} PYQ paper${results.length === 1 ? '' : 's'} found — here are the top ${shown.length}:`,
     results: shown,
   };
 }
 
 const HELP_TEXT =
-  'Main study material dhoondh sakta hoon aur notes se topic samjha sakta hoon. Try karo:\n• “aem chapter 1 sem 3”\n• “dsa unit 3 sem 4”\n• “pyq 2024” ya “previous year papers”\n• “Carnot cycle kya hai?” — main exact page ke saath quote karta hoon';
+  'I can find study material and explain topics from your notes. Try:\n• “aem chapter 1 sem 3”\n• “dsa unit 3 sem 4”\n• “pyq 2024” or “previous year papers”\n• “What is the Carnot cycle?” — I quote with the exact page';
 
 export function getBotReply(rawText) {
   const text = norm(rawText).trim();
-  if (!text) return { reply: 'Kuch likho — e.g. “dsa unit 2 sem 4”.', results: [] };
+  if (!text) return { reply: 'Type something — e.g. “dsa unit 2 sem 4”.', results: [] };
 
   const intent = classifyIntent(text);
   const entities = extractEntities(text);
@@ -238,11 +238,11 @@ export function getBotReply(rawText) {
       return { reply: 'Bhavesh Sharma made this site — and me. I am just here to help you find your notes.', results: [] };
     case 'greeting':
       return {
-        reply: 'Namaste! Notes chahiye to aise likho “aem chapter 1 sem 3”, papers ke liye “pyq 2024”, ya topic poochho jaise “Carnot cycle kya hai?” — main notes se hi jawab deta hoon.',
+        reply: 'Hello! For notes, type something like “aem chapter 1 sem 3”; for papers, “pyq 2024”; or ask a topic like “What is the Carnot cycle?” — I answer from your notes only.',
         results: [],
       };
     case 'thanks':
-      return { reply: 'Koi baat nahi! Padhai ke liye all the best.', results: [] };
+      return { reply: 'You are welcome! All the best with your studies.', results: [] };
     case 'help':
       return { reply: HELP_TEXT, results: [] };
     case 'find_pyq':
@@ -250,14 +250,14 @@ export function getBotReply(rawText) {
     case 'find_notes':
       if (!entities.subject && !entities.semester) {
         return {
-          reply: 'Kaunsa subject? Try karo “dsa unit 2 sem 4” ya “operating systems sem 5”.',
+          reply: 'Which subject? Try “dsa unit 2 sem 4” or “operating systems sem 5”.',
           results: [],
         };
       }
       return answerFindNotes(entities);
     default:
       return {
-        reply: 'Main notes dhoondhne me madad kar sakta hoon — try karo “dsa unit 3 sem 4” ya “pyq 2024”.',
+        reply: 'I can help you find notes — try “dsa unit 3 sem 4” or “pyq 2024”.',
         results: [],
       };
   }

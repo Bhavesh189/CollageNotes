@@ -866,7 +866,7 @@ export async function answerFromNotes(question, opts = {}) {
       hits: hits.slice(0, 4),
       candidates: [],
       synthesis,
-      followUps: [`${sides[0].label} ke baare me aur batao`, `${sides[1].label} ke baare me aur batao`],
+      followUps: [`Tell me more about ${sides[0].label}`, `Tell me more about ${sides[1].label}`],
       questionType: 'difference',
       topic,
       difference: perSide.map((s) => ({ label: s.label, excerpt: s.hits[0].excerpt })),
@@ -889,11 +889,11 @@ export async function answerFromNotes(question, opts = {}) {
     const key = `${h.subject} ${h.title}`;
     if (seenTopics.has(key)) continue;
     seenTopics.add(key);
-    followUps.push(`${h.subject ? `${h.subject} — ` : ''}${h.title} ke baare me aur batao`);
+    followUps.push(`${h.subject ? `${h.subject} — ` : ''}Tell me more about ${h.title}`);
     if (followUps.length >= 2) break;
   }
-  if (followUps.length === 0) followUps.push('Iska example do');
-  if (followUps.length < 2) followUps.push(nq.type === 'example' ? 'Steps batao' : 'Iska example do');
+  if (followUps.length === 0) followUps.push('Show an example');
+  if (followUps.length < 2) followUps.push(nq.type === 'example' ? 'Show the steps' : 'Show an example');
   // The follow-up topic is the CONCEPT ('carnot cycle'), not the subject
   // ('mechanical engineering') — "aur batao" must re-ask the concept.
   const topic = nq.conceptTerms.join(' ') || nq.subject || '';

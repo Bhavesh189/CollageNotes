@@ -91,7 +91,7 @@ const AddNotesForm = () => {
     } catch (error) {
       setSubmitStatus('error');
       setIsSubmitting(false);
-      alert("Server Busy hai badme krio");
+      alert("Server is busy — please try again later.");
       // Fallback redirect preserved from add.js
       window.location.href = "https://wa.me/+916376411796";
     }

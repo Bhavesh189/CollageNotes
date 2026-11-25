@@ -4,7 +4,7 @@ import { answerFromNotes, isTopicQuestion, tokenize, isFollowUp, followUpKind } 
 
 // No "Who created you?" chip — the answer is correct when asked, but it is
 // not advertised (humble credit lives in the footer line below instead).
-const QUICK_REPLIES = ['DSA notes dhoondo', 'PYQ 2024', 'Tum kya kar sakte ho?'];
+const QUICK_REPLIES = ['Find DSA notes', 'PYQ 2024', 'What can you do?'];
 
 /** Semester the student is currently viewing, from the URL hash (#sem4).
  * Used as a ranking context — answers from the viewed semester rank higher.
@@ -30,7 +30,7 @@ const AiChat = ({ onPreview }) => {
   const [messages, setMessages] = useState([
     {
       from: 'bot',
-      text: 'Namaste! Main notes aur PYQ dhoondhta hoon — aur kisi topic ko notes se samjha bhi sakta hoon. Try karo: “Carnot cycle kya hai?” ya “dsa unit 2 sem 4”.',
+      text: 'Hello! I find notes and PYQ papers — and I can explain any topic from your notes. Try: “What is the Carnot cycle?” or “dsa unit 2 sem 4”.',
       results: [],
     },
   ]);
@@ -101,7 +101,7 @@ const AiChat = ({ onPreview }) => {
             turns: Math.min(ctxRef.current.turns + 1, 3),
           };
           const correctedNote = (rag.corrected && rag.corrected.length > 0)
-            ? `\n(Tumne “${rag.corrected[0].from}” likha tha — maine “${rag.corrected[0].to}” samjha.)`
+            ? `\n(You wrote “${rag.corrected[0].from}” — I read it as “${rag.corrected[0].to}”.)`
             : '';
           let lines;
           if (rag.questionType === 'difference' && rag.difference) {
@@ -113,7 +113,7 @@ const AiChat = ({ onPreview }) => {
               (h) => `**${h.title} — page ${h.page}:**\n${h.excerpt}`,
             );
           }
-          reply = `Short me: ${rag.synthesis}\n\nNotes me is baare me ye likha hai:\n\n${lines.join('\n\n')}\n\nNeeche wale note pe tap karke us page ko kholo.${correctedNote}`;
+          reply = `In short: ${rag.synthesis}\n\nHere is what your notes say about this:\n\n${lines.join('\n\n')}\n\nTap a note below to open that page.${correctedNote}`;
           results = rag.hits.map((h) => ({ ...h, page: h.page }));
           const extra = rag.hits.filter((h) => h.excerptMore).map((h) => ({ title: h.title, page: h.page, text: h.excerptMore }));
           const followUps = rag.followUps || [];
@@ -121,18 +121,18 @@ const AiChat = ({ onPreview }) => {
           setMessages((m) => [...m, { from: 'bot', text: reply, results, extra, followUps }]);
           return;
         } else if (rag.status === 'no-index') {
-          reply = 'Notes abhi searchable index me convert ho rahe hain, isliye main abhi sirf title se notes dhoondh sakta hoon — try karo “dsa unit 3 sem 4”. Conversion complete hote hi topic wale jawab apne aap on ho jayenge.';
+          reply = 'Your notes are still being converted into a searchable index, so I can only search by title for now — try “dsa unit 3 sem 4”. Topic answers will switch on automatically once the conversion is complete.';
           results = (rag.candidates || []).slice(0, 3);
         } else {
           const entities = extractEntities(text);
-          const subject = entities.subject ? ` **${entities.subject}** pe` : '';
+          const subject = entities.subject ? ` on **${entities.subject}**` : '';
           // Only point at "closest notes" when there actually are some —
           // otherwise the line promises cards that never appear.
           const cands = (rag.candidates || []).slice(0, 3);
           if (followUp) {
-            reply = `Is topic pe notes me aur kuch nahi mila — jo tha wo upar dikha diya. ${cands.length > 0 ? 'Koi aur topic poochho, ya neeche closest notes dekho.' : 'Koi aur topic poochho.'}`;
+            reply = `I found nothing more on this topic in your notes — everything I found is shown above. ${cands.length > 0 ? 'Ask about another topic, or see the closest notes below.' : 'Ask about another topic.'}`;
           } else {
-            reply = `Maine notes me${subject} “${topic || text}” ke baare me kuch nahi paya. Ho sakta hai ye topic notes me cover hi na hua ho — spelling check karke dobara try karo${cands.length > 0 ? ', ya neeche closest notes dekho.' : '.'}`;
+            reply = `I found nothing about “${topic || text}” in your notes${subject}. This topic may not be covered in the notes — check the spelling and try again${cands.length > 0 ? ', or see the closest notes below.' : '.'}`;
           }
           results = cands;
         }
@@ -173,14 +173,14 @@ const AiChat = ({ onPreview }) => {
                     </>
                   ) : (
                     <button type="button" className="aichat-more-btn" onClick={() => setExpandedExtra((s) => new Set(s).add(i))}>
-                      In pages se aur dikhao ({msg.extra.length})
+                      Show more from these pages ({msg.extra.length})
                     </button>
                   )}
                 </div>
               )}
               {msg.followUps && msg.followUps.length > 0 && (
                 <div className="aichat-followups">
-                  <span>Aage badho:</span>
+                  <span>Go further:</span>
                   {msg.followUps.map((f, fi) => (
                     <button key={fi} type="button" className="aichat-followup-chip" onClick={() => send(f)}>
                       {f}
@@ -235,7 +235,7 @@ const AiChat = ({ onPreview }) => {
           className="form-input aichat-input"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Sawaal likho… e.g. Carnot cycle kya hai?"
+          placeholder="Ask a question… e.g. What is the Carnot cycle?"
           aria-label="Chat message"
           autoComplete="off"
         />

@@ -10,15 +10,15 @@ export default function MaintenancePage() {
         <div className="maintenance-icon">
           <Wrench size={38} />
         </div>
-        <h1>Site Maintenance me hai</h1>
+        <h1>Site Under Maintenance</h1>
         <p className="maintenance-sub">
-          Hum notes ko aur behtar bana rahe hain — Unit-wise notes jald aa rahe hain.
+          We are improving your notes — unit-wise notes are coming soon.
         </p>
         <p className="maintenance-note">
-          Thodi der me wapas aayenge. Page ko refresh karke dobara try karein.
+          We will be back shortly. Refresh the page to try again.
         </p>
         <button className="maintenance-refresh" onClick={() => window.location.reload()}>
-          <RefreshCw size={18} /> Refresh karein
+          <RefreshCw size={18} /> Refresh
         </button>
         <p className="maintenance-foot">Bhavesh Notes</p>
       </div>

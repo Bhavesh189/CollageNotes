@@ -94,7 +94,7 @@ const LoginModal = ({ isOpen, onClose, onUnlock }) => {
 
         <div className="login-support-link">
           <a 
-            href="https://wa.me/916376411796?text=Hello%20sir%20plz%20Give%20me%20id%20pass"
+            href="https://wa.me/916376411796?text=Hello%2C%20could%20you%20please%20share%20the%20login%20ID%20and%20password%20for%20Bhavesh%20Notes%3F"
             target="_blank"
             rel="noopener noreferrer"
           >

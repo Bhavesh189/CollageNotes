@@ -25,9 +25,15 @@ const QUOTES = [
 ];
 const quoteOfDay = () => QUOTES[new Date().getDate() % QUOTES.length];
 
-// Count files in a subject (notes + subnotes, skip placeholders)
-const countNotes = (subject) =>
-  (subject.notes || []).reduce(
+// Count files in a subject (notes + subnotes, skip placeholders).
+// Dual mode (2026-11-26): 'normal' = old typed notes (default), 'ai' =
+// handwritten AI notes. normalNotes undefined (Practical / Mid-Sem) means
+// the subject is unchanged — same list in both modes. normalNotes [] means
+// an AI-only subject (hidden from the grid in normal mode).
+const modeNotesOf = (subject, mode) =>
+  mode === 'normal' ? (subject.normalNotes === undefined ? subject.notes : subject.normalNotes) : subject.notes;
+const countNotes = (subject, mode) =>
+  (modeNotesOf(subject, mode) || []).reduce(
     (n, note) => n + (note.subnotes ? note.subnotes.length : (note.isPlaceholder ? 0 : 1)),
     0
   );
@@ -41,6 +47,14 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
   const [preview, setPreview] = useState(null); // { file, title, context }
   const [filterText, setFilterText] = useState('');
   const [sortBy, setSortBy] = useState('name'); // 'name' | 'files' | 'recent'
+  // Dual mode (2026-11-26): 'normal' = old typed notes (default), 'ai' = handwritten AI notes. Persisted in localStorage.
+  const [notesMode, setNotesMode] = useState(() => {
+    try { return localStorage.getItem('bn-notes-mode') || 'normal'; } catch { return 'normal'; }
+  });
+  const changeNotesMode = (m) => {
+    setNotesMode(m);
+    try { localStorage.setItem('bn-notes-mode', m); } catch { /* ignore */ }
+  };
   const [, setBmTick] = useState(0);
   // F3 — list tools on the subject detail view + home extras.
   const [unitFilter, setUnitFilter] = useState('all');
@@ -95,15 +109,20 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
 
   const visibleSubjects = useMemo(() => {
     const q = filterText.trim().toLowerCase();
-    const list = semData.subjects.filter((s) => !q || s.name.toLowerCase().includes(q));
+    // Normal mode shows only subjects that have normal notes (AI-only
+    // subjects — normalNotes [] — are hidden; switch to AI Notes for them).
+    const list = semData.subjects.filter((s) => {
+      if (notesMode === 'normal' && Array.isArray(s.normalNotes) && s.normalNotes.length === 0) return false;
+      return !q || s.name.toLowerCase().includes(q);
+    });
     if (sortBy === 'files') {
-      return [...list].sort((a, b) => countNotes(b) - countNotes(a) || a.name.localeCompare(b.name));
+      return [...list].sort((a, b) => countNotes(b, notesMode) - countNotes(a, notesMode) || a.name.localeCompare(b.name));
     }
     if (sortBy === 'recent') {
       return [...list].sort((a, b) => latestPyqYear(b.id) - latestPyqYear(a.id) || a.name.localeCompare(b.name));
     }
     return [...list].sort((a, b) => a.name.localeCompare(b.name));
-  }, [semData, filterText, sortBy]);
+  }, [semData, filterText, sortBy, notesMode]);
 
   const handleSubjectClick = (subject) => {
     if (subject.secured && !isAuthenticated) {
@@ -137,7 +156,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
   // Flatten a subject's notes (incl. subnote folders) into uniform rows.
   const flatNotes = (subject) => {
     const rows = [];
-    (subject.notes || []).forEach((note, index) => {
+    (modeNotesOf(subject, notesMode) || []).forEach((note, index) => {
       if (note.subnotes) {
         note.subnotes.forEach((sub, sIdx) => {
           rows.push({ key: `${index}:${sIdx}`, note: sub, parent: note, index, sIdx, title: `${note.title} — ${sub.title}`, file: sub.file });
@@ -265,7 +284,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
 
 
   const subjectBadge = (sub) => {
-    const n = countNotes(sub);
+    const n = countNotes(sub, notesMode);
     if (n > 0) return `${n} file${n === 1 ? '' : 's'}`;
     if (pyqCountFor(sub.id) > 0) return 'PYQ papers';
     return 'Coming soon';
@@ -289,6 +308,13 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
             </button>
             <h2 className="panel-title">{selectedSubject.name} Notes</h2>
             <div style={{ width: '80px' }}></div>
+          </div>
+
+          {/* Dual mode toggle: Normal (old typed) notes by default, AI (handwritten) on demand */}
+          <div className="notes-mode-toggle" role="group" aria-label="Notes mode" style={{ display: 'flex', gap: '8px', alignItems: 'center', justifyContent: 'center', margin: '0.25rem 0 0.75rem' }}>
+            <span className="notes-tools-label">Notes</span>
+            <button type="button" className={`viewer-chip ${notesMode === 'normal' ? 'active' : ''}`} onClick={() => changeNotesMode('normal')}>Normal Notes</button>
+            <button type="button" className={`viewer-chip ${notesMode === 'ai' ? 'active' : ''}`} onClick={() => changeNotesMode('ai')}>AI Notes</button>
           </div>
 
           {/* F3 — list tools: unit + type filters, sort, density, view, status */}
@@ -372,6 +398,18 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
               if (rows.length === 0) {
                 const anyNotes = flatNotes(selectedSubject).length > 0;
                 if (!anyNotes) {
+                  if (notesMode === 'normal' && Array.isArray(selectedSubject.normalNotes) && selectedSubject.normalNotes.length === 0) {
+                    return (
+                      <div className="coming-soon-card glass" style={{ margin: '2rem auto' }}>
+                        <i className="fa-solid fa-hourglass-half coming-soon-icon"></i>
+                        <h3>No normal notes for this subject</h3>
+                        <p>{selectedSubject.name} has AI notes only. Switch to AI Notes to read them.</p>
+                        <button className="back-btn" type="button" style={{ margin: '1rem auto 0' }} onClick={() => changeNotesMode('ai')}>
+                          <i className="fa-solid fa-wand-magic-sparkles"></i> Show AI Notes
+                        </button>
+                      </div>
+                    );
+                  }
                   return (
                     <div className="coming-soon-card glass" style={{ margin: '2rem auto' }}>
                       <i className="fa-solid fa-hourglass-half coming-soon-icon"></i>
@@ -669,7 +707,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
               )}
               <div className="section-head">
                 <h2>{semData.name}</h2>
-                <span className="section-count">{semData.subjects.length} subjects</span>
+                <span className="section-count">{visibleSubjects.length} subjects</span>
                 <button type="button" className="home-extra-btn" onClick={copySemLink} title="Copy a link that opens this semester">
                   <i className="fa-solid fa-link"></i> {copiedSem ? 'Link copied!' : 'Share semester'}
                 </button>
@@ -695,6 +733,10 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
                   <option value="files">Sort: Most files</option>
                   <option value="recent">Sort: Recently added</option>
                 </select>
+                {/* Dual mode toggle: Normal (old typed) notes by default, AI (handwritten) on demand */}
+                <span className="notes-tools-label">Notes</span>
+                <button type="button" className={`viewer-chip ${notesMode === 'normal' ? 'active' : ''}`} onClick={() => changeNotesMode('normal')}>Normal Notes</button>
+                <button type="button" className={`viewer-chip ${notesMode === 'ai' ? 'active' : ''}`} onClick={() => changeNotesMode('ai')}>AI Notes</button>
               </div>
               {visibleSubjects.length > 0 ? (
                 <div className="subjects-grid">

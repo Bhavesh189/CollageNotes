@@ -15,6 +15,11 @@ export const semestersData = {
           { title: 'Unit 4 — Arrays, Pointers & Structures', file: '/notes/sem1/computer/CFP-Sem1-Unit-4.pdf' },
           { title: 'Unit 5 — Functions, Strings & Files', file: '/notes/sem1/computer/CFP-Sem1-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem1/computer/CFP-Sem1-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: '1. C ALL notes 1,2,3 Merged', file: '/notes/sem1/computer/normal/cin1.pdf' },
+          { title: '2. Previous Year Full Book', file: '/notes/sem1/computer/normal/pc.pdf' },
+          { title: '!!! 70 IMP QUES !!!', file: '/notes/sem1/computer/normal/70 CF&P Updated Importnt question (1)BCA.pdf' },
         ]
       },
       {
@@ -29,6 +34,21 @@ export const semestersData = {
           { title: 'Unit 4 — Engineering Materials', file: '/notes/sem1/chemistry/Chemistry-Sem1-Unit-4.pdf' },
           { title: 'Unit 5 — Green Chemistry', file: '/notes/sem1/chemistry/Chemistry-Sem1-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem1/chemistry/Chemistry-Sem1-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: '1. Corrosion', file: '/notes/sem1/chemistry/normal/co.pdf' },
+          { title: '1. Corrosion part 2', file: '/notes/sem1/chemistry/normal/U2[CORROSION].pdf' },
+          { title: '2. Lubricants', file: '/notes/sem1/chemistry/normal/lc.pdf' },
+          { title: '2. Engineering Materials one shot', file: '/notes/sem1/chemistry/normal/U1[Engineering Materials].pdf' },
+          { title: '3. Water + Boiler Troubles', file: '/notes/sem1/chemistry/normal/ce1.pdf' },
+          { title: '4. Fuel', file: '/notes/sem1/chemistry/normal/chemfuel.pdf' },
+          { title: '5. Green Chemistry', file: '/notes/sem1/chemistry/normal/g.pdf' },
+          { title: '6. All Unit 1', file: '/notes/sem1/chemistry/normal/CHEMISTRY UNIT 1.pdf' },
+          { title: '7. All Unit 2', file: '/notes/sem1/chemistry/normal/CHEMISTRY UNIT 2.pdf' },
+          { title: '8. All Unit 3', file: '/notes/sem1/chemistry/normal/CHEMISTRY UNIT 3.pdf' },
+          { title: '9. All Unit 4', file: '/notes/sem1/chemistry/normal/CHEMISTRY UNIT 4.pdf' },
+          { title: '10. All Unit 5', file: '/notes/sem1/chemistry/normal/CHEMISTRY UNIT 5.pdf' },
+          { title: '!!! IMP QUES 70 QUES !!!', file: '/notes/sem1/chemistry/normal/Engg. Chemistry Imp. 70 question (1).pdf' },
         ]
       },
       {
@@ -43,6 +63,15 @@ export const semestersData = {
           { title: 'Unit 4 — Differential Equations-II: Second Order Equations with Variable Coefficients', file: '/notes/sem1/maths/Maths-Sem1-Unit-4.pdf' },
           { title: 'Unit 5 — Partial Differential Equations: Lagrange\'s Form, Standard Forms and Charpit\'s Method', file: '/notes/sem1/maths/Maths-Sem1-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem1/maths/Maths-Sem1-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: '1. Mathematics 1', file: '/notes/sem1/maths/normal/ma111.pdf' },
+          { title: '2. Maths Full Book Answers', file: '/notes/sem1/maths/normal/f.pdf' },
+          { title: '3. Maths Assignment', file: 'https://acrobat.adobe.com/id/urn:aaid:sc:AP:9c2918d3-b1b4-4410-9ddf-2162308daee1', isExternal: true },
+          { title: '3. Maths Assignment Answers', file: '/notes/sem1/maths/normal/mi.pdf' },
+          { title: '3. Maths 10 Minutes Revision', file: '/notes/sem1/maths/normal/Mathsimp.pdf' },
+          { title: 'Unit 3 Differential Equations (handwritten)', file: '/notes/sem1/maths/normal/b.pdf' },
+          { title: 'Differential Equations Solved Examples (handwritten)', file: '/notes/sem1/maths/normal/maths1.pdf' },
         ]
       },
       {
@@ -57,6 +86,13 @@ export const semestersData = {
           { title: 'Unit 4 — Basic Electronic Devices', file: '/notes/sem1/bee/BEE-Sem1-Unit-4.pdf' },
           { title: 'Unit 5 — Communication System', file: '/notes/sem1/bee/BEE-Sem1-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem1/bee/BEE-Sem1-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: '1. 1st Chapter in Normal Handwritten', file: '/notes/sem1/bee/normal/bee.pdf.docx.pdf' },
+          { title: '2. 2nd Chapter in Normal Handwritten', file: '/notes/sem1/bee/normal/bee2.docx.pdf' },
+          { title: '3. 3rd Chapter in Normal Handwritten', file: '/notes/sem1/bee/normal/3b.pdf' },
+          { title: '4. 4th Chapter in Normal Handwritten', file: '/notes/sem1/bee/normal/4b.pdf' },
+          { title: '5. Important Notes', file: '/notes/sem1/bee/normal/imp.pdf' },
         ]
       },
       {
@@ -119,7 +155,8 @@ export const semestersData = {
           { title: 'Unit 4 — Transportation Engineering', file: '/notes/sem1/basic-civil-engineering/BCE-Sem1-Unit-4.pdf' },
           { title: 'Unit 5 — Environment, Water and Waste', file: '/notes/sem1/basic-civil-engineering/BCE-Sem1-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem1/basic-civil-engineering/BCE-Sem1-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'bme',
@@ -133,7 +170,8 @@ export const semestersData = {
           { title: 'Unit 4 — Engineering Materials and Manufacturing Processes', file: '/notes/sem1/basic-mechanical-engineering/BME-Sem1-Unit-4.pdf' },
           { title: 'Unit 5 — Power Transmission and Fluid Machines', file: '/notes/sem1/basic-mechanical-engineering/BME-Sem1-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem1/basic-mechanical-engineering/BME-Sem1-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'csk',
@@ -147,6 +185,9 @@ export const semestersData = {
           { title: 'Unit 4 — Essentials of Grammar', file: '/notes/sem1/communication-skills/CSK-Sem1-Unit-4.pdf' },
           { title: 'Unit 5 — Communication through Poems and Short Stories', file: '/notes/sem1/communication-skills/CSK-Sem1-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem1/communication-skills/CSK-Sem1-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: '70 IMP + All Syllabus', file: '/notes/sem2/communication-skills/normal/2ndseminpcomm.pdf' },
         ]
       },
       {
@@ -161,7 +202,8 @@ export const semestersData = {
           { title: 'Unit 4 — Engineering Materials and Manufacturing Processes', file: '/notes/sem1/elements-of-mechanical-engineering/EME-Sem1-Unit-4.pdf' },
           { title: 'Unit 5 — Belt, Rope and Chain Drives, Gears and Gear Trains', file: '/notes/sem1/elements-of-mechanical-engineering/EME-Sem1-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem1/elements-of-mechanical-engineering/EME-Sem1-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'ep',
@@ -175,6 +217,14 @@ export const semestersData = {
           { title: 'Unit 4 — Physics of Advanced Materials', file: '/notes/sem1/engineering-physics/EP-Sem1-Unit-4.pdf' },
           { title: 'Unit 5 — Introduction to Electromagnetism', file: '/notes/sem1/engineering-physics/EP-Sem1-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem1/engineering-physics/EP-Sem1-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: '70 IMP and Full syllabus', file: '/notes/sem2/physics/normal/PhysicsIMP.pdf' },
+          { title: 'Unit 1 - Wave Optics', file: '/notes/sem2/physics/normal/UNIT-1(WAVE OPTICS).pdf' },
+          { title: 'Unit 2', file: '/notes/sem2/physics/normal/PHYSICS U2.pdf' },
+          { title: 'Unit 3 - Laser', file: '/notes/sem2/physics/normal/UNIT-3(LASER).pdf' },
+          { title: 'Unit 4 - Semiconductors', file: '/notes/sem2/physics/normal/UNIT-4(SEMICONDUUCTORS).pdf' },
+          { title: 'Unit 5 - Electromagnetism', file: '/notes/sem2/physics/normal/UNIT-5(INTRO TO ELECTROMAGNETISM).pdf' },
         ]
       },
       {
@@ -189,7 +239,8 @@ export const semestersData = {
           { title: 'Unit 4 — Harmony in Nature and Existence', file: '/notes/sem1/human-values/HV-Sem1-Unit-4.pdf' },
           { title: 'Unit 5 — Professional Ethics and Harmony in Practice', file: '/notes/sem1/human-values/HV-Sem1-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem1/human-values/HV-Sem1-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'ibe',
@@ -203,7 +254,8 @@ export const semestersData = {
           { title: 'Unit 4 — Historical Architecture and Modern Structural Design', file: '/notes/sem1/introduction-to-built-environment/IBE-Sem1-Unit-4.pdf' },
           { title: 'Unit 5 — Building Physics, Ergonomics and Comfort', file: '/notes/sem1/introduction-to-built-environment/IBE-Sem1-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem1/introduction-to-built-environment/IBE-Sem1-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'pps',
@@ -217,7 +269,8 @@ export const semestersData = {
           { title: 'Unit 4 — Arrays, Pointers & Structures', file: '/notes/sem1/programming-for-problem-solving/PPS-Sem1-Unit-4.pdf' },
           { title: 'Unit 5 — Functions, Strings & Files', file: '/notes/sem1/programming-for-problem-solving/PPS-Sem1-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem1/programming-for-problem-solving/PPS-Sem1-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'tc1',
@@ -231,7 +284,8 @@ export const semestersData = {
           { title: 'Unit 4 — Harmony in Nature and Existence', file: '/notes/sem1/technical-communication/TC-Sem1-Unit-4.pdf' },
           { title: 'Unit 5 — Right Understanding, Relationship and Physical Facility', file: '/notes/sem1/technical-communication/TC-Sem1-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem1/technical-communication/TC-Sem1-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
     ]
   },
@@ -251,7 +305,8 @@ export const semestersData = {
           { title: 'Unit 4 — Engineering Materials', file: '/notes/sem2/engineering-chemistry/Engineering-Chemistry-Sem2-Unit-4.pdf' },
           { title: 'Unit 5 — Green Chemistry', file: '/notes/sem2/engineering-chemistry/Engineering-Chemistry-Sem2-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem2/engineering-chemistry/Engineering-Chemistry-Sem2-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'maths2',
@@ -265,6 +320,13 @@ export const semestersData = {
           { title: 'Unit 4 — Double Integrals', file: '/notes/sem2/engineering-mathematics-2/Engineering-Mathematics-2-Sem2-Unit-4.pdf' },
           { title: 'Unit 5 — Vector Calculus', file: '/notes/sem2/engineering-mathematics-2/Engineering-Mathematics-2-Sem2-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem2/engineering-mathematics-2/Engineering-Mathematics-2-Sem2-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem2/engineering-mathematics-2/normal/em2-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem2/engineering-mathematics-2/normal/em2-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem2/engineering-mathematics-2/normal/em2-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem2/engineering-mathematics-2/normal/em2-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem2/engineering-mathematics-2/normal/em2-unit-5.pdf' },
         ]
       },
       {
@@ -279,6 +341,13 @@ export const semestersData = {
           { title: 'Unit 4 — Engineering Materials and Manufacturing Processes', file: '/notes/sem2/element-of-mecnanical-engineering/EME-Sem2-Unit-4.pdf' },
           { title: 'Unit 5 — Belt, Rope and Chain Drives, Gears and Gear Trains', file: '/notes/sem2/element-of-mecnanical-engineering/EME-Sem2-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem2/element-of-mecnanical-engineering/EME-Sem2-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1 - Notes', file: '/notes/sem2/element-of-mecnanical-engineering/normal/EME- UNIT 01.pdf' },
+          { title: 'Unit 2', file: '/notes/sem2/element-of-mecnanical-engineering/normal/eme-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem2/element-of-mecnanical-engineering/normal/EME UNIT - III.pdf' },
+          { title: 'Unit 4', file: '/notes/sem2/element-of-mecnanical-engineering/normal/EME Unit-IV.pdf' },
+          { title: 'Unit 5', file: '/notes/sem2/element-of-mecnanical-engineering/normal/EME-UNIT-5.pdf' },
         ]
       },
       {
@@ -293,6 +362,15 @@ export const semestersData = {
           { title: 'Unit 4 — Building Planning, Bye-laws & Construction', file: '/notes/sem2/introduction-to-build-enviroment/IBE-Sem2-Unit-4.pdf' },
           { title: 'Unit 5 — Building Physics: Thermal, Lighting & Acoustic Comfort', file: '/notes/sem2/introduction-to-build-enviroment/IBE-Sem2-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem2/introduction-to-build-enviroment/IBE-Sem2-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1 - Notes', file: '/notes/sem2/introduction-to-build-enviroment/normal/UNIT-1 NOTES.pdf' },
+          { title: 'Unit 2, 3, 4 Merge', file: '/notes/sem2/introduction-to-build-enviroment/normal/UNIT 3,2,4.pdf.pdf' },
+          { title: 'Unit 1', file: '/notes/sem2/introduction-to-build-enviroment/normal/ibe-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem2/introduction-to-build-enviroment/normal/ibe-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem2/introduction-to-build-enviroment/normal/ibe-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem2/introduction-to-build-enviroment/normal/ibe-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem2/introduction-to-build-enviroment/normal/ibe-unit-5.pdf' },
         ]
       },
       {
@@ -307,6 +385,24 @@ export const semestersData = {
           { title: 'Unit 4 — Market Structures & Price Determination', file: '/notes/sem2/managerial-economics-and-financial-accounting/MEFA-Sem2-Unit-4.pdf' },
           { title: 'Unit 5 — Business Organisation, Final Accounts & Ratio Analysis', file: '/notes/sem2/managerial-economics-and-financial-accounting/MEFA-Sem2-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem2/managerial-economics-and-financial-accounting/MEFA-Sem2-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem2/managerial-economics-and-financial-accounting/normal/mefa-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem2/managerial-economics-and-financial-accounting/normal/mefa-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem2/managerial-economics-and-financial-accounting/normal/mefa-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem2/managerial-economics-and-financial-accounting/normal/mefa-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem2/managerial-economics-and-financial-accounting/normal/mefa-unit-5.pdf' },
+          { title: '1. 1st Chapter Sir wala', file: '/notes/sem1/mefa/normal/mefa1.pdf' },
+          { title: '1.1 1st Chapter Sir wala (Part 2)', file: '/notes/sem1/mefa/normal/mefa1p.pdf' },
+          { title: '2. 2nd Chapter Sir wala', file: '/notes/sem1/mefa/normal/mefa2.pdf' },
+          { title: '3. Cost', file: '/notes/sem1/mefa/normal/cost.pdf' },
+          { title: '3. Unit 3 Production', file: '/notes/sem1/mefa/normal/m3p.pdf' },
+          { title: '4. 4th Chapter Sir wala', file: '/notes/sem1/mefa/normal/m4.pdf' },
+          { title: '5. 5th Chapter Sir wala', file: '/notes/sem1/mefa/normal/m51.pdf' },
+          { title: '5. Part 2 Chapter 5', file: '/notes/sem1/mefa/normal/m52.pdf' },
+          { title: '5. Part 3 Chapter 5', file: '/notes/sem1/mefa/normal/m53.pdf' },
+          { title: '5. Part 4 Chapter 5', file: '/notes/sem1/mefa/normal/m54.pdf' },
+          { title: '!!! MEFA IMP 70 QUES !!!', file: '/notes/sem1/mefa/normal/MEFA_imp_Q & A_Merged.pdf' },
         ]
       },
     ]
@@ -327,6 +423,13 @@ export const semestersData = {
           { title: 'Unit 4 — Linear Programming, Transportation and Assignment', file: '/notes/sem3/adv-engineering-mathematics/AEM-Sem3-Unit-4.pdf' },
           { title: 'Unit 5 — Numerical Methods', file: '/notes/sem3/adv-engineering-mathematics/AEM-Sem3-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem3/adv-engineering-mathematics/AEM-Sem3-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem3/adv-engineering-mathematics/normal/aem-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem3/adv-engineering-mathematics/normal/aem-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem3/adv-engineering-mathematics/normal/aem-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem3/adv-engineering-mathematics/normal/aem-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem3/adv-engineering-mathematics/normal/aem-unit-5.pdf' },
         ]
       },
       {
@@ -341,6 +444,12 @@ export const semestersData = {
           { title: 'Unit 4 — Sequential Logic Circuits Design', file: '/notes/sem3/digital-electronics/DE-Sem3-Unit-4.pdf' },
           { title: 'Unit 5 — Logic Families', file: '/notes/sem3/digital-electronics/DE-Sem3-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem3/digital-electronics/DE-Sem3-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem3/digital-electronics/normal/de-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem3/digital-electronics/normal/de-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem3/digital-electronics/normal/de-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem3/digital-electronics/normal/de-unit-4.pdf' },
         ]
       },
       {
@@ -355,6 +464,21 @@ export const semestersData = {
           { title: 'Unit 4 — Trees', file: '/notes/sem3/data-structures-algorithms/DSA-Sem3-Unit-4.pdf' },
           { title: 'Unit 5 — Graphs and Hashing', file: '/notes/sem3/data-structures-algorithms/DSA-Sem3-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem3/data-structures-algorithms/DSA-Sem3-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Prerequisite: Linked List', file: '/notes/sem3/data-structures-algorithms/normal/dsa-prerequisite-linked-list.pdf' },
+          { title: 'Unit 1', file: '/notes/sem3/data-structures-algorithms/normal/dsa-unit-1.pdf' },
+          { title: 'Unit 2 (Part 1)', file: '/notes/sem3/data-structures-algorithms/normal/dsa-unit-2-part-1.pdf' },
+          { title: 'Unit 2 (Part 2)', file: '/notes/sem3/data-structures-algorithms/normal/dsa-unit-2-part-2.pdf' },
+          { title: 'Unit 2 (Part 3)', file: '/notes/sem3/data-structures-algorithms/normal/dsa-unit-2-part-3.pdf' },
+          { title: 'Unit 2 (Complete) (Part 1)', file: '/notes/sem3/data-structures-algorithms/normal/dsa-unit-2-complete-part-1.pdf' },
+          { title: 'Unit 2 (Complete) (Part 2)', file: '/notes/sem3/data-structures-algorithms/normal/dsa-unit-2-complete-part-2.pdf' },
+          { title: 'Unit 2 (Complete) (Part 3)', file: '/notes/sem3/data-structures-algorithms/normal/dsa-unit-2-complete-part-3.pdf' },
+          { title: 'Unit 2 (Complete) (Part 4)', file: '/notes/sem3/data-structures-algorithms/normal/dsa-unit-2-complete-part-4.pdf' },
+          { title: 'Unit 3', file: '/notes/sem3/data-structures-algorithms/normal/dsa-unit-3.pdf' },
+          { title: 'Unit 3 (Complete)', file: '/notes/sem3/data-structures-algorithms/normal/dsa-unit-3-complete.pdf' },
+          { title: 'Unit 4', file: '/notes/sem3/data-structures-algorithms/normal/dsa-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem3/data-structures-algorithms/normal/dsa-unit-5.pdf' },
         ]
       },
       {
@@ -369,6 +493,13 @@ export const semestersData = {
           { title: 'Unit 4 — Memory Management', file: '/notes/sem3/oop-using-c/OOP-Sem3-Unit-4.pdf' },
           { title: 'Unit 5 — Templates, STL, Iostreams, Namespaces & OOD', file: '/notes/sem3/oop-using-c/OOP-Sem3-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem3/oop-using-c/OOP-Sem3-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem3/oop-using-c/normal/oop-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem3/oop-using-c/normal/oop-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem3/oop-using-c/normal/oop-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem3/oop-using-c/normal/oop-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem3/oop-using-c/normal/oop-unit-5.pdf' },
         ]
       },
       {
@@ -383,6 +514,13 @@ export const semestersData = {
           { title: 'Unit 4 — Software Design', file: '/notes/sem3/software-engineering/SE-Sem3-Unit-4.pdf' },
           { title: 'Unit 5 — Object-Oriented Analysis, Design & UML', file: '/notes/sem3/software-engineering/SE-Sem3-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem3/software-engineering/SE-Sem3-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem3/software-engineering/normal/se-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem3/software-engineering/normal/se-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem3/software-engineering/normal/se-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem3/software-engineering/normal/se-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem3/software-engineering/normal/se-unit-5.pdf' },
         ]
       },
       {
@@ -397,6 +535,13 @@ export const semestersData = {
           { title: 'Unit 4 — Shell Programming: Variables, Operators & Control', file: '/notes/sem3/linux-and-shell-programming/LSP-Sem3-Unit-4.pdf' },
           { title: 'Unit 5 — Compiling, Packages, Version Control & awk', file: '/notes/sem3/linux-and-shell-programming/LSP-Sem3-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem3/linux-and-shell-programming/LSP-Sem3-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem3/linux-and-shell-programming/normal/lsp-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem3/linux-and-shell-programming/normal/lsp-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem3/linux-and-shell-programming/normal/lsp-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem3/linux-and-shell-programming/normal/lsp-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem3/linux-and-shell-programming/normal/lsp-unit-5.pdf' },
         ]
       },
       {
@@ -411,7 +556,8 @@ export const semestersData = {
           { title: 'Unit 4 — Uncertainty and Fuzzy Logic', file: '/notes/sem3/introduction-to-artificial-intelligence/IAI-Sem3-Unit-4.pdf' },
           { title: 'Unit 5 — Machine Learning', file: '/notes/sem3/introduction-to-artificial-intelligence/IAI-Sem3-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem3/introduction-to-artificial-intelligence/IAI-Sem3-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'ics',
@@ -425,7 +571,8 @@ export const semestersData = {
           { title: 'Unit 4 — Authentication, Web and Email Security: X.509, SSL, PGP, S/MIME and Replay', file: '/notes/sem3/introduction-to-cyber-security/ICS-Sem3-Unit-4.pdf' },
           { title: 'Unit 5 — Network Security, Attacks and Malware: Firewall, IDS, Buffer Overflow, DoS and DDoS', file: '/notes/sem3/introduction-to-cyber-security/ICS-Sem3-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem3/introduction-to-cyber-security/ICS-Sem3-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'ids',
@@ -439,7 +586,8 @@ export const semestersData = {
           { title: 'Unit 4 — Machine Learning Foundations', file: '/notes/sem3/introduction-to-data-science/IDS-Sem3-Unit-4.pdf' },
           { title: 'Unit 5 — Dimensionality Reduction, Feature Selection & Evaluation', file: '/notes/sem3/introduction-to-data-science/IDS-Sem3-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem3/introduction-to-data-science/IDS-Sem3-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'pic',
@@ -453,7 +601,8 @@ export const semestersData = {
           { title: 'Unit 4 — The C Language: Structure, Features, Pointers and Behaviour', file: '/notes/sem3/principles-of-imperative-computation/PIC-Sem3-Unit-4.pdf' },
           { title: 'Unit 5 — Memory, Modularity and Libraries: Building Large Programs', file: '/notes/sem3/principles-of-imperative-computation/PIC-Sem3-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem3/principles-of-imperative-computation/PIC-Sem3-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
     ]
   },
@@ -470,6 +619,13 @@ export const semestersData = {
           { title: 'Unit 4 — Graph Theory & Trees', file: '/notes/sem4/discrete-mathematics/Discrete-Mathematics-Sem4-Unit-4.pdf' },
           { title: 'Unit 5 — Algebraic Structures & Groups', file: '/notes/sem4/discrete-mathematics/Discrete-Mathematics-Sem4-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem4/discrete-mathematics/Discrete-Mathematics-Sem4-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem4/discrete-mathematics/normal/dm-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem4/discrete-mathematics/normal/dm-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem4/discrete-mathematics/normal/dm-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem4/discrete-mathematics/normal/dm-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem4/discrete-mathematics/normal/dm-unit-5.pdf' },
         ]
       },
       {
@@ -484,6 +640,13 @@ export const semestersData = {
           { title: 'Unit 4 — Architecture of 8051', file: '/notes/sem4/microprocessor-and-interfaces/Microprocessor-and-Interfaces-Sem4-Unit-4.pdf' },
           { title: 'Unit 5 — Programming and Application of 8051', file: '/notes/sem4/microprocessor-and-interfaces/Microprocessor-and-Interfaces-Sem4-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem4/microprocessor-and-interfaces/Microprocessor-and-Interfaces-Sem4-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem4/microprocessor-and-interfaces/normal/mpi-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem4/microprocessor-and-interfaces/normal/mpi-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem4/microprocessor-and-interfaces/normal/mpi-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem4/microprocessor-and-interfaces/normal/mpi-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem4/microprocessor-and-interfaces/normal/mpi-unit-5.pdf' },
         ]
       },
       {
@@ -498,6 +661,13 @@ export const semestersData = {
           { title: 'Unit 4 — Turing Machines', file: '/notes/sem4/theory-of-computation/Theory-of-Computation-Sem4-Unit-4.pdf' },
           { title: 'Unit 5 — Decidability and Computational Complexity', file: '/notes/sem4/theory-of-computation/Theory-of-Computation-Sem4-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem4/theory-of-computation/Theory-of-Computation-Sem4-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem4/theory-of-computation/normal/toc-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem4/theory-of-computation/normal/toc-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem4/theory-of-computation/normal/toc-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem4/theory-of-computation/normal/toc-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem4/theory-of-computation/normal/toc-unit-5.pdf' },
         ]
       },
       {
@@ -512,6 +682,13 @@ export const semestersData = {
           { title: 'Unit 4 — Transactions & Serializability', file: '/notes/sem4/database-management-systems/DBMS-Sem4-Unit-4.pdf' },
           { title: 'Unit 5 — Concurrency Control, Deadlock & Recovery', file: '/notes/sem4/database-management-systems/DBMS-Sem4-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem4/database-management-systems/DBMS-Sem4-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem4/database-management-systems/normal/dbms-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem4/database-management-systems/normal/dbms-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem4/database-management-systems/normal/dbms-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem4/database-management-systems/normal/dbms-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem4/database-management-systems/normal/dbms-unit-5.pdf' },
         ]
       },
       {
@@ -526,6 +703,13 @@ export const semestersData = {
           { title: 'Unit 4 — Functions, Recursion, Lambda & File Handling', file: '/notes/sem4/python-programming/Python-Programming-Sem4-Unit-4.pdf' },
           { title: 'Unit 5 — NumPy: Arrays & Vectorised Computation', file: '/notes/sem4/python-programming/Python-Programming-Sem4-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem4/python-programming/Python-Programming-Sem4-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem4/python-programming/normal/py-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem4/python-programming/normal/py-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem4/python-programming/normal/py-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem4/python-programming/normal/py-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem4/python-programming/normal/py-unit-5.pdf' },
         ]
       },
       {
@@ -540,6 +724,13 @@ export const semestersData = {
           { title: 'Unit 4 — Multithreaded Programming', file: '/notes/sem4/java-programming/Java-Programming-Sem4-Unit-4.pdf' },
           { title: 'Unit 5 — I/O, Applets, Networking & JDBC', file: '/notes/sem4/java-programming/Java-Programming-Sem4-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem4/java-programming/Java-Programming-Sem4-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem4/java-programming/normal/jav-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem4/java-programming/normal/jav-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem4/java-programming/normal/jav-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem4/java-programming/normal/jav-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem4/java-programming/normal/jav-unit-5.pdf' },
         ]
       },
       {
@@ -554,7 +745,8 @@ export const semestersData = {
           { title: 'Unit 4 — PHP and Server-Side', file: '/notes/sem4/introduction-to-web-technology/Introduction-to-Web-Technology-Sem4-Unit-4.pdf' },
           { title: 'Unit 5 — Cookies, Sessions and Web Design', file: '/notes/sem4/introduction-to-web-technology/Introduction-to-Web-Technology-Sem4-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem4/introduction-to-web-technology/Introduction-to-Web-Technology-Sem4-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'spt',
@@ -568,7 +760,8 @@ export const semestersData = {
           { title: 'Unit 4 — Queueing Theory', file: '/notes/sem4/statistics-and-probability-theory/Statistics-and-Probability-Theory-Sem4-Unit-4.pdf' },
           { title: 'Unit 5 — Markov Process and Stochastic Processes', file: '/notes/sem4/statistics-and-probability-theory/Statistics-and-Probability-Theory-Sem4-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem4/statistics-and-probability-theory/Statistics-and-Probability-Theory-Sem4-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
     ] },
   sem5: { id: 'sem5', name: 'Semester 5', subjects: [
@@ -584,6 +777,13 @@ export const semestersData = {
           { title: 'Unit 4 — File Management', file: '/notes/sem5/operating-systems/Operating-Systems-Sem5-Unit-4.pdf' },
           { title: 'Unit 5 — Linux and Unix Case Study', file: '/notes/sem5/operating-systems/Operating-Systems-Sem5-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem5/operating-systems/Operating-Systems-Sem5-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem5/operating-systems/normal/os-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem5/operating-systems/normal/os-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem5/operating-systems/normal/os-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem5/operating-systems/normal/os-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem5/operating-systems/normal/os-unit-5.pdf' },
         ]
       },
       {
@@ -598,6 +798,13 @@ export const semestersData = {
           { title: 'Unit 4 — Pipeline and Vector Processing & Computer Arithmetic', file: '/notes/sem5/computer-org-architecture/Computer-Organization-and-Architecture-Sem5-Unit-4.pdf' },
           { title: 'Unit 5 — Input-Output and Memory Organization', file: '/notes/sem5/computer-org-architecture/Computer-Organization-and-Architecture-Sem5-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem5/computer-org-architecture/Computer-Organization-and-Architecture-Sem5-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem5/computer-org-architecture/normal/coa-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem5/computer-org-architecture/normal/coa-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem5/computer-org-architecture/normal/coa-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem5/computer-org-architecture/normal/coa-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem5/computer-org-architecture/normal/coa-unit-5.pdf' },
         ]
       },
       {
@@ -612,6 +819,13 @@ export const semestersData = {
           { title: 'Unit 4 — Transport Layer', file: '/notes/sem5/computer-networks/Computer-Networks-Sem5-Unit-4.pdf' },
           { title: 'Unit 5 — Application Layer', file: '/notes/sem5/computer-networks/Computer-Networks-Sem5-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem5/computer-networks/Computer-Networks-Sem5-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem5/computer-networks/normal/cn-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem5/computer-networks/normal/cn-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem5/computer-networks/normal/cn-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem5/computer-networks/normal/cn-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem5/computer-networks/normal/cn-unit-5.pdf' },
         ]
       },
       {
@@ -626,6 +840,13 @@ export const semestersData = {
           { title: 'Unit 4 — Cloud Security, BCP/DRP, Risk & SLA', file: '/notes/sem5/cloud-computing-devops/Cloud-Computing-and-DevOps-Sem5-Unit-4.pdf' },
           { title: 'Unit 5 — AWS, Azure, Aneka & Cloud Applications', file: '/notes/sem5/cloud-computing-devops/Cloud-Computing-and-DevOps-Sem5-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem5/cloud-computing-devops/Cloud-Computing-and-DevOps-Sem5-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem5/cloud-computing-devops/normal/cc-dev-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem5/cloud-computing-devops/normal/cc-dev-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem5/cloud-computing-devops/normal/cc-dev-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem5/cloud-computing-devops/normal/cc-dev-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem5/cloud-computing-devops/normal/cc-dev-unit-5.pdf' },
         ]
       },
       {
@@ -640,6 +861,13 @@ export const semestersData = {
           { title: 'Unit 4 — Semi-Supervised & Reinforcement Learning', file: '/notes/sem5/machine-learning/Machine-Learning-Sem5-Unit-4.pdf' },
           { title: 'Unit 5 — Recommender Systems & Neural Networks', file: '/notes/sem5/machine-learning/Machine-Learning-Sem5-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem5/machine-learning/Machine-Learning-Sem5-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem5/machine-learning/normal/ml-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem5/machine-learning/normal/ml-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem5/machine-learning/normal/ml-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem5/machine-learning/normal/ml-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem5/machine-learning/normal/ml-unit-5.pdf' },
         ]
       },
       {
@@ -654,6 +882,13 @@ export const semestersData = {
           { title: 'Unit 4 — Frequent Pattern Mining & Association Rules', file: '/notes/sem5/data-mining-warehousing/Data-Mining-and-Warehousing-Sem5-Unit-4.pdf' },
           { title: 'Unit 5 — Advanced Topics, Applications & Social Impacts', file: '/notes/sem5/data-mining-warehousing/Data-Mining-and-Warehousing-Sem5-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem5/data-mining-warehousing/Data-Mining-and-Warehousing-Sem5-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem5/data-mining-warehousing/normal/dmw-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem5/data-mining-warehousing/normal/dmw-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem5/data-mining-warehousing/normal/dmw-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem5/data-mining-warehousing/normal/dmw-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem5/data-mining-warehousing/normal/dmw-unit-5.pdf' },
         ]
       },
       {
@@ -668,6 +903,13 @@ export const semestersData = {
           { title: 'Unit 4 — Distributed Shared Memory', file: '/notes/sem5/distributed-systems/Distributed-Systems-Sem5-Unit-4.pdf' },
           { title: 'Unit 5 — Distributed Agreement and CORBA', file: '/notes/sem5/distributed-systems/Distributed-Systems-Sem5-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem5/distributed-systems/Distributed-Systems-Sem5-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem5/distributed-systems/normal/ds-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem5/distributed-systems/normal/ds-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem5/distributed-systems/normal/ds-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem5/distributed-systems/normal/ds-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem5/distributed-systems/normal/ds-unit-5.pdf' },
         ]
       },
       {
@@ -682,7 +924,8 @@ export const semestersData = {
           { title: 'Unit 4 — Dynamic Programming: Knapsack, LCS and Matrix Chains', file: '/notes/sem5/analysis-of-algorithms/Analysis-of-Algorithms-Sem5-Unit-4.pdf' },
           { title: 'Unit 5 — Backtracking, Branch and Bound, Randomised and NP-Complete Problems', file: '/notes/sem5/analysis-of-algorithms/Analysis-of-Algorithms-Sem5-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem5/analysis-of-algorithms/Analysis-of-Algorithms-Sem5-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'avr',
@@ -696,7 +939,8 @@ export const semestersData = {
           { title: 'Unit 4 — Rendering the Virtual World: Projection, Light and Depth', file: '/notes/sem5/augmented-and-virtual-reality/Augmented-and-Virtual-Reality-Sem5-Unit-4.pdf' },
           { title: 'Unit 5 — Tools and Applications: Games, Film, Engineering, Education and Therapy', file: '/notes/sem5/augmented-and-virtual-reality/Augmented-and-Virtual-Reality-Sem5-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem5/augmented-and-virtual-reality/Augmented-and-Virtual-Reality-Sem5-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'cgm',
@@ -710,7 +954,8 @@ export const semestersData = {
           { title: 'Unit 4 — Colour, Light, Shading and Shadows', file: '/notes/sem5/computer-graphics-and-multimedia/Computer-Graphics-and-Multimedia-Sem5-Unit-4.pdf' },
           { title: 'Unit 5 — Animation, Fractals and Projections', file: '/notes/sem5/computer-graphics-and-multimedia/Computer-Graphics-and-Multimedia-Sem5-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem5/computer-graphics-and-multimedia/Computer-Graphics-and-Multimedia-Sem5-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'hci',
@@ -724,7 +969,8 @@ export const semestersData = {
           { title: 'Unit 4 — Design: Task Analysis, Interface Design, Prototyping and Dialog Design', file: '/notes/sem5/human-computer-interaction/Human-Computer-Interaction-Sem5-Unit-4.pdf' },
           { title: 'Unit 5 — Evaluation and Methods: Heuristics, Experiments and Formal Models', file: '/notes/sem5/human-computer-interaction/Human-Computer-Interaction-Sem5-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem5/human-computer-interaction/Human-Computer-Interaction-Sem5-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'itc',
@@ -738,7 +984,8 @@ export const semestersData = {
           { title: 'Unit 4 — Block Codes and Cyclic Codes: Linear Codes, Hamming and Cyclic Codes', file: '/notes/sem5/information-theory-and-coding/Information-Theory-and-Coding-Sem5-Unit-4.pdf' },
           { title: 'Unit 5 — Convolutional Codes and Error Control: State Diagrams, Viterbi and ARQ', file: '/notes/sem5/information-theory-and-coding/Information-Theory-and-Coding-Sem5-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem5/information-theory-and-coding/Information-Theory-and-Coding-Sem5-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'blockchain',
@@ -752,7 +999,8 @@ export const semestersData = {
           { title: 'Unit 4 — Architecture and Cryptography in Depth', file: '/notes/sem5/introduction-to-blockchain/Introduction-to-Blockchain-Sem5-Unit-4.pdf' },
           { title: 'Unit 5 — Applications: Supply Chains, Healthcare, Trading and the Economy', file: '/notes/sem5/introduction-to-blockchain/Introduction-to-Blockchain-Sem5-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem5/introduction-to-blockchain/Introduction-to-Blockchain-Sem5-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'ml_apps',
@@ -766,7 +1014,8 @@ export const semestersData = {
           { title: 'Unit 4 — Bayesian Learning: Bayes, Naive Bayes and Belief Networks', file: '/notes/sem5/machine-learning-and-its-applications/Machine-Learning-and-its-Applications-Sem5-Unit-4.pdf' },
           { title: 'Unit 5 — Evolution, Evaluation and Experiments: Genetic Algorithms and Model Assessment', file: '/notes/sem5/machine-learning-and-its-applications/Machine-Learning-and-its-Applications-Sem5-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem5/machine-learning-and-its-applications/Machine-Learning-and-its-Applications-Sem5-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'mfc',
@@ -780,7 +1029,8 @@ export const semestersData = {
           { title: 'Unit 4 — Linear Algebra: Vectors, Vector Spaces and Linear Maps', file: '/notes/sem5/mathematical-foundation-course/Mathematical-Foundation-Course-Sem5-Unit-4.pdf' },
           { title: 'Unit 5 — Advanced Topics: MLE Proofs, Heteroscedasticity, Entropy and Normality', file: '/notes/sem5/mathematical-foundation-course/Mathematical-Foundation-Course-Sem5-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem5/mathematical-foundation-course/Mathematical-Foundation-Course-Sem5-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'uhb',
@@ -794,7 +1044,8 @@ export const semestersData = {
           { title: 'Unit 4 — Happiness, Prosperity and the Vision of a Happy Life', file: '/notes/sem5/understanding-the-human-being/Understanding-the-Human-Being-Comprehensive-Human-Aspirations-Sem5-Unit-4.pdf' },
           { title: 'Unit 5 — Relationship, Trust and the Expansion of Harmony', file: '/notes/sem5/understanding-the-human-being/Understanding-the-Human-Being-Comprehensive-Human-Aspirations-Sem5-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem5/understanding-the-human-being/Understanding-the-Human-Being-Comprehensive-Human-Aspirations-Sem5-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
     ] },
   sem6: { id: 'sem6', name: 'Semester 6', subjects: [
@@ -810,6 +1061,13 @@ export const semestersData = {
           { title: 'Unit 4 — Storage Allocation & Symbol Tables', file: '/notes/sem6/compiler-design/Compiler-Design-Sem6-Unit-4.pdf' },
           { title: 'Unit 5 — Code Optimisation & Code Generation', file: '/notes/sem6/compiler-design/Compiler-Design-Sem6-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem6/compiler-design/Compiler-Design-Sem6-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem6/compiler-design/normal/cd-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem6/compiler-design/normal/cd-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem6/compiler-design/normal/cd-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem6/compiler-design/normal/cd-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem6/compiler-design/normal/cd-unit-5.pdf' },
         ]
       },
       {
@@ -824,6 +1082,13 @@ export const semestersData = {
           { title: 'Unit 4 — Branch and Bound & Backtracking', file: '/notes/sem6/design-and-analysis-of-algorithms/Design-and-Analysis-of-Algorithms-Sem6-Unit-4.pdf' },
           { title: 'Unit 5 — NP-Hard, NP-Complete & Approximation Algorithms', file: '/notes/sem6/design-and-analysis-of-algorithms/Design-and-Analysis-of-Algorithms-Sem6-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem6/design-and-analysis-of-algorithms/Design-and-Analysis-of-Algorithms-Sem6-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem6/design-and-analysis-of-algorithms/normal/daa-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem6/design-and-analysis-of-algorithms/normal/daa-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem6/design-and-analysis-of-algorithms/normal/daa-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem6/design-and-analysis-of-algorithms/normal/daa-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem6/design-and-analysis-of-algorithms/normal/daa-unit-5.pdf' },
         ]
       },
       {
@@ -838,6 +1103,13 @@ export const semestersData = {
           { title: 'Unit 4 — Message Authentication, Hash Functions & Digital Signatures', file: '/notes/sem6/information-security-systems/Information-Security-Systems-Sem6-Unit-4.pdf' },
           { title: 'Unit 5 — Key Management, Web Security, SSL/TLS & Kerberos', file: '/notes/sem6/information-security-systems/Information-Security-Systems-Sem6-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem6/information-security-systems/Information-Security-Systems-Sem6-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem6/information-security-systems/normal/iss-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem6/information-security-systems/normal/iss-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem6/information-security-systems/normal/iss-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem6/information-security-systems/normal/iss-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem6/information-security-systems/normal/iss-unit-5.pdf' },
         ]
       },
       {
@@ -852,6 +1124,13 @@ export const semestersData = {
           { title: 'Unit 4 — Image Compression', file: '/notes/sem6/digital-image-processing/Digital-Image-Processing-Sem6-Unit-4.pdf' },
           { title: 'Unit 5 — Image Segmentation & Representation', file: '/notes/sem6/digital-image-processing/Digital-Image-Processing-Sem6-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem6/digital-image-processing/Digital-Image-Processing-Sem6-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem6/digital-image-processing/normal/dip-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem6/digital-image-processing/normal/dip-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem6/digital-image-processing/normal/dip-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem6/digital-image-processing/normal/dip-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem6/digital-image-processing/normal/dip-unit-5.pdf' },
         ]
       },
       {
@@ -866,6 +1145,13 @@ export const semestersData = {
           { title: 'Unit 4 — M2M, SDN & NFV for IoT', file: '/notes/sem6/internet-of-things/Internet-of-Things-Sem6-Unit-4.pdf' },
           { title: 'Unit 5 — Domain-Specific IoT Applications', file: '/notes/sem6/internet-of-things/Internet-of-Things-Sem6-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem6/internet-of-things/Internet-of-Things-Sem6-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem6/internet-of-things/normal/iot-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem6/internet-of-things/normal/iot-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem6/internet-of-things/normal/iot-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem6/internet-of-things/normal/iot-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem6/internet-of-things/normal/iot-unit-5.pdf' },
         ]
       },
       {
@@ -880,6 +1166,13 @@ export const semestersData = {
           { title: 'Unit 4 — Natural Language Generation & Machine Translation', file: '/notes/sem6/natural-language-processing/Natural-Language-Processing-Sem6-Unit-4.pdf' },
           { title: 'Unit 5 — Information Retrieval & Lexical Resources', file: '/notes/sem6/natural-language-processing/Natural-Language-Processing-Sem6-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem6/natural-language-processing/Natural-Language-Processing-Sem6-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem6/natural-language-processing/normal/nlp-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem6/natural-language-processing/normal/nlp-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem6/natural-language-processing/normal/nlp-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem6/natural-language-processing/normal/nlp-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem6/natural-language-processing/normal/nlp-unit-5.pdf' },
         ]
       },
       {
@@ -894,7 +1187,8 @@ export const semestersData = {
           { title: 'Unit 4 — Web Security, SSL and SET', file: '/notes/sem6/application-and-network-security-fundamentals/Application-and-Network-Security-Fundamentals-Sem6-Unit-4.pdf' },
           { title: 'Unit 5 — IP Security, Firewalls and Intrusion Detection', file: '/notes/sem6/application-and-network-security-fundamentals/Application-and-Network-Security-Fundamentals-Sem6-Unit-5.pdf' },
           { title: 'Most Important Questions (50)', file: '/notes/sem6/application-and-network-security-fundamentals/Application-and-Network-Security-Fundamentals-Sem6-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'ai',
@@ -908,7 +1202,8 @@ export const semestersData = {
           { title: 'Unit 4 — Machine Learning', file: '/notes/sem6/artificial-intelligence/Artificial-Intelligence-Sem6-Unit-4.pdf' },
           { title: 'Unit 5 — Expert Systems, NLP and Robotics', file: '/notes/sem6/artificial-intelligence/Artificial-Intelligence-Sem6-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem6/artificial-intelligence/Artificial-Intelligence-Sem6-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'bda',
@@ -922,7 +1217,8 @@ export const semestersData = {
           { title: 'Unit 4 — Pig and Pig Latin', file: '/notes/sem6/big-data-analytics/Big-Data-Analytics-Sem6-Unit-4.pdf' },
           { title: 'Unit 5 — Hive, HBase and Sqoop', file: '/notes/sem6/big-data-analytics/Big-Data-Analytics-Sem6-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem6/big-data-analytics/Big-Data-Analytics-Sem6-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'gpu',
@@ -936,7 +1232,8 @@ export const semestersData = {
           { title: 'Unit 4 — CUDA Architecture and Memory', file: '/notes/sem6/gpu-computing/GPU-Computing-Sem6-Unit-4.pdf' },
           { title: 'Unit 5 — CUDA Kernels and Memory Efficiency', file: '/notes/sem6/gpu-computing/GPU-Computing-Sem6-Unit-5.pdf' },
           { title: 'Most Important Questions (50)', file: '/notes/sem6/gpu-computing/GPU-Computing-Sem6-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'iccl',
@@ -950,7 +1247,8 @@ export const semestersData = {
           { title: 'Unit 4 — Cyber Forensics and Investigation', file: '/notes/sem6/introduction-to-cyber-crime-law-and-investigation/Introduction-to-Cyber-Crime-Law-and-Investigation-Sem6-Unit-4.pdf' },
           { title: 'Unit 5 — Law in Action: Blocking, Privacy and the Digital Age', file: '/notes/sem6/introduction-to-cyber-crime-law-and-investigation/Introduction-to-Cyber-Crime-Law-and-Investigation-Sem6-Unit-5.pdf' },
           { title: 'Most Important Questions (50)', file: '/notes/sem6/introduction-to-cyber-crime-law-and-investigation/Introduction-to-Cyber-Crime-Law-and-Investigation-Sem6-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'nsva',
@@ -964,7 +1262,8 @@ export const semestersData = {
           { title: 'Unit 4 — Finding Vulnerabilities and Penetration Testing', file: '/notes/sem6/network-system-vulnerability-assessment/Network-System-Vulnerability-Assessment-Sem6-Unit-4.pdf' },
           { title: 'Unit 5 — Defence in Depth', file: '/notes/sem6/network-system-vulnerability-assessment/Network-System-Vulnerability-Assessment-Sem6-Unit-5.pdf' },
           { title: 'Most Important Questions (50)', file: '/notes/sem6/network-system-vulnerability-assessment/Network-System-Vulnerability-Assessment-Sem6-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'smf',
@@ -978,7 +1277,8 @@ export const semestersData = {
           { title: 'Unit 4 — Estimation Methods', file: '/notes/sem6/statistical-modeling-and-forecasting/Statistical-Modeling-and-Forecasting-Sem6-Unit-4.pdf' },
           { title: 'Unit 5 — Forecasting in Practice', file: '/notes/sem6/statistical-modeling-and-forecasting/Statistical-Modeling-and-Forecasting-Sem6-Unit-5.pdf' },
           { title: 'Most Important Questions (50)', file: '/notes/sem6/statistical-modeling-and-forecasting/Statistical-Modeling-and-Forecasting-Sem6-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
     ] },
   sem7: { id: 'sem7', name: 'Semester 7', subjects: [
@@ -994,6 +1294,13 @@ export const semestersData = {
           { title: 'Unit 4 — Optimisation, Learning Rate & Batch Normalisation', file: '/notes/sem7/deep-learning/Deep-Learning-Sem7-Unit-4.pdf' },
           { title: 'Unit 5 — RNN, LSTM, GANs & Deep Learning Frameworks', file: '/notes/sem7/deep-learning/Deep-Learning-Sem7-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem7/deep-learning/Deep-Learning-Sem7-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem7/deep-learning/normal/dl-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem7/deep-learning/normal/dl-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem7/deep-learning/normal/dl-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem7/deep-learning/normal/dl-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem7/deep-learning/normal/dl-unit-5.pdf' },
         ]
       },
       {
@@ -1008,6 +1315,13 @@ export const semestersData = {
           { title: 'Unit 4 — Disaster Risk Reduction, Prediction and Institutions', file: '/notes/sem7/disaster-management/Disaster-Management-Sem7-Unit-4.pdf' },
           { title: 'Unit 5 — Regional Surveys, Sustainability and Governance in India', file: '/notes/sem7/disaster-management/Disaster-Management-Sem7-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem7/disaster-management/Disaster-Management-Sem7-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem7/disaster-management/normal/dm-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem7/disaster-management/normal/dm-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem7/disaster-management/normal/dm-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem7/disaster-management/normal/dm-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem7/disaster-management/normal/dm-unit-5.pdf' },
         ]
       },
       {
@@ -1022,6 +1336,11 @@ export const semestersData = {
           { title: 'Unit 4 — Advanced Generative AI Topics', file: '/notes/sem7/generative-ai/Generative-AI-Sem7-Unit-4.pdf' },
           { title: 'Unit 5 — Generative AI for Language and Applications  [built from PYQ topics]', file: '/notes/sem7/generative-ai/Generative-AI-Sem7-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem7/generative-ai/Generative-AI-Sem7-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 2', file: '/notes/sem7/generative-ai/normal/gai-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem7/generative-ai/normal/gai-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem7/generative-ai/normal/gai-unit-4.pdf' },
         ]
       },
       {
@@ -1036,7 +1355,8 @@ export const semestersData = {
           { title: 'Unit 4 — Mobile IP and Mobile Transport Protocols', file: '/notes/sem7/mobile-computing/Mobile-Computing-Sem7-Unit-4.pdf' },
           { title: 'Unit 5 — Mobile Databases, Dissemination, Security and Ethics', file: '/notes/sem7/mobile-computing/Mobile-Computing-Sem7-Unit-5.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem7/mobile-computing/Mobile-Computing-Sem7-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
       {
         id: 'soft_comp',
@@ -1050,7 +1370,8 @@ export const semestersData = {
           { title: 'Unit 4 — Genetic Algorithms', file: '/notes/sem7/soft-computing-and-evolutionary-algorithms/Soft-Computing-and-Evolutionary-Algorithms-Sem7-Unit-4.pdf' },
           { title: 'Unit 5 — Evolutionary Algorithms, Particle Swarm Optimisation and Neuro-Fuzzy Systems', file: '/notes/sem7/soft-computing-and-evolutionary-algorithms/Soft-Computing-and-Evolutionary-Algorithms-Sem7-Unit-5.pdf' },
           { title: 'Most Important Questions (50)', file: '/notes/sem7/soft-computing-and-evolutionary-algorithms/Soft-Computing-and-Evolutionary-Algorithms-Sem7-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
     ] },
   sem8: { id: 'sem8', name: 'Semester 8', subjects: [
@@ -1068,6 +1389,15 @@ export const semestersData = {
           { title: 'Unit 6 — Communication', file: '/notes/sem8/fhi-subject/Factor-of-Human-Interaction-Sem8-Unit-6.pdf' },
           { title: 'Unit 7 — Human Error and Hazards in the Workplace', file: '/notes/sem8/fhi-subject/Factor-of-Human-Interaction-Sem8-Unit-7.pdf' },
           { title: '70 Most Important Questions', file: '/notes/sem8/fhi-subject/Factor-of-Human-Interaction-Sem8-Important-Questions.pdf' },
+        ],
+        normalNotes: [
+          { title: 'Unit 1', file: '/notes/sem8/fhi-subject/normal/fhi-unit-1.pdf' },
+          { title: 'Unit 2', file: '/notes/sem8/fhi-subject/normal/fhi-unit-2.pdf' },
+          { title: 'Unit 3', file: '/notes/sem8/fhi-subject/normal/fhi-unit-3.pdf' },
+          { title: 'Unit 4', file: '/notes/sem8/fhi-subject/normal/fhi-unit-4.pdf' },
+          { title: 'Unit 5', file: '/notes/sem8/fhi-subject/normal/fhi-unit-5.pdf' },
+          { title: 'Unit 6', file: '/notes/sem8/fhi-subject/normal/fhi-unit-6.pdf' },
+          { title: 'Unit 7', file: '/notes/sem8/fhi-subject/normal/fhi-unit-7.pdf' },
         ]
       },
       {
@@ -1082,7 +1412,8 @@ export const semestersData = {
           { title: 'Unit 4 — Business Environment and Management', file: '/notes/sem8/entrepreneurship/Entrepreneurship-Sem8-Unit-4.pdf' },
           { title: 'Unit 5 — Business Planning, Growth and Special Topics', file: '/notes/sem8/entrepreneurship/Entrepreneurship-Sem8-Unit-5.pdf' },
           { title: 'Most Important Questions (50)', file: '/notes/sem8/entrepreneurship/Entrepreneurship-Sem8-Important-Questions.pdf' },
-        ]
+        ],
+        normalNotes: []
       },
     ] }
 };

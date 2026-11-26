@@ -412,11 +412,13 @@ export function hwShaFor(sourceSha) {
 }
 
 /** The typed Sem 2-3 docs the handwriting conversion covers (PYQ excluded,
- * Sem 4+ out of scope). */
+ * Sem 4+ out of scope). Restored NORMAL notes (2026-11-26 dual mode) are
+ * excluded: they must stay typed as scanned/written, never re-typeset. */
 export function handwriteTargets(docs) {
   return Object.entries(docs)
     .filter(([key, e]) =>
       (key.startsWith('/notes/sem2/') || key.startsWith('/notes/sem3/')) &&
+      !key.includes('/normal/') &&
       !key.endsWith('-Handwritten-Notes-Full.pdf') &&
       !/-Sem\d+-Unit-[1-7]\.pdf$/.test(key) &&
       !key.endsWith('-Important-Questions.pdf') &&

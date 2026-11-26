@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { pyqPapers } from '../data/pyqData';
 import DocViewer from '../components/DocViewer';
-import { ViewButton, DownloadButton, BookmarkButton } from '../components/NoteActions';
+import { ViewButton, BookmarkButton } from '../components/NoteActions';
 import { isBookmarked, toggleBookmark } from '../lib/bookmarks';
 
 // PYQ Finder. When initialSubjects is set (from a subject's "Get PYQ"
@@ -156,7 +156,7 @@ const PyqFinder = ({ initialSubjects, initialLabel, onClearInitialSubjects }) =>
           </select>
         </div>
         <p style={{ margin: '12px 0 0', color: 'var(--text-muted, #9aa0b4)', fontSize: '0.9rem' }}>
-          {results.length} paper{results.length === 1 ? '' : 's'} found — tap a card to view it, or use Download.
+          {results.length} paper{results.length === 1 ? '' : 's'} found — tap a card to view it.
         </p>
       </div>
 
@@ -173,7 +173,7 @@ const PyqFinder = ({ initialSubjects, initialLabel, onClearInitialSubjects }) =>
       <div className="notes-list-container">
         {results.length > 0 ? (
           results.map((p, index) => {
-            const openView = () => { setSolutionMsg(''); setPreview({ file: p.file, title: `${p.subject} — ${p.session}`, context: { subject: p.subject, source: 'pyq' }, allowDownload: true }); };
+            const openView = () => { setSolutionMsg(''); setPreview({ file: p.file, title: `${p.subject} — ${p.session}`, context: { subject: p.subject, source: 'pyq' }, allowDownload: false }); };
             const bmId = `pyq:${p.id}`;
             return (
             <div
@@ -196,7 +196,6 @@ const PyqFinder = ({ initialSubjects, initialLabel, onClearInitialSubjects }) =>
               <div className="note-item-right">
                 <BookmarkButton active={isBookmarked(bmId)} onClick={() => handleToggleBookmark(p)} />
                 <ViewButton onClick={(e) => { e.stopPropagation(); openView(); }} label={`View ${p.subject} ${p.session}`} />
-                <DownloadButton file={p.file} label={`Download ${p.subject} ${p.session}`} />
               </div>
             </div>
             );

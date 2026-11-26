@@ -94,7 +94,7 @@ const FloatingBot = () => {
           file={preview.file}
           title={preview.title}
           context={{ source: preview.type === 'pyq' ? 'pyq' : 'notes' }}
-          allowDownload={preview.type === 'pyq'}
+          allowDownload={false}
           onClose={() => setPreview(null)}
         />
       )}

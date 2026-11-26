@@ -6,7 +6,7 @@ import { ViewButton, DownloadButton } from './NoteActions';
 // The syllabus card — always the FIRST thing on a semester page.
 // Available semesters get View (in-page) + Download; the rest get an honest
 // "coming soon" card until the official document is added.
-// Syllabus is downloadable like PYQ (PYQ exemption, 2026-11-22).
+// Syllabus is downloadable (PYQ downloads removed 2026-11-26).
 const SyllabusCard = ({ semId, onPreview }) => {
   const data = syllabusData[semId];
   if (!data) return null;

@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { getBookmarks, removeBookmark } from '../lib/bookmarks';
 import DocViewer from '../components/DocViewer';
-import { ViewButton, DownloadButton, OpenButton } from '../components/NoteActions';
+import { ViewButton, OpenButton } from '../components/NoteActions';
 import {
   getCollections, saveCollection, deleteCollection, newCollectionId,
   getFlashcards, addFlashcard, deleteFlashcard, reviewFlashcard, getFlashcardsDue,
@@ -440,7 +440,7 @@ const Bookmarks = ({ onBrowseNotes }) => {
                 window.open(b.file, '_blank', 'noopener,noreferrer');
                 return;
               }
-              setPreview({ file: b.file, title: b.title, context: { semester: b.semesterName, source: 'bookmarks' }, allowDownload: b.type === 'pyq' });
+              setPreview({ file: b.file, title: b.title, context: { semester: b.semesterName, source: 'bookmarks' }, allowDownload: false });
             };
             return (
               <div
@@ -482,7 +482,6 @@ const Bookmarks = ({ onBrowseNotes }) => {
                   ) : (
                     <>
                       <ViewButton onClick={(e) => { e.stopPropagation(); openView(); }} label={`View ${b.title}`} />
-                      {b.type === 'pyq' && <DownloadButton file={b.file} label={`Download ${b.title}`} />}
                     </>
                   )}
                 </div>

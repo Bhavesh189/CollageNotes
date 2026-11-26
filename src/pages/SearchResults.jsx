@@ -9,7 +9,7 @@ import {
 } from '../lib/searchIndex';
 import { useDebouncedValue } from '../lib/useDebouncedValue';
 import DocViewer from '../components/DocViewer';
-import { ViewButton, DownloadButton, OpenButton, BookmarkButton } from '../components/NoteActions';
+import { ViewButton, OpenButton, BookmarkButton } from '../components/NoteActions';
 import { isBookmarked, toggleBookmark } from '../lib/bookmarks';
 import { getTrendingSearches, requestNote, getNoteRequests } from '../lib/study';
 
@@ -220,7 +220,7 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
                 if (r.isExternal) {
                   window.open(r.file, '_blank', 'noopener,noreferrer');
                 } else {
-                  setPreview({ file: r.file, title: r.title, context: { semester: r.semesterName, subject: r.subject, source: r.type || 'search' }, allowDownload: r.type === 'pyq' });
+                  setPreview({ file: r.file, title: r.title, context: { semester: r.semesterName, subject: r.subject, source: r.type || 'search' }, allowDownload: false });
                 }
               };
               const snip = snippetFor(r, query);
@@ -261,7 +261,6 @@ const SearchResults = ({ query, onQueryChange, onClear }) => {
                   ) : (
                     <>
                       <ViewButton onClick={(e) => { e.stopPropagation(); openView(); }} label={`View ${r.title}`} />
-                      {r.type === 'pyq' && <DownloadButton file={r.file} label={`Download ${r.title}`} />}
                     </>
                   )}
                 </div>

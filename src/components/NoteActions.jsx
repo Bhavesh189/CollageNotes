@@ -21,8 +21,8 @@ export const BookmarkButton = ({ active, onClick, label }) => (
 // Explicit View + Download actions used on every note row across the site
 // (NotesHub, SearchResults, PyqFinder). View opens the in-page DocViewer;
 // Download is a plain anchor so the browser saves the file.
-// PYQ EXEMPTION (2026-11-22): DownloadButton is for PYQ / syllabus rows
-// ONLY — notes rows never render it (notes are image-only, no download).
+// DownloadButton is for SYLLABUS rows ONLY (PYQ downloads removed
+// 2026-11-26) — notes rows never render it (notes are image-only).
 export const ViewButton = ({ onClick, label }) => (
   <button
     type="button"

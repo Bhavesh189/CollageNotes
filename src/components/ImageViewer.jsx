@@ -20,7 +20,7 @@ import { semestersData } from '../data/notesData';
 //
 // COPY PROTECTION, by design:
 //  - page images only — no text layer, nothing selectable BY DEFAULT;
-//  - no Download button for NOTES (PYQ papers get one — the source PDF);
+//  - no Download button for NOTES or PYQ papers (nothing passes downloadUrl for them);
 //  - user-select:none on the page area, context menu + copy/cut/save
 //    shortcuts blocked inside the modal (inputs exempt) — EXCEPT the
 //    reading page image itself: right-click → Copy image and dragging

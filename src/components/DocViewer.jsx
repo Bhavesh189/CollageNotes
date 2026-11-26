@@ -11,10 +11,11 @@ export { prefetchViewerManifest };
 //    text index. Page images allow the browser's native Copy image +
 //    drag (his order 2026-11-24) — the watermark is an HTML overlay, not
 //    baked into the JPEG, so a copied image leaves without it.
-//  - PYQ PAPERS (file under /pyq/): page IMAGES (ImageViewer, 2026-11-24)
-//    with a Download button (the source PDF) + the Solution button
-//    (PYQ only, via onShowSolution). Fast + light — the whole PDF no
-//    longer loads just to read a paper.
+//  - PYQ PAPERS (file under /pyq/): page IMAGES ONLY (ImageViewer), like
+//    notes — NO download (2026-11-26: PYQ PDFs moved out of public/, so
+//    no raw PDF URL exists) + the Solution button (PYQ only, via
+//    onShowSolution). Fast + light — the whole PDF no longer loads just
+//    to read a paper.
 //  - SYLLABUS + anything else with allowDownload: the real PDF
 //    (PdfViewer) with Download button, text layer and full toolbar —
 //    the file is meant to be kept.
@@ -37,7 +38,6 @@ const DocViewer = ({ file, title, onClose, context, allowDownload, onOpenSyllabu
         context={context}
         onOpenSyllabus={onOpenSyllabus}
         onOpenNext={onOpenNext}
-        downloadUrl={file}
         onShowSolution={onShowSolution}
       />
     );

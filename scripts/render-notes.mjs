@@ -57,7 +57,7 @@ import { runHandwritePass } from './handwrite.mjs';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
 const SRC = path.join(ROOT, 'notes-source');
-const PYQ_DIR = path.join(ROOT, 'public', 'pyq');
+const PYQ_DIR = path.join(SRC, 'pyq');
 const OUT = path.join(ROOT, 'public', 'generated');
 const SCALE = 1.5;
 const QUALITY = 80;
@@ -209,9 +209,10 @@ if (!isMainThread) {
   let prev = { version: 0, docs: {} };
   try { prev = JSON.parse(fs.readFileSync(manifestPath, 'utf8')); } catch { /* first run */ }
 
-  // NOTES + PYQ SOLUTIONS from notes-source/, plus PYQ PAPERS from
-  // public/pyq/ (2026-11-24: PYQs render to page images like notes;
-  // Download serves the source PDF). Syllabus is never rendered.
+  // NOTES + PYQ SOLUTIONS + PYQ PAPERS all from notes-source/ (2026-11-26:
+  // PYQ papers moved out of public/pyq/ so no raw PDF URL exists — the
+  // viewer shows page images only, like notes, and nothing is downloadable).
+  // Syllabus is never rendered.
   // Each entry is { rel, srcPath } where rel is the manifest-relative
   // path (manifest key = '/' + rel, render dir = sha1(rel)[0:12]).
   const files = walk(SRC)

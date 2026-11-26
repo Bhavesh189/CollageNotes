@@ -90,7 +90,7 @@ const NotesHub = ({ currentSem, onNavigate, onNavigatePyq }) => {
         file: d.file,
         title: d.title || d.file,
         context: d.context || { semester: semData.name, source },
-        allowDownload: source === 'pyq' || source === 'syllabus',
+        allowDownload: source === 'syllabus',
       });
     };
     window.addEventListener('bn-open-note', onOpen);
